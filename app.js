@@ -20,10 +20,14 @@ app.use((request, response, next) => {
     next()
 })
 
+const bodyParserJson = bodyParser.json()
 
+
+/************************************ Controller  ******************************/
 const controllerUsuario = require('./controller/controller_usuario')
 
-const bodyParserJson = bodyParser.json()
+
+/************************************ Usuario ******************************/
 
 app.get('/v1/sinalibras/usuarios', cors(), async function(request, response){
 
@@ -41,6 +45,37 @@ app.get('/v1/sinalibras/usuarios', cors(), async function(request, response){
 
 })
 
+app.get('/v1/sinalibras/usuarios/:id', cors(), async function(request,response,next){
+
+    let idUsuario = request.params.id;
+
+    //Encaminh o ID para o controller buscar o filme
+    let dadosUsuarios = await controllerUsuario.getBuscarUsuarioById(idUsuario)
+
+    response.status(dadosUsuarios.status_code);
+    response.json(dadosUsuarios);
+
+});
+
+app.get('/v1/sinalibras/usuariosNome/:nome', cors(), async function(request,response,next){
+
+        let nomeUsuario = request.query.nome
+        let usuariosNome = await controllerUsuario.getBuscarUsuarioNome(nomeUsuario)
+    
+            response.json(usuariosNome);
+             response.status(usuariosNome.status_code)
+     })
+
+
+app.get('/v1/sinalibras/usuarios/:email', cors(), async function(request,response,next){
+
+        let emailUsuario = request.query.email
+        let usuarios = await controllerUsuario.getBuscarUsuarioEmail(emailUsuario)
+    
+            response.json(usuarios);
+             response.status(usuarios.status_code)
+     })
+
 app.post('/v1/sinalibras/usuario', cors(), bodyParserJson, async function (request, response){
     let contentType = request.headers['content-type']
 
@@ -49,6 +84,28 @@ app.post('/v1/sinalibras/usuario', cors(), bodyParserJson, async function (reque
 
     response.status(resultadoNovoUsuario.status_code)
     response.json(resultadoNovoUsuario)
+})
+
+
+app.put('/v1/sinalibras/usuario/:id', cors(), bodyParserJson, async function(request,response){
+    let contentType = request.headers['content-type']
+    let idUsuario = request.params.id
+
+    let dadosBody = request.body
+    let resultadoNovoUsuario = await controllerUsuario.setAtualizarUsuario(idUsuario, dadosBody, contentType)
+
+    response.status(resultadoNovoUsuario.status_code)
+    response.json(resultadoNovoUsuario)
+})
+
+app.delete('/v1/sinalibras/usuario/:id', cors(), async function(request,response){
+
+    let idUsuario = request.params.id
+
+    let dadosUsuario = await controllerUsuario.setExcluirUsuario(idUsuario)
+    response.status(dadosUsuario.status_code)
+    response.json(dadosUsuario)
+
 })
 
 

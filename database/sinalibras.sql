@@ -7,6 +7,8 @@ CREATE TABLE tbl_usuario (
   email VARCHAR(250) NOT NULL,
   senha VARCHAR(8) NOT NULL,
   data_nascimento DATE NOT NULL,
+  status_usuario varchar(255) not null,
+  foto_perfil varchar (255), 
   unique key (id),
   unique index(id)
   );

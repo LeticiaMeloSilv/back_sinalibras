@@ -4,16 +4,29 @@ const prisma = new PrismaClient();
 
 
 const selectAllUsers = async function (){
-    let sql = 'select * from tbl_usuario';
+    
+    let sql = 'select * from tbl_usuario'
 
-    //Executa o script SQL no Banco de Dados e recebe o retorno dos dados
     let rsUsuario = await prisma.$queryRawUnsafe(sql);
-
-    //Validação para retornar os dados
-    if( rsUsuario.length > 0) 
-       return rsUsuario;
-    else
+    
+    if( rsUsuario.length > 0) {
+    return rsUsuario;
+}else
        return false;
+}
+
+const selectByIdUsuario = async function (id){
+    try{
+        let sql = `select * from tbl_usuario where id = ${id}`
+
+        let rsUsuario = await prisma.$queryRawUnsafe(sql)
+
+        return rsUsuario
+       
+
+    } catch (error){
+        return false
+    }
 
 }
 
@@ -28,12 +41,16 @@ const insertUsuario = async function(dadosUsuario){
                             nome, 
                             email,
                             senha,
-                            data_nascimento
+                            data_nascimento,
+                            status_usuario,
+                            foto_perfil
                             ) values (
                                 '${dadosUsuario.nome}',
                                 '${dadosUsuario.email}',
                                 '${dadosUsuario.senha}',
-                                '${dadosUsuario.data_nascimento}'
+                                '${dadosUsuario.data_nascimento}',
+                                '${dadosUsuario.status_usuario}',
+                                '${dadosUsuario.foto_perfil}'
                             )`
        
 
@@ -48,7 +65,6 @@ const insertUsuario = async function(dadosUsuario){
             return false
 
     } catch(error) {
-        console.log(error);
         return false
     }
 }
@@ -68,10 +84,87 @@ const insertUsuario = async function(dadosUsuario){
        }
    }
 
+   const updateUsuario = async function (id, dadosUsuario) {
+
+    try{
+        let sql 
+    
+        sql = `update tbl_usuario set
+            nome =  '${dadosUsuario.nome}',
+            email =  '${dadosUsuario.email}',
+            senha =  '${dadosUsuario.senha}',
+            data_nascimento =  '${dadosUsuario.data_nascimento}',
+            status_usuario =  '${dadosUsuario.status_usuario}',
+            foto_perfil = '${dadosUsuario.foto_perfil}'
+            where tbl_usuario.id = ${id}
+       `
+       
+    
+        let rsUser = await prisma.$executeRawUnsafe(sql)
+    
+    
+         if (rsUser)
+         return true
+         else
+         return false 
+    }catch(error){
+        return false
+    }
+
+}
+
+const deleteUsuario = async function (id){
+
+    try {
+   
+       let sql = `delete from tbl_usuario  where id = ${id}`
+   
+       let rsUsuario = await prisma.$executeRawUnsafe(sql);  
+      
+       if(rsUsuario)
+       return true
+      
+     } catch (error) {
+        
+       return false
+       }
+   
+}
+
+const selectUsuarioByNome = async function (nome){
+    try{
+        let sql = `select * from tbl_usuario where nome LIKE "%${nome}%"`
+       
+
+        let rsUsuario = await prisma.$queryRawUnsafe(sql);
+        return rsUsuario;
+    } catch (error) {
+        return false
+    }
+}
+
+
+const selectUsuarioByEmail = async function (email){
+    try{
+        let sql = `select * from tbl_usuario where email LIKE "%${email}%"`
+
+        let rsUsuario = await prisma.$queryRawUnsafe(sql)
+
+        if(rsUsuario)
+        return true
+    }catch(error){
+        return false
+    }
+}
 
 
 module.exports = {
     selectAllUsers,
+    selectByIdUsuario,
+    selectUsuarioByEmail,
+    selectUsuarioByNome,
     insertUsuario,
-    selectUltimoIdUsuario
+    selectUltimoIdUsuario,
+    updateUsuario,
+    deleteUsuario
 }
