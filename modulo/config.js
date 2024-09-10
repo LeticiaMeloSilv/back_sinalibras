@@ -8,6 +8,7 @@
 /**********************Mensagens de ERROS *****************************/ 
 
 const ERROR_INVALID_ID = {status: false, status_code: 400, message: 'O ID encaminhado na requisição não é válido!!'};
+const ERROR_INVALID_DATA = {status: false, status_code: 400, message: 'A data encaminhada na requisição não é válida!!'};
 const ERROR_REQUIRED_FIELDS = {status :false, status_code: 400, message: 'Existem campos requiridos que não foram preenchidos, ou que não atende ao critério da digitação.'}
 const ERROR_NOT_FOUND = {status: false, status_code: 404, message: 'Não foram encontrados item na requisição!!'};
 const ERROR_INTERNAL_SERVER_DB = {status: false, status_code: 500, message: 'Não foi possível processar a requisição devido ao um problema na comunicação com o Banco de Dados. Contate o ADM da API !!'};
@@ -32,5 +33,6 @@ module.exports = {
     ERROR_INTERNAL_SERVER,
     SUCESS_DELETED_ITEM,
     ERROR_NOT_FOUND_ID,
-    SUCESS_UPDATED_ITEM
+    SUCESS_UPDATED_ITEM,
+    ERROR_INVALID_DATA
 }
