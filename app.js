@@ -1,7 +1,7 @@
 /*********************************************************
  * Objetivo: Arquivo para realizar as requisições do aplicativo 
  * data: 03/09/2024
- * Autor: Julia Mendes e Gabriel Barros
+ * Autor: Julia Mendes 
  * Versão: 1.0
  ***********************************************************/
 
