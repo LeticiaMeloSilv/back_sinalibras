@@ -153,6 +153,10 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
             if (!dadosAluno.data_nascimento || !data.validarData(dadosAluno.data_nascimento)) {
                 return message.ERROR_INVALID_DATA 
             }
+
+            if(dadosAluno.data_nascimento){
+                dadosAluno.data_nascimento = data.converterData(dadosAluno.data_nascimento)
+            }
                
                 let novoAluno= await alunoDao.insertAluno(dadosAluno)
                
