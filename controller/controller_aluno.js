@@ -145,7 +145,7 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
                dadosAluno.nome == '' || dadosAluno.nome == undefined || dadosAluno.nome == null || dadosAluno.nome.length > 255||
                dadosAluno.email == "" || dadosAluno.email == undefined || dadosAluno.email == null|| dadosAluno.email.length > 255||
                dadosAluno.senha == "" || dadosAluno.senha == undefined || dadosAluno.senha == null||  dadosAluno.senha.length > 8 || 
-               dadosAluno.foto_perfil == undefined || dadosAluno.foto_perfil.length > 255
+               dadosAluno.foto_perfil == undefined || dadosAluno.foto_perfil.length > 255 
             ){
                 return message.ERROR_REQUIRED_FIELDS
             }
@@ -153,11 +153,10 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
             if (!dadosAluno.data_nascimento || !data.validarData(dadosAluno.data_nascimento)) {
                 return message.ERROR_INVALID_DATA 
             }
-
+               
             if(dadosAluno.data_nascimento){
                 dadosAluno.data_nascimento = data.converterData(dadosAluno.data_nascimento)
             }
-               
                 let novoAluno= await alunoDao.insertAluno(dadosAluno)
                
                 if (novoAluno){

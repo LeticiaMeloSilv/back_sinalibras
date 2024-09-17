@@ -43,6 +43,7 @@ const selectByIdAluno = async function (id){
 const insertAluno = async function(dadosAluno){
        
     let sql 
+    console.log(dadosAluno);
 
         try{
     
@@ -55,12 +56,14 @@ const insertAluno = async function(dadosAluno){
            
         sql = `insert into tbl_aluno ( 
                                 nome, 
+                                data_cadastro,
                                 email,
                                 senha,
                                 data_nascimento,
                                 foto_perfil
                                 ) values (
                                     '${dadosAluno.nome}',
+                                    '${dadosAluno.data_cadastro}',
                                     '${dadosAluno.email}',
                                     '${dadosAluno.senha}',
                                     '${dadosAluno.data_nascimento}',
@@ -71,12 +74,14 @@ const insertAluno = async function(dadosAluno){
     
                   sql =  `insert into tbl_aluno ( 
                                 nome, 
+                                data_cadastro,
                                 email,
                                 senha,
                                 data_nascimento,
                                 foto_perfil
                                 ) values (
                                     '${dadosAluno.nome}',
+                                    '${dadosAluno.data_cadastro}',
                                     '${dadosAluno.email}',
                                     '${dadosAluno.senha}',
                                     '${dadosAluno.data_nascimento}',
@@ -88,7 +93,7 @@ const insertAluno = async function(dadosAluno){
 
         
 
-
+                console.log(sql);
         let rsUsuario = await prisma.$executeRawUnsafe(sql)
 
         if(rsUsuario){
@@ -132,6 +137,7 @@ const updateAluno = async function (id, dadosAluno) {
     
         sql = `update tbl_aluno set
             nome =  '${dadosAluno.nome}',
+            data_cadastro =  '${dadosAluno.data_cadastro}',
             email =  '${dadosAluno.email}',
             senha =  '${dadosAluno.senha}',
             data_nascimento =  '${dadosAluno.data_nascimento}',
@@ -142,6 +148,7 @@ const updateAluno = async function (id, dadosAluno) {
 
                 sql = `update tbl_aluno set
                 nome =  '${dadosAluno.nome}',
+                data_cadastro =  '${dadosAluno.data_cadastro}',
                 email =  '${dadosAluno.email}',
                 senha =  '${dadosAluno.senha}',
                 data_nascimento =  '${dadosAluno.data_nascimento}',

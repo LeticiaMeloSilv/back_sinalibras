@@ -223,6 +223,10 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
                             return message.ERROR_INVALID_DATA 
                         }
 
+                        if(dadosProfessor.data_nascimento){
+                            data.converterData(data_nascimento)
+                        }
+
                             let usuarioAtualizado = await professorDAO.updateProfessor(id, dadosProfessor)
             
                             if (usuarioAtualizado){

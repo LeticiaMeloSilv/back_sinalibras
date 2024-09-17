@@ -8,6 +8,8 @@
 const express = require('express')
 const cors = require ('cors')
 const bodyParser = require('body-parser')
+const {request} = require('http')
+const {access} = require('fs')
 
 const app = express()
 
@@ -26,7 +28,7 @@ const bodyParserJson = bodyParser.json()
 /************************************ Controller  ******************************/
 const controllerAluno = require('./controller/controller_aluno')
 const controllerProfessor = require('./controller/controller_professor')
-
+const controllerQuestao = require('./controller/controller_questao')
 
 /************************************ Aluno ******************************/
 
@@ -36,7 +38,7 @@ app.get('/v1/sinalibras/alunos', cors(), async function(request, response){
     let dadosUsuarios = await controllerAluno.getListarAlunos();
 
     //Validação para retornar o JSON dos filmes ou retornar o 404
-    if(dadosUsuarios.length >0){
+    if(dadosUsuarios){
         response.json(dadosUsuarios);
         response.status(200);
     }else{
@@ -115,10 +117,10 @@ app.post('/v1/sinalibras/professor', cors(), bodyParserJson, async function (req
     let contentType = request.headers['content-type']
 
     let dadosBody = request.body
-    let resultadoNovoProfessor = await controllerProfessor.setInserirNovoProfessor(dadosBody,contentType)
+    let resultadoNovaQuestao = await controllerProfessor.setInserirNovoProfessor(dadosBody,contentType)
 
-    response.status(resultadoNovoProfessor.status_code)
-    response.json(resultadoNovoProfessor)
+    response.status(resultadoNovaQuestao.status_code)
+    response.json(resultadoNovaQuestao)
 })
 
 app.put('/v1/sinalibras/professor/:id', cors(), bodyParserJson, async function(request,response){
@@ -126,10 +128,10 @@ app.put('/v1/sinalibras/professor/:id', cors(), bodyParserJson, async function(r
     let idProfessor = request.params.id
 
     let dadosBody = request.body
-    let resultadoNovoProfessor = await controllerProfessor.setAtualizarProfessor(idProfessor, dadosBody, contentType)
+    let resultadoNovaQuestao = await controllerProfessor.setAtualizarProfessor(idProfessor, dadosBody, contentType)
 
-    response.status(resultadoNovoProfessor.status_code)
-    response.json(resultadoNovoProfessor)
+    response.status(resultadoNovaQuestao.status_code)
+    response.json(resultadoNovaQuestao)
 })
 
 app.delete('/v1/sinalibras/professor/:id', cors(), async function(request,response){
@@ -188,6 +190,21 @@ app.get('/v1/sinalibras/professoremail/:email', cors(), async function(request,r
             response.json(professor);
              response.status(professor.status_code)
      })
+
+
+
+/*********************** Questão *****************************/
+
+app.post('/v1/sinalibras/questao', cors(), bodyParserJson, async function (request, response){
+    let contentType = request.headers['content-type']
+
+    let dadosBody = request.body
+    let resultadoNovaQuestao = await controllerQuestao.setInserirNovaQuestao(dadosBody,contentType)
+
+    response.status(resultadoNovaQuestao.status_code)
+    response.json(resultadoNovaQuestao)
+})
+
 
 
 app.listen('8080', function(){
