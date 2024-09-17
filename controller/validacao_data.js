@@ -1,32 +1,51 @@
 const validarData = (data) => {
-    const regexData = /^(19|20)\d\d-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
 
- 
-    if (!regexData.test(data)) {
+    
+    if (data === "00-00-0000") {
         return false;
     }
 
-    
+     
     if (data === "0000-00-00") {
         return false;
     }
-
     
-    const [ano, mes, dia] = data.split('-').map(Number);
+    const [dia, mes, ano] = data.split('-').map(Number);
 
-
-    if (mes < 1 || mes > 12) {
+    if (dia < 1 || dia > 31) {
         return false;
     }
 
-    
-    if (dia < 1 || dia > 31) {
+    if (mes < 1 || mes > 12) {
         return false;
     }
 
     return true; 
 }
 
+
+function converterData(data) {
+
+const partes = data.split('-');
+  try{
+  if (partes.length === 3) {
+
+    const dia = partes[0];
+    const mes = partes[1];
+    const ano = partes[2];
+      
+    const dataFormatada = `${ano}-${mes}-${dia}`
+      return dataFormatada;
+    } else {
+      return false
+    }
+}catch(error){
+    console.log(error);
+    return false
+}
+  }
+
 module.exports = {
-    validarData
+    validarData,
+    converterData
 }
