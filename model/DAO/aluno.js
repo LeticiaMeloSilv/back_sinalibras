@@ -26,7 +26,7 @@ const selectAllAlunos = async function (){
 
 const selectByIdAluno = async function (id){
     try{
-        let sql = `select * from tbl_aluno where id = ${id}`
+        let sql = `select * from tbl_aluno where id_aluno = ${id}`
 
         let rsUsuario = await prisma.$queryRawUnsafe(sql)
 
@@ -34,6 +34,8 @@ const selectByIdAluno = async function (id){
        
 
     } catch (error){
+        console.log(error);
+        
         return false
     }
 
@@ -43,8 +45,6 @@ const selectByIdAluno = async function (id){
 const insertAluno = async function(dadosAluno){
        
     let sql 
-    console.log(dadosAluno);
-
         try{
     
             
@@ -62,8 +62,8 @@ const insertAluno = async function(dadosAluno){
                                 data_nascimento,
                                 foto_perfil
                                 ) values (
-                                    '${dadosAluno.nome}',
-                                    '${dadosAluno.data_cadastro}',
+                                 '${dadosAluno.nome}',
+                                   '${dadosAluno.data_cadastro}',
                                     '${dadosAluno.email}',
                                     '${dadosAluno.senha}',
                                     '${dadosAluno.data_nascimento}',
@@ -93,8 +93,9 @@ const insertAluno = async function(dadosAluno){
 
         
 
-                console.log(sql);
         let rsUsuario = await prisma.$executeRawUnsafe(sql)
+        console.log(rsUsuario);
+        
 
         if(rsUsuario){
             return true
@@ -112,7 +113,7 @@ const insertAluno = async function(dadosAluno){
 
  const selectUltimoIdAluno = async function (){
         try{
-           let sql = `select cast(last_insert_id()as DECIMAL) as id from tbl_aluno limit 1;`
+           let sql = `select cast(last_insert_id()as DECIMAL) as id_aluno from tbl_aluno limit 1;`
    
            let rsUsuario = await prisma.$queryRawUnsafe(sql);
            return rsUsuario
@@ -142,7 +143,7 @@ const updateAluno = async function (id, dadosAluno) {
             senha =  '${dadosAluno.senha}',
             data_nascimento =  '${dadosAluno.data_nascimento}',
             foto_perfil = '${dadosAluno.foto_perfil}'
-            where tbl_aluno.id = ${id}`
+            where tbl_aluno.id_aluno = ${id}`
 
             }else{
 
@@ -153,7 +154,7 @@ const updateAluno = async function (id, dadosAluno) {
                 senha =  '${dadosAluno.senha}',
                 data_nascimento =  '${dadosAluno.data_nascimento}',
                 foto_perfil = null
-                where tbl_aluno.id = ${id}`
+                where tbl_aluno.id_aluno = ${id}`
 
 
             }
@@ -172,10 +173,11 @@ const updateAluno = async function (id, dadosAluno) {
 }
 
 const deleteAluno = async function (id){
-
+     console.log(id);
+     
     try {
    
-       let sql = `delete from tbl_aluno  where id = ${id}`
+       let sql = `delete from tbl_aluno where id_aluno = ${id}`
    
        let rsAluno = await prisma.$executeRawUnsafe(sql);  
       
@@ -213,6 +215,18 @@ const selectAlunoByEmail = async function (email){
     }catch(error){
         return false
     }
+}
+
+const selectValidacaoUsuario = async (email, senha) => {
+
+    try {
+        let sql = `select tu.id, tu.nome, tu.email from tbl_usuario as tu where email = '${email}' and senha = md5('${senha}')`
+        let rsUsuario = await prisma.$queryRawUnsafe(sql)
+        return rsUsuario        
+    } catch (error) {
+        return false
+    }
+
 }
 
 

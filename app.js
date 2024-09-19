@@ -98,14 +98,18 @@ app.put('/v1/sinalibras/alunos/:id', cors(), bodyParserJson, async function(requ
     let resultadoNovoUsuario = await controllerAluno.setAtualizarAluno(idUsuario, dadosBody, contentType)
 
     response.status(resultadoNovoUsuario.status_code)
+   
+    
     response.json(resultadoNovoUsuario)
 })
 
 app.delete('/v1/sinalibras/aluno/:id', cors(), async function(request,response){
 
     let idUsuario = request.params.id
-
+    console.log(idUsuario);
+    
     let dadosUsuario = await controllerAluno.setExcluirAluno(idUsuario)
+    
     response.status(dadosUsuario.status_code)
     response.json(dadosUsuario)
 

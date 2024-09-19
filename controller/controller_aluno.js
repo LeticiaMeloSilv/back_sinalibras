@@ -145,7 +145,7 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
                dadosAluno.nome == '' || dadosAluno.nome == undefined || dadosAluno.nome == null || dadosAluno.nome.length > 255||
                dadosAluno.email == "" || dadosAluno.email == undefined || dadosAluno.email == null|| dadosAluno.email.length > 255||
                dadosAluno.senha == "" || dadosAluno.senha == undefined || dadosAluno.senha == null||  dadosAluno.senha.length > 8 || 
-               dadosAluno.foto_perfil == undefined || dadosAluno.foto_perfil.length > 255 
+                dadosAluno.foto_perfil.length > 255 
             ){
                 return message.ERROR_REQUIRED_FIELDS
             }
@@ -153,17 +153,28 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
             if (!dadosAluno.data_nascimento || !data.validarData(dadosAluno.data_nascimento)) {
                 return message.ERROR_INVALID_DATA 
             }
+
+            if(dadosAluno.data_nascimento){
+                dadosAluno.data_nascimento = dadosAluno.data_nascimento.replaceAll("/","-")
+            }
                
             if(dadosAluno.data_nascimento){
                 dadosAluno.data_nascimento = data.converterData(dadosAluno.data_nascimento)
             }
+
+
+
                 let novoAluno= await alunoDao.insertAluno(dadosAluno)
+                
+                
                
                 if (novoAluno){
                 
                     let ultimoID = await alunoDao.selectUltimoIdAluno()
-                   
-                    dadosAluno.id = Number(ultimoID[0].id)
+                  
+                    
+                    dadosAluno.id_aluno= Number(ultimoID[0].id_aluno)
+                    
                     
                 }
                 
@@ -175,6 +186,7 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
                     
                     return novoAlunoJSON //201
                 }else {
+                    
                     return message.ERROR_INTERNAL_SERVER_DB // 500 
                 
             
@@ -185,9 +197,11 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
         }
         
     }catch(error){
-        console.log(error);
+        
+        
         
         return message.ERROR_INTERNAL_SERVER //500 erro na controller
+
     }
 }
 
@@ -262,17 +276,24 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
     }
    
     const setExcluirAluno = async function (id){
+        let idUsuario = id 
         try{
-            let idUsuario = id 
+       
     
             if (idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)) {
                 return message.ERROR_INVALID_ID; //400
+              
+                
             } else {
                 let dadosUsuario = await alunoDao.selectByIdAluno(idUsuario);
+                console.log(dadosUsuario);
+                
                 let verificarId = dadosUsuario.length
                 if (verificarId > 0) {
-    
+                    
                     dadosUsuario = await alunoDao.deleteAluno(idUsuario)
+                   
+                    
                     
                     return message.SUCESS_DELETED_ITEM
                 } else {
@@ -286,6 +307,8 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
            
         
     }
+
+    
     
 
 
