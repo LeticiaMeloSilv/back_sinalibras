@@ -8,7 +8,7 @@
 
 const message = require('../modulo/config.js')
 const professorDAO = require('../model/DAO/professor.js');
-const data = require('./validacao_data.js')
+const data = require('./validacoes.js')
 
 
 const getListarProfessores = async function () {

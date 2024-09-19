@@ -94,8 +94,6 @@ const insertAluno = async function(dadosAluno){
         
 
         let rsUsuario = await prisma.$executeRawUnsafe(sql)
-        console.log(rsUsuario);
-        
 
         if(rsUsuario){
             return true
@@ -124,13 +122,14 @@ const insertAluno = async function(dadosAluno){
        }
    }
 
+   
 const updateAluno = async function (id, dadosAluno) {
 
     let sql  
 
 
     try{
-       
+    
         if(dadosAluno.foto_perfil != "" && 
             dadosAluno.foto_perfil != null &&
             dadosAluno.foto_perfil != undefined
@@ -158,20 +157,22 @@ const updateAluno = async function (id, dadosAluno) {
 
 
             }
-       
+    
     
         let rsAluno = await prisma.$executeRawUnsafe(sql)
     
-         if (rsAluno)
-         return true
-         else
-         return false 
+        if (rsAluno)
+        return true
+        else
+        return false 
     }catch(error){
         return false
     }
 
 }
 
+
+    
 const deleteAluno = async function (id){
      console.log(id);
      
@@ -217,17 +218,35 @@ const selectAlunoByEmail = async function (email){
     }
 }
 
-const selectValidacaoUsuario = async (email, senha) => {
 
-    try {
-        let sql = `select tu.id, tu.nome, tu.email from tbl_usuario as tu where email = '${email}' and senha = md5('${senha}')`
-        let rsUsuario = await prisma.$queryRawUnsafe(sql)
-        return rsUsuario        
-    } catch (error) {
+
+
+/********************************* Perfil aluno **************************************/
+
+const updateAlunoFotoPerfil = async function (id, dadosAluno) {
+
+    let sql  
+
+
+    try{
+        sql = `update tbl_aluno set
+            foto_perfil = '${dadosAluno.foto_perfil}'
+            where tbl_aluno.id_aluno = ${id}`
+            
+        let rsAluno = await prisma.$executeRawUnsafe(sql)
+    
+        if (rsAluno)
+        return true
+        else
+        return false 
+    }catch(error){
         return false
     }
 
 }
+
+
+
 
 
 module.exports = {
@@ -238,5 +257,6 @@ module.exports = {
     insertAluno,
     selectUltimoIdAluno,
     updateAluno,
-    deleteAluno
+    deleteAluno,
+    updateAlunoFotoPerfil
 }

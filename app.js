@@ -83,10 +83,10 @@ app.post('/v1/sinalibras/alunos', cors(), bodyParserJson, async function (reques
     let contentType = request.headers['content-type']
 
     let dadosBody = request.body
-    let resultadoNovoUsuario = await controllerAluno.setInserirNovoAluno(dadosBody,contentType)
+    let ressultadoNovaFoto = await controllerAluno.setInserirNovoAluno(dadosBody,contentType)
 
-    response.status(resultadoNovoUsuario.status_code)
-    response.json(resultadoNovoUsuario)
+    response.status(ressultadoNovaFoto.status_code)
+    response.json(ressultadoNovaFoto)
 })
 
 
@@ -95,12 +95,12 @@ app.put('/v1/sinalibras/alunos/:id', cors(), bodyParserJson, async function(requ
     let idUsuario = request.params.id
 
     let dadosBody = request.body
-    let resultadoNovoUsuario = await controllerAluno.setAtualizarAluno(idUsuario, dadosBody, contentType)
+    let ressultadoNovaFoto = await controllerAluno.setAtualizarAluno(idUsuario, dadosBody, contentType)
 
-    response.status(resultadoNovoUsuario.status_code)
+    response.status(ressultadoNovaFoto.status_code)
    
     
-    response.json(resultadoNovoUsuario)
+    response.json(ressultadoNovaFoto)
 })
 
 app.delete('/v1/sinalibras/aluno/:id', cors(), async function(request,response){
@@ -113,6 +113,22 @@ app.delete('/v1/sinalibras/aluno/:id', cors(), async function(request,response){
     response.status(dadosUsuario.status_code)
     response.json(dadosUsuario)
 
+})
+
+
+/********************************** Perfil Aluno ************************/
+
+app.put('/v1/sinalibras/perfilAluno/:id', cors(), bodyParserJson, async function(request,response){
+    let contentType = request.headers['content-type']
+    let idUsuario = request.params.id
+
+    let dadosBody = request.body
+    let resultadoNovaFoto = await controllerAluno.setAtualizarFotoPerfilAluno(idUsuario, dadosBody, contentType)
+
+    response.status(resultadoNovaFoto.status_code)
+   
+    
+    response.json(resultadoNovaFoto)
 })
 
 /*********************** Professor *****************************/

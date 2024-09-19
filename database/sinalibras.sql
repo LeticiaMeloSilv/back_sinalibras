@@ -7,7 +7,7 @@ use db_sinalibras;
 CREATE TABLE `tbl_usuario_teste` (
   `id_usuario_teste` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `email` VARCHAR(255) NOT NULL,
-  `data` DATE NOT NULL)
+  `data` DATE NOT NULL)	
 ENGINE = InnoDB;
 
 CREATE TABLE `tbl_resposta_usuario` (

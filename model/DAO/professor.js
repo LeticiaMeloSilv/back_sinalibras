@@ -27,7 +27,7 @@ const selectAllProfessores = async function (){
 
 const selectByIdProfessor = async function (id){
     try{
-        let sql = `select * from tbl_professor where id = ${id}`
+        let sql = `select * from tbl_professor where id_professor = ${id}`
 
         let rsProfessor = await prisma.$queryRawUnsafe(sql)
 
@@ -54,12 +54,14 @@ const insertProfessor = async function(dadosProfessor){
        
     sql = `insert into tbl_professor ( 
                             nome, 
+                            data_cadastro
                             email,
                             senha,
                             data_nascimento,
                             foto_perfil
                             ) values (
                                 '${dadosProfessor.nome}',
+                                '${dadosProfessor.data_cadastro}',
                                 '${dadosProfessor.email}',
                                 '${dadosProfessor.senha}',
                                 '${dadosProfessor.data_nascimento}',
@@ -70,12 +72,14 @@ const insertProfessor = async function(dadosProfessor){
 
               sql =  `insert into tbl_professor ( 
                             nome, 
+                            data_cadastro,
                             email,
                             senha,
                             data_nascimento,
                             foto_perfil
                             ) values (
                                 '${dadosProfessor.nome}',
+                                '${dadosProfessor.data_cadastro}',
                                 '${dadosProfessor.email}',
                                 '${dadosProfessor.senha}',
                                 '${dadosProfessor.data_nascimento}',
@@ -99,7 +103,7 @@ const insertProfessor = async function(dadosProfessor){
 
     const selectUltimoIdProfessor = async function (){
         try{
-           let sql = `select cast(last_insert_id()as DECIMAL) as id from tbl_professor limit 1;`
+           let sql = `select cast(last_insert_id()as DECIMAL) as id_professor from tbl_professor limit 1;`
    
            let rsProfessor = await prisma.$queryRawUnsafe(sql);
            return rsProfessor
@@ -128,7 +132,7 @@ const insertProfessor = async function(dadosProfessor){
             senha =  '${dadosProfessor.senha}',
             data_nascimento =  '${dadosProfessor.data_nascimento}',
             foto_perfil = '${dadosProfessor.foto_perfil}'
-            where tbl_professor.id = ${id}`
+            where tbl_professor.id_professor = ${id}`
 
             }else{
 
@@ -138,7 +142,7 @@ const insertProfessor = async function(dadosProfessor){
                 senha =  '${dadosProfessor.senha}',
                 data_nascimento =  '${dadosProfessor.data_nascimento}',
                 foto_perfil = null
-                where tbl_professor.id = ${id}`
+                where tbl_professor.id_professor = ${id}`
 
 
             }
@@ -160,7 +164,7 @@ const deleteProfessor = async function (id){
 
     try {
    
-       let sql = `delete from tbl_professor  where id = ${id}`
+       let sql = `delete from tbl_professor  where id_professor = ${id}`
    
        let rsProfessor = await prisma.$executeRawUnsafe(sql);  
       

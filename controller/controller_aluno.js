@@ -8,7 +8,7 @@
 
 const message = require('../modulo/config.js')
 const alunoDao = require('../model/DAO/aluno.js');
-const data = require('./validacao_data.js')
+const data = require('./validacoes.js')
 
 
 const getListarAlunos = async function () {
@@ -18,6 +18,12 @@ const getListarAlunos = async function () {
 
     //Chama a funcão do DAO para retornar os dados da tabela de filmes
     let dadosUsuarios = await alunoDao.selectAllAlunos();
+   
+       
+
+    if(dadosUsuarios.data_nascimento){
+        dadosUsuarios.data_nascimento = data.converterDataBR(dadosUsuarios.data_nascimento)
+    }
 
     // Validação para verificar s existem dados 
     if (dadosUsuarios) {
@@ -150,7 +156,7 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
                 return message.ERROR_REQUIRED_FIELDS
             }
 
-            if (!dadosAluno.data_nascimento || !data.validarData(dadosAluno.data_nascimento)) {
+            if (!dadosAluno.data_nascimento ||!data.validarData(dadosAluno.data_nascimento)) {
                 return message.ERROR_INVALID_DATA 
             }
 
@@ -158,10 +164,7 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
                 dadosAluno.data_nascimento = dadosAluno.data_nascimento.replaceAll("/","-")
             }
                
-            if(dadosAluno.data_nascimento){
-                dadosAluno.data_nascimento = data.converterData(dadosAluno.data_nascimento)
-            }
-
+           
 
 
                 let novoAluno= await alunoDao.insertAluno(dadosAluno)
@@ -225,7 +228,7 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
 
                     if (String(contentType).toLowerCase() == 'application/json'){
 
-                        let updateUsuarioJSON = {}
+                        let updateFotoAlunoJSON= {}
 
                         if(
                             dadosAluno.nome == '' || dadosAluno.nome == undefined || dadosAluno.nome == null || dadosAluno.nome.length > 255||
@@ -240,16 +243,16 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
                             return message.ERROR_INVALID_DATA 
                         }
 
-                            let usuarioAtualizado = await alunoDao.updateAluno(id, dadosAluno)
+                            let fotoPerfilAlunoAtualizado = await alunoDao.updateAluno(id, dadosAluno)
             
-                            if (usuarioAtualizado){
+                            if (fotoPerfilAlunoAtualizado){
                             
-                               updateUsuarioJSON.aluno = dadosAluno
-                               updateUsuarioJSON.status = message.SUCESS_UPDATED_ITEM.status
-                               updateUsuarioJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
-                               updateUsuarioJSON.message = message.SUCESS_UPDATED_ITEM.message
+                               updateFotoAlunoJSON.aluno = dadosAluno
+                               updateFotoAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
+                               updateFotoAlunoJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
+                               updateFotoAlunoJSON.message = message.SUCESS_UPDATED_ITEM.message
                                 
-                                return updateUsuarioJSON //201
+                                return updateFotoAlunoJSON//201
                             }else {
                           
                                 return message.ERROR_INTERNAL_SERVER_DB // 500 
@@ -308,7 +311,69 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
         
     }
 
+    /*********************************** Aluno Perfil ************************************** */
+
+    const setAtualizarFotoPerfilAluno = async function (id, dadosAluno, contentType){
+
+   
+        let idUsuario = id
     
+      
+    
+        if (idUsuario== '' || idUsuario == undefined || isNaN(idUsuario)) {
+            return message.ERROR_INVALID_ID; 
+            }else {
+              
+                let result = await alunoDao.selectByIdAluno(idUsuario)
+                let verificarId = result.length
+                if (verificarId > 0) {
+                    
+                    try{
+    
+                        if (String(contentType).toLowerCase() == 'application/json'){
+    
+                            let updateFotoAlunoJSON= {}
+    
+                            if( 
+                                 dadosAluno.foto_perfil == undefined || dadosAluno.foto_perfil == "" || dadosAluno.foto_perfil.length > 255
+                             ){
+                                return message.ERROR_REQUIRED_FIELDS
+                             }
+    
+                                let fotoPerfilAtualizado = await alunoDao.updateAlunoFotoPerfil(id, dadosAluno)
+                
+                                if (fotoPerfilAtualizado){
+                                
+                                   updateFotoAlunoJSON.Atualizacao = dadosAluno
+                                   updateFotoAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
+                                   updateFotoAlunoJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
+                                   updateFotoAlunoJSON.message = message.SUCESS_UPDATED_ITEM.message
+                                    
+                                    return updateFotoAlunoJSON//201
+                                }else {
+                              
+                                    return message.ERROR_INTERNAL_SERVER_DB // 500 
+                                }
+    
+    
+                            
+    
+                        }else{
+                            return message.ERROR_CONTENT_TYPE
+                        }
+                    }catch(error){
+                    
+                        return message.ERROR_INTERNAL_SERVER
+                    }
+                }else{
+                    return message.ERROR_NOT_FOUND_ID
+                }
+    
+            
+    
+            }
+        
+        }
     
 
 
@@ -322,5 +387,6 @@ module.exports = {
     getBuscarAlunoEmail,
     setInserirNovoAluno,
     setAtualizarAluno,
-    setExcluirAluno
+    setExcluirAluno,
+    setAtualizarFotoPerfilAluno
 }
