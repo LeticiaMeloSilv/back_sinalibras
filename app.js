@@ -116,6 +116,7 @@ app.delete('/v1/sinalibras/aluno/:id', cors(), async function(request,response){
 })
 
 
+
 /********************************** Perfil Aluno ************************/
 
 app.put('/v1/sinalibras/perfilAluno/:id', cors(), bodyParserJson, async function(request,response){
@@ -130,6 +131,20 @@ app.put('/v1/sinalibras/perfilAluno/:id', cors(), bodyParserJson, async function
     
     response.json(resultadoNovaFoto)
 })
+
+app.put('/v1/sinalibras/aluno/:id', cors(), bodyParserJson, async function(request,response){
+    let contentType = request.headers['content-type']
+    let idUsuario = request.params.id
+
+    let dadosBody = request.body
+    let resultadoNovaSenha = await controllerAluno.setAtualizarSenhaAluno(idUsuario, dadosBody, contentType)
+
+    response.status(resultadoNovaSenha.status_code)
+   
+    
+    response.json(resultadoNovaSenha)
+})
+
 
 /*********************** Professor *****************************/
 
@@ -210,6 +225,35 @@ app.get('/v1/sinalibras/professoremail/:email', cors(), async function(request,r
             response.json(professor);
              response.status(professor.status_code)
      })
+
+
+     /********************************** Perfil Professor ************************/
+
+app.put('/v1/sinalibras/perfilProfessor/:id', cors(), bodyParserJson, async function(request,response){
+    let contentType = request.headers['content-type']
+    let idUsuario = request.params.id
+
+    let dadosBody = request.body
+    let resultadoNovaFoto = await controllerProfessor.setAtualizarFotoPerfilProfessor(idUsuario, dadosBody, contentType)
+
+    response.status(resultadoNovaFoto.status_code)
+   
+    
+    response.json(resultadoNovaFoto)
+})
+
+app.put('/v1/sinalibras/professor/:id', cors(), bodyParserJson, async function(request,response){
+    let contentType = request.headers['content-type']
+    let idUsuario = request.params.id
+
+    let dadosBody = request.body
+    let resultadoNovaSenha = await controllerProfessor.setAtualizarSenhaProf(idUsuario, dadosBody, contentType)
+
+    response.status(resultadoNovaSenha.status_code)
+   
+    
+    response.json(resultadoNovaSenha)
+})
 
 
 

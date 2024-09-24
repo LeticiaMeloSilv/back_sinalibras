@@ -12,6 +12,19 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 
+const selectValidarAluno = async function (email,senha){
+ let sql = `select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta
+ where email = '${email}' and senha = md5('${senha}')`
+
+    let rsUsuario = await prisma.$queryRawUnsafe
+    if(rsUsuario){
+        return rsAluno
+    }else{
+        return false
+    }
+}
+
+
 const selectAllAlunos = async function (){
     
     let sql = 'select * from tbl_aluno'
@@ -65,7 +78,7 @@ const insertAluno = async function(dadosAluno){
                                  '${dadosAluno.nome}',
                                    '${dadosAluno.data_cadastro}',
                                     '${dadosAluno.email}',
-                                    '${dadosAluno.senha}',
+                                    MD5('${dadosAluno.senha}'),
                                     '${dadosAluno.data_nascimento}',
                                     '${dadosAluno.foto_perfil}'
                                 )`
@@ -83,7 +96,7 @@ const insertAluno = async function(dadosAluno){
                                     '${dadosAluno.nome}',
                                     '${dadosAluno.data_cadastro}',
                                     '${dadosAluno.email}',
-                                    '${dadosAluno.senha}',
+                                    MD5('${dadosAluno.senha}'),
                                     '${dadosAluno.data_nascimento}',
                                      null
                                 )`
@@ -150,7 +163,7 @@ const updateAluno = async function (id, dadosAluno) {
                 nome =  '${dadosAluno.nome}',
                 data_cadastro =  '${dadosAluno.data_cadastro}',
                 email =  '${dadosAluno.email}',
-                senha =  '${dadosAluno.senha}',
+                senha =  md5('${dadosAluno.senha}'),
                 data_nascimento =  '${dadosAluno.data_nascimento}',
                 foto_perfil = null
                 where tbl_aluno.id_aluno = ${id}`
@@ -219,12 +232,6 @@ const selectAlunoByEmail = async function (email){
 }
 
 
-const updateSenhaAluno = async function  (id, dadosAluno) {
-    
-}
-
-
-
 
 /********************************* Perfil aluno **************************************/
 
@@ -250,6 +257,26 @@ const updateAlunoFotoPerfil = async function (id, dadosAluno) {
 
 }
 
+const updateSenhaAluno = async function  (id, dadosAluno) {
+    
+    let sql 
+
+    try{
+
+        sql = `UPDATE tbl_aluno SET 
+                senha = md5('${dadosAluno.senha}') 
+                WHERE id_aluno = ${id}`
+
+          let rsAluno = await prisma.$executeRawUnsafe(sql)    
+          if(rsAluno){
+            return rsAluno
+          }  
+    }catch(error){
+        return false 
+    }
+}
+
+
 
 
 
@@ -263,5 +290,7 @@ module.exports = {
     selectUltimoIdAluno,
     updateAluno,
     deleteAluno,
-    updateAlunoFotoPerfil
+    updateAlunoFotoPerfil,
+    updateSenhaAluno,
+    selectValidarAluno
 }

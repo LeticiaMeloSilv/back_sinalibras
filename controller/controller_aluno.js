@@ -201,7 +201,7 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
         
     }catch(error){
         
-        
+        console.log(error);
         
         return message.ERROR_INTERNAL_SERVER //500 erro na controller
 
@@ -228,7 +228,7 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
 
                     if (String(contentType).toLowerCase() == 'application/json'){
 
-                        let updateFotoAlunoJSON= {}
+                        let updateSenhaAlunoJSON= {}
 
                         if(
                             dadosAluno.nome == '' || dadosAluno.nome == undefined || dadosAluno.nome == null || dadosAluno.nome.length > 255||
@@ -247,12 +247,12 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
             
                             if (fotoPerfilAlunoAtualizado){
                             
-                               updateFotoAlunoJSON.aluno = dadosAluno
-                               updateFotoAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
-                               updateFotoAlunoJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
-                               updateFotoAlunoJSON.message = message.SUCESS_UPDATED_ITEM.message
+                               updateSenhaAlunoJSON.aluno = dadosAluno
+                               updateSenhaAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
+                               updateSenhaAlunoJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
+                               updateSenhaAlunoJSON.message = message.SUCESS_UPDATED_ITEM.message
                                 
-                                return updateFotoAlunoJSON//201
+                                return updateSenhaAlunoJSON//201
                             }else {
                           
                                 return message.ERROR_INTERNAL_SERVER_DB // 500 
@@ -342,9 +342,9 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
                                 return message.ERROR_REQUIRED_FIELDS
                              }
     
-                                let fotoPerfilAtualizado = await alunoDao.updateAlunoFotoPerfil(id, dadosAluno)
+                                let fotoAtualizada = await alunoDao.updateAlunoFotoPerfil(id, dadosAluno)
                 
-                                if (fotoPerfilAtualizado){
+                                if (fotoAtualizada){
                                 
                                    updateFotoAlunoJSON.Atualizacao = dadosAluno
                                    updateFotoAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
@@ -379,6 +379,70 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
     
 
 
+        const setAtualizarSenhaAluno = async function (id, dadosAluno, contentType){
+
+   
+            let idUsuario = id
+        
+          
+        
+            if (idUsuario== '' || idUsuario == undefined || isNaN(idUsuario)) {
+                return message.ERROR_INVALID_ID; 
+                }else {
+                  
+                    let result = await alunoDao.selectByIdAluno(idUsuario)
+                    let verificarId = result.length
+                    if (verificarId > 0) {
+                        
+                        try{
+        
+                            if (String(contentType).toLowerCase() == 'application/json'){
+        
+                                let updateSenhaAlunoJSON= {}
+        
+                                if( 
+                                     dadosAluno.senha == undefined || dadosAluno.senha == "" || dadosAluno.senha.length > 8 || dadosAluno.senha.length < 8 
+                                 ){
+                                    return message.ERROR_REQUIRED_FIELDS
+                                 }
+        
+                                    let senhaAtualizada = await alunoDao.updateSenhaAluno(id, dadosAluno)
+                    
+                                    if (senhaAtualizada){
+                                    
+                                       //updateSenhaAlunoJSON.DadosUsuario = dadosAluno
+                                       updateSenhaAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
+                                       updateSenhaAlunoJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
+                                       updateSenhaAlunoJSON.message = message.SUCESS_UPDATED_ITEM.message
+                                        
+                                        return updateSenhaAlunoJSON//201
+                                    }else {
+                                  
+                                        return message.ERROR_INTERNAL_SERVER_DB // 500 
+                                    }
+        
+        
+                                
+        
+                            }else{
+                                return message.ERROR_CONTENT_TYPE
+                            }
+                        }catch(error){
+                        
+                            return message.ERROR_INTERNAL_SERVER
+                        }
+                    }else{
+                        return message.ERROR_NOT_FOUND_ID
+                    }
+        
+                
+        
+                }
+            
+            }
+        
+
+
 
 
 
@@ -390,5 +454,6 @@ module.exports = {
     setInserirNovoAluno,
     setAtualizarAluno,
     setExcluirAluno,
-    setAtualizarFotoPerfilAluno
+    setAtualizarFotoPerfilAluno,
+    setAtualizarSenhaAluno
 }

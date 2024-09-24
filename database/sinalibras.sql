@@ -33,20 +33,24 @@ CREATE TABLE `tbl_professor` (
   `nome` VARCHAR(250) NOT NULL,
   `data_cadastro` DATE NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `senha` VARCHAR(8) NOT NULL,
+  `senha` varchar (255) not null,
   `data_nascimento` DATE NOT NULL,
   `foto_perfil` VARCHAR(255) NULL)
 ENGINE = InnoDB;
+
+alter table tbl_professor
+	modify column senha varchar (255) not null;
 
 CREATE TABLE `tbl_aluno` (
   `id_aluno` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `nome` VARCHAR(250) NOT NULL,
   `data_cadastro` DATE NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `senha` VARCHAR(8) NOT NULL,
+  `senha`varchar(255) not null,
   `data_nascimento` DATE NOT NULL,
   `foto_perfil` VARCHAR(255) NULL)
 ENGINE = InnoDB;
+
 
 CREATE TABLE `tbl_perguntas` (
   `id_pergunta` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -178,4 +182,25 @@ insert into tbl_aluno (
                                     '2000-10-23',
                                     'xxxxxxxx'
                                 );
+                                
+                                
+                                
+                                insert into tbl_aluno ( 
+                                nome, 
+                                data_cadastro,
+                                email,
+                                senha,
+                                data_nascimento,
+                                foto_perfil
+                                ) values (
+                                    'ju',
+                                    '2000-6-8',
+                                    'lladgfdf',
+                                    MD5('1234'),
+                                    '2000-09-12',
+                                     null
+                                );
 
+
+select * from tbl_aluno;
+select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta where email = 'mu@mu' and senha = md5('12345678');

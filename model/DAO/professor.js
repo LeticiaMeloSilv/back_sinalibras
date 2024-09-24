@@ -12,6 +12,18 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
+const selectValidarProf = async function (email,senha){
+    let sql = `select tp.id_professor, tp.nome, tp.email from tbl_professor as tp 
+    where email = '${email}' and senha = md5('${senha}')`
+   
+       let rsProfessor = await prisma.$queryRawUnsafe
+       if(rsProfessor){
+           return rsAluno
+       }else{
+           return false
+       }
+   }
+
 
 const selectAllProfessores = async function (){
     
@@ -54,7 +66,7 @@ const insertProfessor = async function(dadosProfessor){
        
     sql = `insert into tbl_professor ( 
                             nome, 
-                            data_cadastro
+                            data_cadastro,
                             email,
                             senha,
                             data_nascimento,
@@ -63,7 +75,7 @@ const insertProfessor = async function(dadosProfessor){
                                 '${dadosProfessor.nome}',
                                 '${dadosProfessor.data_cadastro}',
                                 '${dadosProfessor.email}',
-                                '${dadosProfessor.senha}',
+                                md5('${dadosProfessor.senha}'),
                                 '${dadosProfessor.data_nascimento}',
                                 '${dadosProfessor.foto_perfil}'
                             )`
@@ -81,7 +93,7 @@ const insertProfessor = async function(dadosProfessor){
                                 '${dadosProfessor.nome}',
                                 '${dadosProfessor.data_cadastro}',
                                 '${dadosProfessor.email}',
-                                '${dadosProfessor.senha}',
+                                md5('${dadosProfessor.senha}'),
                                 '${dadosProfessor.data_nascimento}',
                                  null
                             )`
@@ -129,7 +141,7 @@ const insertProfessor = async function(dadosProfessor){
         sql = `update tbl_professor set
             nome =  '${dadosProfessor.nome}',
             email =  '${dadosProfessor.email}',
-            senha =  '${dadosProfessor.senha}',
+            senha =  md5('${dadosProfessor.senha}'),
             data_nascimento =  '${dadosProfessor.data_nascimento}',
             foto_perfil = '${dadosProfessor.foto_perfil}'
             where tbl_professor.id_professor = ${id}`
@@ -139,7 +151,7 @@ const insertProfessor = async function(dadosProfessor){
                 sql = `update tbl_professor set
                 nome =  '${dadosProfessor.nome}',
                 email =  '${dadosProfessor.email}',
-                senha =  '${dadosProfessor.senha}',
+                senha =  md5('${dadosProfessor.senha}'),
                 data_nascimento =  '${dadosProfessor.data_nascimento}',
                 foto_perfil = null
                 where tbl_professor.id_professor = ${id}`
@@ -182,8 +194,8 @@ const selectProfessorByNome = async function (nome){
     try{
         let sql = `select * from tbl_professor where nome LIKE "%${nome}%"`
        
-        let rsUsuario = await prisma.$queryRawUnsafe(sql);
-        return rsUsuario;
+        let rsProfessor = await prisma.$queryRawUnsafe(sql);
+        return rsProfessor;
     } catch (error) {
         return false
     }
@@ -205,6 +217,50 @@ const selectProfessorByEmail = async function (email){
 }
 
 
+/********************************* Perfil professor **************************************/
+
+const updateProfessorFotoPerfil = async function (id, dadosProfessor) {
+
+    let sql  
+
+
+    try{
+        sql = `update tbl_professor set
+            foto_perfil = '${dadosProfessor.foto_perfil}'
+            where tbl_professor.id_professor = ${id}`
+            
+        let rsProfessor = await prisma.$executeRawUnsafe(sql)
+    
+        if (rsProfessor)
+        return true
+        else
+        return false 
+    }catch(error){
+        return false
+    }
+
+}
+
+const updateSenhaProfessor = async function  (id, dadosProfessor) {
+    
+    let sql 
+
+    try{
+
+        sql = `UPDATE tbl_professor SET 
+                senha = md5('${dadosProfessor.senha}') 
+                WHERE id_professor = ${id}`
+
+          let rsProfessor = await prisma.$executeRawUnsafe(sql)    
+          if(rsProfessor){
+            return rsProfessor
+          }  
+    }catch(error){
+        return false 
+    }
+}
+
+
 module.exports = {
     selectAllProfessores,
     selectByIdProfessor,
@@ -213,5 +269,8 @@ module.exports = {
     selectUltimoIdProfessor,
     deleteProfessor,
     updateProfessor,
-    insertProfessor
+    insertProfessor,
+    updateProfessorFotoPerfil,
+    updateSenhaProfessor,
+    selectValidarProf
 }
