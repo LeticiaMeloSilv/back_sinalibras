@@ -311,6 +311,8 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
         
     }
 
+    
+
     /*********************************** Aluno Perfil ************************************** */
 
     const setAtualizarFotoPerfilAluno = async function (id, dadosAluno, contentType){

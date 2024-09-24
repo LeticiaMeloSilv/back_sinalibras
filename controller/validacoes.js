@@ -95,6 +95,24 @@ const partes = data.split('-');
     
     }
 
+
+    const getListaDeEstados = function(){
+      let arrayLocal = []
+      let jsonEstados = {}
+     
+      estadosC.estadosCidades.estados.forEach(estado =>{
+          arrayLocal.push(estado.sigla)
+      });
+  
+  
+      jsonEstados.uf = arrayLocal
+      jsonEstados.quantidade = arrayLocal.length
+  
+  
+       
+      return jsonEstados
+    }
+
     
 
 module.exports = {

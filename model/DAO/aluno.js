@@ -219,6 +219,11 @@ const selectAlunoByEmail = async function (email){
 }
 
 
+const updateSenhaAluno = async function  (id, dadosAluno) {
+    
+}
+
+
 
 
 /********************************* Perfil aluno **************************************/

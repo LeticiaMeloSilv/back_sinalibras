@@ -226,6 +226,19 @@ app.post('/v1/sinalibras/questao', cors(), bodyParserJson, async function (reque
 })
 
 
+app.get('/v1/sinalibras/questao/:id', cors(), async function(request,response,next){
+
+    let idQuestao = request.params.id;
+
+    //Encaminh o ID para o controller buscar o filme
+    let dadosQuestao = await controllerQuestao.getBuscarQuestoes(idQuestao)
+
+    response.status(dadosQuestao.status_code);
+    response.json(dadosQuestao);
+
+});
+
+
 
 app.listen('8080', function(){
     console.log("API funcionando e aguardando requisições");

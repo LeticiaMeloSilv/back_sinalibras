@@ -60,6 +60,44 @@ console.log(dadosQuestao);
     }
 }
 
+const getBuscarQuestoes = async function (id){
+    let idquestao = id 
+
+    let questaoJSON = {}
+
+    if (idquestao == '' || idquestao == undefined || isNaN(idquestao)) {
+        return message.ERROR_INVALID_ID; //400
+    } else {
+
+       
+        let dadosQuestao = await questaoDAO.selectQuestoesAternativas(idquestao)
+        console.log(dadosQuestao);
+        
+       
+        if (dadosQuestao) {
+
+            
+            if (dadosQuestao.length > 0) {
+                questaoJSON.questao = dadosQuestao;
+                questaoJSON.status_code = 200;
+
+                return questaoJSON
+                
+            } else {
+                return message.ERROR_NOT_FOUND; //404
+            }
+
+        } else {
+            return message.ERROR_INTERNAL_SERVER_DB; //500
+        }
+    }
+
+}
+
+
+
+
 module.exports = {
-    setInserirNovaQuestao
+    setInserirNovaQuestao,
+    getBuscarQuestoes
 }
