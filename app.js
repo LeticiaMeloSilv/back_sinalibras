@@ -148,7 +148,7 @@ app.put('/v1/sinalibras/aluno/:id', cors(), bodyParserJson, async function(reque
 
 /*********************** Professor *****************************/
 
-app.post('/v1/sinalibras/professor', cors(), bodyParserJson, async function (request, response){
+app.post('/v1/sinalibras/professor/cadastro', cors(), bodyParserJson, async function (request, response){
     let contentType = request.headers['content-type']
 
     let dadosBody = request.body
@@ -158,7 +158,7 @@ app.post('/v1/sinalibras/professor', cors(), bodyParserJson, async function (req
     response.json(resultadoNovaQuestao)
 })
 
-app.put('/v1/sinalibras/professor/:id', cors(), bodyParserJson, async function(request,response){
+app.put('/v1/sinalibras/professor/edit/:id', cors(), bodyParserJson, async function(request,response){
     let contentType = request.headers['content-type']
     let idProfessor = request.params.id
 
@@ -169,7 +169,7 @@ app.put('/v1/sinalibras/professor/:id', cors(), bodyParserJson, async function(r
     response.json(resultadoNovaQuestao)
 })
 
-app.delete('/v1/sinalibras/professor/:id', cors(), async function(request,response){
+app.delete('/v1/sinalibras/professor/delete/:id', cors(), async function(request,response){
 
     let idProfessor = request.params.id
 
@@ -181,11 +181,11 @@ app.delete('/v1/sinalibras/professor/:id', cors(), async function(request,respon
 
 app.get('/v1/sinalibras/professores', cors(), async function(request, response){
 
-    //Chama a função da controller para retorNAR FILMES
+    //Chama a função da controller para retornar os professores
     let dadosProfessores = await controllerProfessor.getListarProfessores();
 
     //Validação para retornar o JSON dos filmes ou retornar o 404
-    if(dadosProfessores.length > 0){
+    if(dadosProfessores){
         response.json(dadosProfessores);
         response.status(200);
     }else{
@@ -207,7 +207,7 @@ app.get('/v1/sinalibras/professor/:id', cors(), async function(request,response,
 
 });
 
-app.get('/v1/sinalibras/professorNome/:nome', cors(), async function(request,response,next){
+app.get('/v1/sinalibras/professor/buscar/:nome', cors(), async function(request,response,next){
 
         let nomeProfessor = request.query.nome
         let professorNome = await controllerProfessor.getBuscarProfessorNome(nomeProfessor)
@@ -217,7 +217,7 @@ app.get('/v1/sinalibras/professorNome/:nome', cors(), async function(request,res
      })
 
 
-app.get('/v1/sinalibras/professoremail/:email', cors(), async function(request,response,next){
+app.get('/v1/sinalibras/professor/pesquisar/:email', cors(), async function(request,response,next){
 
         let emailProfessor = request.query.email
         let professor = await controllerProfessor.getBuscarProfessorEmail(emailProfessor)
@@ -229,7 +229,7 @@ app.get('/v1/sinalibras/professoremail/:email', cors(), async function(request,r
 
      /********************************** Perfil Professor ************************/
 
-app.put('/v1/sinalibras/perfilProfessor/:id', cors(), bodyParserJson, async function(request,response){
+app.put('/v1/sinalibras/professor/editPerfil/foto/:id', cors(), bodyParserJson, async function(request,response){
     let contentType = request.headers['content-type']
     let idUsuario = request.params.id
 
@@ -242,7 +242,7 @@ app.put('/v1/sinalibras/perfilProfessor/:id', cors(), bodyParserJson, async func
     response.json(resultadoNovaFoto)
 })
 
-app.put('/v1/sinalibras/professor/:id', cors(), bodyParserJson, async function(request,response){
+app.put('/v1/sinalibras/professor/editPefil/password/:id', cors(), bodyParserJson, async function(request,response){
     let contentType = request.headers['content-type']
     let idUsuario = request.params.id
 
@@ -276,6 +276,7 @@ app.get('/v1/sinalibras/questao/:id', cors(), async function(request,response,ne
 
     //Encaminh o ID para o controller buscar o filme
     let dadosQuestao = await controllerQuestao.getBuscarQuestoes(idQuestao)
+
 
     response.status(dadosQuestao.status_code);
     response.json(dadosQuestao);

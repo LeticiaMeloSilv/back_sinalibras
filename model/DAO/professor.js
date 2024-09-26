@@ -119,8 +119,6 @@ const insertProfessor = async function(dadosProfessor){
    
            let rsProfessor = await prisma.$queryRawUnsafe(sql);
            return rsProfessor
-   
-           
         } catch (error) {
            return false
        }

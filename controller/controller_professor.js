@@ -143,8 +143,8 @@ const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
             if(
                dadosProfessor.nome == '' || dadosProfessor.nome == undefined || dadosProfessor.nome == null || dadosProfessor.nome.length > 255||
                dadosProfessor.email == "" || dadosProfessor.email == undefined || dadosProfessor.email == null|| dadosProfessor.email.length > 255||
-               dadosProfessor.senha == "" || dadosProfessor.senha == undefined || dadosProfessor.senha == null||  dadosProfessor.senha.length > 8 || 
-               dadosProfessor.foto_perfil == undefined || dadosProfessor.foto_perfil == "" || dadosProfessor.foto_perfil.length > 255
+               dadosProfessor.senha == "" || dadosProfessor.senha == undefined || dadosProfessor.senha == null||  dadosProfessor.senha.length > 8 || dadosProfessor.senha.length < 8 ||
+               dadosProfessor.foto_perfil.length > 255
             ){
                 return message.ERROR_REQUIRED_FIELDS
             }
@@ -159,7 +159,7 @@ const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
                 
                     let ultimoID = await professorDAO.selectUltimoIdProfessor()
                    
-                    dadosProfessor.id = Number(ultimoID[0].id)
+                    dadosProfessor.id_professor = Number(ultimoID[0].id_professor)
                     
                 }
                 

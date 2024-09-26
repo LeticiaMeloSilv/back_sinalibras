@@ -176,7 +176,7 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
                     let ultimoID = await alunoDao.selectUltimoIdAluno()
                   
                     
-                    dadosAluno.id_aluno= Number(ultimoID[0].id_aluno)
+                    dadosAluno.id_aluno = Number(ultimoID[0].id_aluno)
                     
                     
                 }

@@ -18,7 +18,6 @@ const setInserirNovaQuestao = async function (dadosQuestao, contentType) {
         if (String(contentType).toLowerCase() == 'application/json'){
           
             let novaQuestaoJSON = {}
-console.log(dadosQuestao);
             if(
               dadosQuestao.p_pergunta == '' ||dadosQuestao.p_pergunta == undefined ||dadosQuestao.p_pergunta == null ||dadosQuestao.p_pergunta.length > 25||
               dadosQuestao.p_video == "" ||dadosQuestao.p_video == undefined ||dadosQuestao.p_video == null||dadosQuestao.p_video.length > 250||
@@ -63,24 +62,43 @@ console.log(dadosQuestao);
 const getBuscarQuestoes = async function (id){
     let idquestao = id 
 
-    let questaoJSON = {}
+   
 
     if (idquestao == '' || idquestao == undefined || isNaN(idquestao)) {
         return message.ERROR_INVALID_ID; //400
     } else {
-
-       
-        let dadosQuestao = await questaoDAO.selectQuestoesAternativas(idquestao)
-        console.log(dadosQuestao);
         
        
-        if (dadosQuestao) {
+        let dadosQuestao = await questaoDAO.selectQuestoesAternativas(idquestao)
+        
+            if(dadosQuestao){
+            let jsonQuestao = {}
+         
+            let questaoJSON = {}
+            let alternativas = []
+      
+
+            dadosQuestao.forEach(questao => {
+                const alternativa = {}
+                jsonQuestao.id_pergunta = questao.id_pergunta;
+                jsonQuestao.pergunta = questao.pergunta;
+                jsonQuestao.video = questao.video; 
+                jsonQuestao.alternativas = alternativas
+                  
+                  alternativa.id_alternativa =  questao.id_alternativa,
+                  alternativa.alternativa = questao.alternativa,
+                  alternativa.status = questao.status
+
+                
+                  alternativas.push(alternativa)
+
+            });
 
             
+    
             if (dadosQuestao.length > 0) {
-                questaoJSON.questao = dadosQuestao;
+                questaoJSON.questao = jsonQuestao;
                 questaoJSON.status_code = 200;
-
                 return questaoJSON
                 
             } else {
@@ -94,7 +112,7 @@ const getBuscarQuestoes = async function (id){
 
 }
 
-
+getBuscarQuestoes(1)
 
 
 module.exports = {
