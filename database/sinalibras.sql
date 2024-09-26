@@ -38,7 +38,7 @@ CREATE TABLE `tbl_professor` (
   `foto_perfil` VARCHAR(255) NULL)
 ENGINE = InnoDB;
 
-alter table tbl_aluno
+alter table tbl_professor
 	modify column senha varchar (255) not null;
 
 CREATE TABLE `tbl_aluno` (
@@ -151,21 +151,20 @@ END//
 DELIMITER ;
 
 CALL inserir_questao_com_alternativas(
-    'Qual é a capital do Brasil?', 
+    'Qual é a capital da França?', 
     'video1.mp4', 
-    'Brasilia,1;São Paulo,0;Rio de Janeiro,0'
+    'Paris,1;Londres,0;Berlim,0'
 );
 
 
 create view pergunta_alternativas as
-select p.id_pergunta, p.pergunta, p.video, a.id_alternativa, a.alternativa, a.status
+select p.id_pergunta, p.pergunta, p.video, a.alternativa, a.status
 from tbl_alternativas as a
 inner join tbl_perguntas as p
 on a.id_pergunta = p.id_pergunta;
 
 
-
-select * from pergunta_alternativas where id_pergunta = 1;
+select * from pergunta_alternativas where id_pergunta = 2;
 
 
 insert into tbl_aluno ( 
@@ -203,5 +202,10 @@ insert into tbl_aluno (
                                 );
 
 
-select * from tbl_professor;
-select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta where email = 'mu@mu' and senha = md5('12345678');
+select * from tbl_aluno;
+select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta where email = 'mu@mu' and senha = md5('1234566');
+
+select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta
+ where email = 'mu@mu' and senha = md5('1234567');
+ 
+ 
