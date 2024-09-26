@@ -20,6 +20,7 @@ const ERROR_CONTENT_TYPE = { status: false, status_code: 415, message: 'O conten
 const SUCESS_CREATED_ITEM = {status: true, status_code: 201, message: 'Item criado com sucesso !!'};
 const SUCESS_UPDATED_ITEM = {status: true, status_code: 201, message: 'Item atualizado com sucesso !!'};
 const SUCESS_DELETED_ITEM = {status: true, status_code:200, message: 'Item deletado ocm sucesso !!'}
+const SUCESS_VALIDATED_ITEM = {status: true, status_code:200, message: 'Usuário validado com sucesso!!'}
 
 
 
@@ -34,5 +35,6 @@ module.exports = {
     SUCESS_DELETED_ITEM,
     ERROR_NOT_FOUND_ID,
     SUCESS_UPDATED_ITEM,
-    ERROR_INVALID_DATA
+    ERROR_INVALID_DATA,
+    SUCESS_VALIDATED_ITEM
 }

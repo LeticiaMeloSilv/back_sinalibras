@@ -211,10 +211,10 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
                         let updateUsuarioJSON = {}
 
                         if(
-                            dadosProfessor.nome == '' || dadosProfessor.nome == undefined || dadosProfessor.nome == null || dadosProfessor.nome.length > 255||
+                            dadosProfessor.nome == "" || dadosProfessor.nome == undefined || dadosProfessor.nome == null || dadosProfessor.nome.length > 255||
                             dadosProfessor.email == "" || dadosProfessor.email == undefined || dadosProfessor.email == null|| dadosProfessor.email.length > 255||
-                            dadosProfessor.senha == "" || dadosProfessor.senha == undefined || dadosProfessor.senha == null||  dadosProfessor.senha.length > 8 || 
-                            dadosProfessor.foto_perfil == undefined || dadosProfessor.foto_perfil == "" || dadosProfessor.foto_perfil.length > 255
+                            dadosProfessor.senha == "" || dadosProfessor.senha == undefined || dadosProfessor.senha == null||  dadosProfessor.senha.length != 8 
+                            || dadosProfessor.foto_perfil.length > 255
                          ){
                             return message.ERROR_REQUIRED_FIELDS
                          }
@@ -223,9 +223,7 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
                             return message.ERROR_INVALID_DATA 
                         }
 
-                        if(dadosProfessor.data_nascimento){
-                            data.converterData(data_nascimento)
-                        }
+                       
 
                             let usuarioAtualizado = await professorDAO.updateProfessor(id, dadosProfessor)
             
@@ -249,6 +247,7 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
                         return message.ERROR_CONTENT_TYPE
                     }
                 }catch(error){
+                
                    
                     return message.ERROR_INTERNAL_SERVER
                 }
