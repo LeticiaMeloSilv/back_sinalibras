@@ -29,6 +29,9 @@ const bodyParserJson = bodyParser.json()
 const controllerAluno = require('./controller/controller_aluno')
 const controllerProfessor = require('./controller/controller_professor')
 const controllerQuestao = require('./controller/controller_questao')
+const controllerVideoaula = require('./controller/controller_videoaula')
+const controllerNivel = require('./controller/controller_nivel')
+const controllerModulo = require('./controller/controller_modulo')
 
 /************************************ Aluno ******************************/
 
@@ -116,7 +119,6 @@ app.delete('/v1/sinalibras/aluno/:id', cors(), async function(request,response){
 })
 
 
-
 /********************************** Perfil Aluno ************************/
 
 app.put('/v1/sinalibras/perfilAluno/:id', cors(), bodyParserJson, async function(request,response){
@@ -132,23 +134,9 @@ app.put('/v1/sinalibras/perfilAluno/:id', cors(), bodyParserJson, async function
     response.json(resultadoNovaFoto)
 })
 
-app.put('/v1/sinalibras/aluno/:id', cors(), bodyParserJson, async function(request,response){
-    let contentType = request.headers['content-type']
-    let idUsuario = request.params.id
-
-    let dadosBody = request.body
-    let resultadoNovaSenha = await controllerAluno.setAtualizarSenhaAluno(idUsuario, dadosBody, contentType)
-
-    response.status(resultadoNovaSenha.status_code)
-   
-    
-    response.json(resultadoNovaSenha)
-})
-
-
 /*********************** Professor *****************************/
 
-app.post('/v1/sinalibras/professor/cadastro', cors(), bodyParserJson, async function (request, response){
+app.post('/v1/sinalibras/professor', cors(), bodyParserJson, async function (request, response){
     let contentType = request.headers['content-type']
 
     let dadosBody = request.body
@@ -158,7 +146,7 @@ app.post('/v1/sinalibras/professor/cadastro', cors(), bodyParserJson, async func
     response.json(resultadoNovaQuestao)
 })
 
-app.put('/v1/sinalibras/professor/edit/:id', cors(), bodyParserJson, async function(request,response){
+app.put('/v1/sinalibras/professor/:id', cors(), bodyParserJson, async function(request,response){
     let contentType = request.headers['content-type']
     let idProfessor = request.params.id
 
@@ -169,7 +157,7 @@ app.put('/v1/sinalibras/professor/edit/:id', cors(), bodyParserJson, async funct
     response.json(resultadoNovaQuestao)
 })
 
-app.delete('/v1/sinalibras/professor/delete/:id', cors(), async function(request,response){
+app.delete('/v1/sinalibras/professor/:id', cors(), async function(request,response){
 
     let idProfessor = request.params.id
 
@@ -181,11 +169,11 @@ app.delete('/v1/sinalibras/professor/delete/:id', cors(), async function(request
 
 app.get('/v1/sinalibras/professores', cors(), async function(request, response){
 
-    //Chama a função da controller para retornar os professores
+    //Chama a função da controller para retorNAR FILMES
     let dadosProfessores = await controllerProfessor.getListarProfessores();
 
     //Validação para retornar o JSON dos filmes ou retornar o 404
-    if(dadosProfessores){
+    if(dadosProfessores.length > 0){
         response.json(dadosProfessores);
         response.status(200);
     }else{
@@ -207,7 +195,7 @@ app.get('/v1/sinalibras/professor/:id', cors(), async function(request,response,
 
 });
 
-app.get('/v1/sinalibras/professor/buscar/:nome', cors(), async function(request,response,next){
+app.get('/v1/sinalibras/professorNome/:nome', cors(), async function(request,response,next){
 
         let nomeProfessor = request.query.nome
         let professorNome = await controllerProfessor.getBuscarProfessorNome(nomeProfessor)
@@ -217,7 +205,7 @@ app.get('/v1/sinalibras/professor/buscar/:nome', cors(), async function(request,
      })
 
 
-app.get('/v1/sinalibras/professor/pesquisar/:email', cors(), async function(request,response,next){
+app.get('/v1/sinalibras/professoremail/:email', cors(), async function(request,response,next){
 
         let emailProfessor = request.query.email
         let professor = await controllerProfessor.getBuscarProfessorEmail(emailProfessor)
@@ -225,35 +213,6 @@ app.get('/v1/sinalibras/professor/pesquisar/:email', cors(), async function(requ
             response.json(professor);
              response.status(professor.status_code)
      })
-
-
-     /********************************** Perfil Professor ************************/
-
-app.put('/v1/sinalibras/professor/editPerfil/foto/:id', cors(), bodyParserJson, async function(request,response){
-    let contentType = request.headers['content-type']
-    let idUsuario = request.params.id
-
-    let dadosBody = request.body
-    let resultadoNovaFoto = await controllerProfessor.setAtualizarFotoPerfilProfessor(idUsuario, dadosBody, contentType)
-
-    response.status(resultadoNovaFoto.status_code)
-   
-    
-    response.json(resultadoNovaFoto)
-})
-
-app.put('/v1/sinalibras/professor/editPefil/password/:id', cors(), bodyParserJson, async function(request,response){
-    let contentType = request.headers['content-type']
-    let idUsuario = request.params.id
-
-    let dadosBody = request.body
-    let resultadoNovaSenha = await controllerProfessor.setAtualizarSenhaProf(idUsuario, dadosBody, contentType)
-
-    response.status(resultadoNovaSenha.status_code)
-   
-    
-    response.json(resultadoNovaSenha)
-})
 
 
 
@@ -277,7 +236,6 @@ app.get('/v1/sinalibras/questao/:id', cors(), async function(request,response,ne
     //Encaminh o ID para o controller buscar o filme
     let dadosQuestao = await controllerQuestao.getBuscarQuestoes(idQuestao)
 
-
     response.status(dadosQuestao.status_code);
     response.json(dadosQuestao);
 
@@ -287,4 +245,30 @@ app.get('/v1/sinalibras/questao/:id', cors(), async function(request,response,ne
 
 app.listen('8080', function(){
     console.log("API funcionando e aguardando requisições");
+})
+
+
+/**************************** NIVEIS **************************/
+app.get('/v1/sinalibras/niveis/:id', cors(), async function(request, response, next){
+    let idNivel = request.params.id
+
+    let dadosnivel = await controllerNivel.getNivelById(idNivel)
+    console.log(dadosnivel);
+
+    response.status(dadosnivel.status_code)
+    response.json(dadosnivel)
+})
+
+
+
+/******************************** VIDEOAULAS  *****************************/
+
+app.get('/v1/sinalibras/videoaulas', cors(), async function(request, response){
+    let contentType = request.headers['content-type']
+
+    let dadosBody = request.body
+    let dadosVideoaula = await controllerVideoaula.getListaVideoaulas()
+
+    response.status(dadosVideoaula.status_code)
+    response.json(dadosVideoaula)
 })
