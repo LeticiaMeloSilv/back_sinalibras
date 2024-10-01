@@ -22,16 +22,16 @@ const updateModulo = async function (id, dadosModulo){
     try{
 
         let sql = `update tbl_modulo set modulo = '${dadosModulo.modulo}' where id_modulo = ${id}`
-
+     
         let rsModulo = await prisma.$executeRawUnsafe(sql)
 
         if(rsModulo)
-        return true 
-        else 
-        return false
+        return rsModulo
+        
 
     }catch(error){
-        return false
+        console.log(error);
+        return error
     }
 }
 
@@ -85,14 +85,14 @@ const selectModuloById = async function (id){
 const selectVideosModulo = async function (id){
     try{
 
-        let sql = `select * tbl_videoaula where id_modulo = ${id}`
+        let sql = `select * from tbl_videoaula where id_modulo = ${id}`
 
         let rsModulo = await prisma.$queryRawUnsafe(sql)
 
+        console.log(rsModulo);
+
         if(rsModulo)
         return rsModulo
-        else 
-        return false
 
     }catch(error){
         return false

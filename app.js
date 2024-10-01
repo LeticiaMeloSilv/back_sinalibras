@@ -32,6 +32,7 @@ const controllerQuestao = require('./controller/controller_questao')
 const controllerVideoaula = require('./controller/controller_videoaula')
 const controllerNivel = require('./controller/controller_nivel')
 const controllerModulo = require('./controller/controller_modulo')
+const controllerComentario = require('./controller/controller_comentario')
 const { log } = require('console')
 
 /************************************ Aluno ******************************/
@@ -313,13 +314,13 @@ app.delete('/v1/sinalibras/deleteModulo/:id', cors(), async function(request, re
 
 })
 
-app.put('/v1/sinalibras/updateModulo/:id', cors(), bodyParserJson, async function(request, response){
+app.put('/v1/sinalibras/updateModulos/:id', cors(), bodyParserJson, async function(request, response){
 
     let idModulo = request.params.id
-    let contentType = request.header['content-type']
+    let contentType = request.headers['content-type']
     let dadosBody = request.body
 
-    let moduloAtualizado = await controllerModulo.setAtualizarModulo(idModulo, contentType, dadosBody)
+    let moduloAtualizado = await controllerModulo.setAtualizarModulo(idModulo, dadosBody, contentType)
 
     if(moduloAtualizado){
         response.status(200)
@@ -437,6 +438,24 @@ app.get('/v1/sinalibras/videosNivel/:id', cors(), async function(request, respon
     }else{
         response.status(404)
         response.json({message: 'Nenhum registro foi encontrado'})
+    }
+
+})
+
+/************************ COMENTARIOS ************************/
+
+app.post('/v1/sinalibras/videoaula/comentario', cors(), bodyParserJson, async function(request, response){
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+
+    let novoComentario = await controllerComentario.setInserirNovoComentario(dadosBody, contentType)
+
+    if(novoComentario){
+        response.status(200)
+        response.json(novoComentario)
+    }else{
+        response.status(404)
+        response.json({message: 'Não foi possível inserir no banco'})
     }
 
 })

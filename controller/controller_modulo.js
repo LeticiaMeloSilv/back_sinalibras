@@ -43,45 +43,59 @@ const inserirNovoModulo = async function(dadosModulo, contentType){
 }
 
 const setAtualizarModulo = async function (id, dadosModulo, contentType){
-
     try{
+        console.log(contentType);
 
         let idModulo = id
-
-    if(idModulo == undefined || idModulo == null || idModulo == '' || isNaN(idModulo)){
-        return message.ERROR_INVALID_ID
-    } else {
-            if(String(contentType).toLowerCase () == 'application/json'){
+        
+        if(idModulo == undefined || idModulo == null || idModulo == '' || isNaN(idModulo)){
+            return message.ERROR_INVALID_ID
+            
+        } else {
+            if(String(contentType).toLowerCase() == 'application/json'){
+                
                 let updateModuloJson = {}
 
                  if(dadosModulo.modulo == null || dadosModulo.modulo == ' ' || dadosModulo.modulo.length > 20 || dadosModulo.modulo == undefined){
                     return message.ERROR_REQUIRED_FIELDS
                  } else {
 
-                    let status = false
-                        let moduloAtualizado = await moduloDAO.updateModulo(idModulo)
+                    let moduloId = await moduloDAO.selectModuloById(idModulo)
+                        
 
-                        if(moduloAtualizado){
+                        if(moduloId.length>0){
 
-                             updateModuloJson.modulo = dadosVideoaula
-                             updateModuloJson.status = message.SUCESS_UPDATED_ITEM.status
-                             updateModuloJson.status_code = message.SUCESS_UPDATED_ITEM.status_code
-                             updateModuloJson.message = message.SUCESS_UPDATED_ITEM.message
+                            let moduloAtualizado = await moduloDAO.updateModulo(idModulo, dadosModulo)
 
-                             return updateModuloJson
+                            if(moduloAtualizado){
+
+                                updateModuloJson.modulo = dadosModulo
+                                updateModuloJson.status = message.SUCESS_UPDATED_ITEM.status
+                                updateModuloJson.status_code = message.SUCESS_UPDATED_ITEM.status_code
+                                updateModuloJson.message = message.SUCESS_UPDATED_ITEM.message
+   
+                                return updateModuloJson
+
+                            }else{
+                                 return message.ERROR_INTERNAL_SERVER_DB
+                            }
+
+                             
                         }else{
-                              return message.ERROR_INTERNAL_SERVER_DB
+                              return message.ERROR_NOT_FOUND
                          }
                     
                 }
 
-        }else{
-            return message.ERROR_NOT_FOUND_ID
+            }else{
+            
+             return message.ERROR_CONTENT_TYPE
+            }
         }
-    }
 
     }catch(error){
-        return false
+        console.log(error);
+        return message.ERROR_INTERNAL_SERVER
     }
     
     
@@ -180,7 +194,12 @@ const getVideosDoModulo = async function(id){
         if(idModulo == null || idModulo == ' ' || isNaN(idModulo) || idModulo == undefined){
             return message.ERROR_INVALID_ID
         }else{
-            let dadosModulo = await moduloDAO.selectVideosModulo(idModulo)
+
+            let moduloId = await moduloDAO.selectModuloById(idModulo)
+
+            if(moduloId){
+
+                let dadosModulo = await moduloDAO.selectVideosModulo(idModulo)
 
             if(dadosModulo){
                 if(dadosModulo.length>0){
@@ -193,10 +212,16 @@ const getVideosDoModulo = async function(id){
             }else{
                 return message.ERROR_INTERNAL_SERVER_DB
             }
+
+            }else{
+                return message.ERROR_NOT_FOUND_ID
+            }
+
+            
         }
 
     }catch (error){
-        return message.ERROR_INTERNAL_SERVER_DB
+        return message.ERROR_INTERNAL_SERVER
     }
 }
 
