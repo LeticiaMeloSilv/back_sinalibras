@@ -167,6 +167,19 @@ app.put('/v1/sinalibras/aluno/perfil/:id', cors(), bodyParserJson, async functio
     //ok
 })
 
+/*********************************************** Pré cadastro professor ****************************************/
+app.post('/v1/sinalibras/usuario', cors(), bodyParserJson, async function (request, response){
+    let contentType = request.headers['content-type']
+
+    let dadosBody = request.body
+    let resultadoNovoUser = await controllerProfessor.setInserirUsuarioQuiz(dadosBody,contentType)
+
+    response.status(resultadoNovoUser.status_code)
+    response.json(resultadoNovoUser)
+
+//ok
+})
+
 
 /*********************** Professor *****************************/
 

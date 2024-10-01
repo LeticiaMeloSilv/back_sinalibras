@@ -9,6 +9,10 @@
 const message = require('../modulo/config.js')
 const professorDAO = require('../model/DAO/professor.js');
 const data = require('./validacoes.js')
+const userQuizDAO = require('../model/DAO/preCadastroProfessor.js')
+
+
+
 
 
 
@@ -346,6 +350,58 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
     
 
 
+    /*********************************** Pré cadastro prof ****************************************/
+
+    const setInserirUsuarioQuiz = async function (dadosUser, contentType) {
+    
+        try{
+          
+            if (String(contentType).toLowerCase() == 'application/json'){
+              
+                let usuarioJson = {}
+    
+                if(
+                   dadosUser.email == ""      || dadosUser.email == undefined || dadosUser.email == null|| dadosUser.email.length > 255
+                ){
+                    return message.ERROR_REQUIRED_FIELDS
+                }
+    
+                if (!dadosUser.data || dadosUser.data == undefined|| dadosUser.data == null) {
+                    return message.ERROR_INVALID_DATA 
+                }
+                   
+                    let user = await userQuizDAO.insertUsuarioQuiz(dadosUser)
+                   
+                    if (user){
+                    
+                        let ultimoID = await userQuizDAO.selectUltimoIdUserQuiz()
+                       
+                        dadosUser.id = Number(ultimoID[0].id_usuario_teste)
+                        
+                    }
+                    
+                    if (user){
+                        usuarioJson.usuario = dadosUser
+                        usuarioJson.status = message.SUCESS_CREATED_ITEM.status
+                        usuarioJson.status_code = message.SUCESS_CREATED_ITEM.status_code
+                        usuarioJson.message = message.SUCESS_CREATED_ITEM.message
+                        
+                        return usuarioJson //201
+                    }else {
+                        return message.ERROR_INTERNAL_SERVER_DB // 500 
+                    
+                
+                }
+            
+            }else{
+                return message.ERROR_CONTENT_TYPE//415
+            }
+            
+        }catch(error){
+            
+            return message.ERROR_INTERNAL_SERVER //500 erro na controller
+        }
+    }
 
     /*********************************** Professor Perfil ************************************** */
 
@@ -489,5 +545,6 @@ module.exports = {
     setExcluirProfessor,
     setAtualizarFotoPerfilProfessor,
     setAtualizarSenhaProf,
-    getValidarProf
+    getValidarProf,
+    setInserirUsuarioQuiz
 }
