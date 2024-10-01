@@ -40,7 +40,7 @@ app.get('/v1/sinalibras/aluno/validacao', cors(), bodyParserJson, async (request
 //ok
 })
 
-app.get('/v1/sinalibras/aluno/listar', cors(), async function(request, response){
+app.get('/v1/sinalibras/alunos', cors(), async function(request, response){
 
     //Chama a função da controller para retorNAR FILMES
     let dadosUsuarios = await controllerAluno.getListarAlunos();
@@ -58,7 +58,7 @@ app.get('/v1/sinalibras/aluno/listar', cors(), async function(request, response)
 
 })
 
-app.get('/v1/sinalibras/aluno/buscar/:id', cors(), async function(request,response,next){
+app.get('/v1/sinalibras/aluno/:id', cors(), async function(request,response,next){
 
     let idUsuario = request.params.id;
 
@@ -94,7 +94,7 @@ app.get('/v1/sinalibras/aluno/email/:email', cors(), async function(request,resp
 //ok
 })
 
-app.post('/v1/sinalibras/aluno/cadastro', cors(), bodyParserJson, async function (request, response){
+app.post('/v1/sinalibras/aluno', cors(), bodyParserJson, async function (request, response){
     let contentType = request.headers['content-type']
 
     let dadosBody = request.body
@@ -107,7 +107,7 @@ app.post('/v1/sinalibras/aluno/cadastro', cors(), bodyParserJson, async function
 })
 
 
-app.put('/v1/sinalibras/aluno/edit/:id', cors(), bodyParserJson, async function(request,response){
+app.put('/v1/sinalibras/aluno/:id', cors(), bodyParserJson, async function(request,response){
     let contentType = request.headers['content-type']
     let idUsuario = request.params.id
 
@@ -121,7 +121,7 @@ app.put('/v1/sinalibras/aluno/edit/:id', cors(), bodyParserJson, async function(
     //ok
 })
 
-app.delete('/v1/sinalibras/aluno/delete/:id', cors(), async function(request,response){
+app.delete('/v1/sinalibras/aluno/:id', cors(), async function(request,response){
 
     let idUsuario = request.params.id
     
@@ -138,7 +138,7 @@ app.delete('/v1/sinalibras/aluno/delete/:id', cors(), async function(request,res
 
 /********************************** Perfil Aluno ************************/
 
-app.put('/v1/sinalibras/aluno/editarPerfil/foto/:id', cors(), bodyParserJson, async function(request,response){
+app.put('/v1/sinalibras/aluno/fotoPerfil/:id', cors(), bodyParserJson, async function(request,response){
     let contentType = request.headers['content-type']
     let idUsuario = request.params.id
 
@@ -153,7 +153,7 @@ app.put('/v1/sinalibras/aluno/editarPerfil/foto/:id', cors(), bodyParserJson, as
     //ok
 })
 
-app.put('/v1/sinalibras/aluno/editarPerfil/password/:id', cors(), bodyParserJson, async function(request,response){
+app.put('/v1/sinalibras/aluno/perfil/:id', cors(), bodyParserJson, async function(request,response){
     let contentType = request.headers['content-type']
     let idUsuario = request.params.id
 
