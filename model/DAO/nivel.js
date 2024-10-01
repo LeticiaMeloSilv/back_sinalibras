@@ -85,12 +85,12 @@ const selectNivelById = async function (id){
 const selectVideosNivel = async function (id){
     try{
 
-        let sql = `select * tbl_videoaula where id_nivel = ${id}`
+        let sql = `select * from tbl_videoaula where id_nivel = ${id}`
 
         let rsNivel = await prisma.$queryRawUnsafe(sql)
 
         if(rsNivel)
-        return true 
+        return rsNivel
         else 
         return false
 

@@ -3,8 +3,7 @@ const message = require('../modulo/config.js')
 
 const inserirNovoModulo = async function(dadosModulo, contentType){
     try{
-
-        if(String(contentType).toLowerCase == 'application/json'){
+        if(String(contentType).toLowerCase() == 'application/json'){
             let novoModuloJson = {}
 
             if(dadosModulo.modulo == undefined || dadosModulo.modulo == null || dadosModulo.modulo == '' || dadosModulo.modulo.length>20){
@@ -17,8 +16,9 @@ const inserirNovoModulo = async function(dadosModulo, contentType){
                     let novoModulo = await moduloDAO.insertModulo(dadosModulo)
 
                     if(novoModulo){
-                        let ultimoId = moduloDAO.selectLastId()
-                        dadosModulo.id = ultimoId
+                        let ultimoId = await moduloDAO.selectLastId()
+                      
+                        dadosModulo.id = Number(ultimoId[0].id_modulo)
 
                         novoModuloJson.modulo = dadosModulo
                         novoModuloJson.status = message.SUCESS_CREATED_ITEM.status
@@ -33,6 +33,7 @@ const inserirNovoModulo = async function(dadosModulo, contentType){
 
             }
         }else{
+         
             return message.ERROR_CONTENT_TYPE
         }
 
@@ -42,51 +43,48 @@ const inserirNovoModulo = async function(dadosModulo, contentType){
 }
 
 const setAtualizarModulo = async function (id, dadosModulo, contentType){
-    let idModulo = id
+
+    try{
+
+        let idModulo = id
 
     if(idModulo == undefined || idModulo == null || idModulo == '' || isNaN(idModulo)){
         return message.ERROR_INVALID_ID
     } else {
-        let idModulo = await moduloDAO.selectModuloById(idModulo)
-        
-        if(idModulo > 0){
+            if(String(contentType).toLowerCase () == 'application/json'){
+                let updateModuloJson = {}
 
-            try{
-                if(String(contentType).toLowerCase () == 'application/json'){
-                    let updateModuloJson = {}
+                 if(dadosModulo.modulo == null || dadosModulo.modulo == ' ' || dadosModulo.modulo.length > 20 || dadosModulo.modulo == undefined){
+                    return message.ERROR_REQUIRED_FIELDS
+                 } else {
 
-                    if(dadosModulo.modulo == null || dadosModulo.modulo == ' ' || dadosModulo.modulo.length > 20 || dadosModulo.modulo == undefined){
-                        return message.ERROR_REQUIRED_FIELDS
-                    } else {
+                    let status = false
+                        let moduloAtualizado = await moduloDAO.updateModulo(idModulo)
 
-                            let moduloAtualizado = await moduloDAO.updateModulo(idModulo)
+                        if(moduloAtualizado){
 
-                            if(ModuloAtualizado){
+                             updateModuloJson.modulo = dadosVideoaula
+                             updateModuloJson.status = message.SUCESS_UPDATED_ITEM.status
+                             updateModuloJson.status_code = message.SUCESS_UPDATED_ITEM.status_code
+                             updateModuloJson.message = message.SUCESS_UPDATED_ITEM.message
 
-                                updateModuloJson.modulo = dadosVideoaula
-                                updateModuloJson.status = message.SUCESS_UPDATED_ITEM.status
-                                updateModuloJson.status_code = message.SUCESS_UPDATED_ITEM.status_code
-                                updateModuloJson.message = message.SUCESS_UPDATED_ITEM.message
-
-                                return updateModuloJson
-                            }else{
-                                return message.ERROR_INTERNAL_SERVER_DB
-                            }
+                             return updateModuloJson
+                        }else{
+                              return message.ERROR_INTERNAL_SERVER_DB
+                         }
                     
-                    }
-
-                }else{
-                    return message.ERROR_CONTENT_TYPE
                 }
-            }catch(error){
-                return message.ERROR_INTERNAL_SERVER
-            }
-    
 
         }else{
             return message.ERROR_NOT_FOUND_ID
         }
     }
+
+    }catch(error){
+        return false
+    }
+    
+    
 }
 
 const setExcluirModulo = async function (id){

@@ -4,16 +4,16 @@ const prisma = new PrismaClient()
 const insertModulo = async function(dadosModulo){
     try{
 
-        let sql = `insert into tbl_modulo (modulo) values ('${dadosModulo.modulo})`
+        let sql = `insert into tbl_modulo (modulo) values ('${dadosModulo.modulo}')`
 
         let rsModulo = await prisma.$executeRawUnsafe(sql)
+     
 
         if(rsModulo)
-        return true
-        else 
-        return false
+        return rsModulo
 
     }catch(error){
+    
         return false
     }
 }
@@ -101,7 +101,7 @@ const selectVideosModulo = async function (id){
 
 const selectLastId = async function (){
     try{
-        let sql = `select cast(last_insert_id()as DECIMAL) as id from tbl_modulo limit 1;`
+        let sql = `select cast(last_insert_id()as DECIMAL) as id_modulo from tbl_modulo limit 1;`
  
         let rsModulo = await prisma.$queryRawUnsafe(sql)
  

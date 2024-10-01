@@ -189,9 +189,11 @@ const getVideosDoNivel = async function(id){
         }else{
             let dadosNivel = await nivelDAO.selectVideosNivel(idNivel)
 
+            console.log(dadosNivel);
+
             if(dadosNivel){
                 if(dadosNivel.length>0){
-                    nivelJson.nivel = dadosNivel
+                    nivelJson.videos = dadosNivel
                     nivelJson.status_code = 200
 
                     return nivelJson

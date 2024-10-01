@@ -32,6 +32,7 @@ const controllerQuestao = require('./controller/controller_questao')
 const controllerVideoaula = require('./controller/controller_videoaula')
 const controllerNivel = require('./controller/controller_nivel')
 const controllerModulo = require('./controller/controller_modulo')
+const { log } = require('console')
 
 /************************************ Aluno ******************************/
 
@@ -248,17 +249,197 @@ app.listen('8080', function(){
 })
 
 
-/**************************** NIVEIS **************************/
-app.get('/v1/sinalibras/niveis/:id', cors(), async function(request, response, next){
-    let idNivel = request.params.id
+/****************************** MODULOS ***************************************/
 
-    let dadosnivel = await controllerNivel.getNivelById(idNivel)
-    console.log(dadosnivel);
+app.get('/v1/sinalibras/modulo/:id', cors(), async function(request, response, next){
+    let idModulo = request.params.id
 
-    response.status(dadosnivel.status_code)
-    response.json(dadosnivel)
+    let dadosModulo = await controllerModulo.getModuloById(idModulo)
+
+    if(dadosModulo){
+        response.status(200)
+        response.json(dadosModulo)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+
+   
 })
 
+
+app.get('/v1/sinalibras/modulos', cors(), async function (request, response){
+    let dadosModulo = await controllerModulo.getListaModulo()
+
+    if(dadosModulo){
+        response.status(200)
+        response.json(dadosModulo)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+})
+
+app.post('/v1/sinalibras/modulo', cors(), bodyParserJson, async function(request, response){
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+
+    console.log(contentType);
+    let novoModulo = await controllerModulo.inserirNovoModulo(dadosBody, contentType)
+
+    if(novoModulo){
+        response.status(200)
+        response.json(novoModulo)
+    }else{
+        response.status(404)
+        response.json({message: 'Não foi possível inserir no banco'})
+    }
+
+})
+
+
+app.delete('/v1/sinalibras/deleteModulo/:id', cors(), async function(request, response){
+    let idModulo = request.params.id
+
+
+    let dadosModulo = await controllerModulo.setExcluirModulo(idModulo)
+    if(dadosModulo){
+        response.status(200)
+        response.json(dadosModulo)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+
+})
+
+app.put('/v1/sinalibras/updateModulo/:id', cors(), bodyParserJson, async function(request, response){
+
+    let idModulo = request.params.id
+    let contentType = request.header['content-type']
+    let dadosBody = request.body
+
+    let moduloAtualizado = await controllerModulo.setAtualizarModulo(idModulo, contentType, dadosBody)
+
+    if(moduloAtualizado){
+        response.status(200)
+        response.json(moduloAtualizado)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+
+})
+
+app.get('/v1/sinalibras/videosModulo/:id', cors(), async function(request, response){
+    let idModulo = request.params.id
+    let videosModulo = await controllerModulo.getVideosDoModulo(idModulo)
+
+    if(videosModulo){
+        response.status(200)
+        response.json(videosModulo)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+
+})
+
+
+
+/**************************** NIVEIS **************************/
+app.get('/v1/sinalibras/nivel/:id', cors(), async function(request, response, next){
+    let idNivel = request.params.id
+
+    let dadosNivel = await controllerNivel.getNivelById(idNivel)
+
+    if(dadosNivel){
+        response.status(200)
+        response.json(dadosNivel)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+
+   
+})
+
+
+app.get('/v1/sinalibras/niveis', cors(), async function (request, response){
+    let dadosNivel = await controllerNivel.getListaNivel()
+
+    if(dadosNivel){
+        response.status(200)
+        response.json(dadosNivel)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+})
+
+app.post('/v1/sinalibras/nivel', cors(), bodyParserJson, async function(request, response){
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+
+    let novoNivel = await controllerNivel.inserirNovoNivel(dadosBody, contentType)
+
+    if(novoNivel){
+        response.status(200)
+        response.json(novoNivel)
+    }else{
+        response.status(404)
+        response.json({message: 'Não foi possível inserir no banco'})
+    }
+
+})
+
+
+app.delete('/v1/sinalibras/deleteNivel/:id', cors(), async function(request, response){
+    let idNivel = request.params.id
+
+
+    let dadosNivel = await controllerNivel.setExcluirNivel(idNivel)
+    if(dadosNivel){
+        response.status(200)
+        response.json(dadosNivel)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+
+})
+
+app.put('/v1/sinalibras/updateNivel/:id', cors(), bodyParserJson, async function(request, response){
+
+    let idNivel = request.params.id
+    let contentType = request.header['content-type']
+    let dadosBody = request.body
+
+    let nivelatualizado = await controllerNivel.setAtualizarNivel(idNivel, contentType, dadosBody)
+
+    if(nivelatualizado){
+        response.status(200)
+        response.json(nivelatualizado)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+
+})
+
+app.get('/v1/sinalibras/videosNivel/:id', cors(), async function(request, response){
+    let idNivel = request.params.id
+    let videosNivel = await controllerNivel.getVideosDoNivel(idNivel)
+
+    if(videosNivel){
+        response.status(200)
+        response.json(videosNivel)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+
+})
 
 
 /******************************** VIDEOAULAS  *****************************/

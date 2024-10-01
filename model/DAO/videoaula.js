@@ -145,6 +145,8 @@ const selectAllVideoaula = async function (){
         let sql = `select  * from tbl_videoaula order by data desc;`
 
         let rsVideoaula = await prisma.$queryRawUnsafe(sql)
+
+        console.log(rsVideoaula);
       
 
         if(rsVideoaula.length > 0)
