@@ -63,18 +63,7 @@ const selectUltimoIdQuestao = async function (){
 }
 
 
-const selectQuestaoById = async function (id) {
 
-    try{
-        let sql = `select * from tbl_alternativas where id_alternativa = ${id}`
-        let rsQuestao = await prisma.$queryRawUnsafe(sql)
-        return rsQuestao
-
-    }catch(error){
-        return false
-    }
-    
-}
 
 const selectAlternativaById = async function (id) {
 
@@ -88,10 +77,27 @@ const selectAlternativaById = async function (id) {
     }
     
 }
+
+
+const selectAllQuestoes = async function (){
+    try{
+        let sql = `select * from pergunta_alternativas `
+
+        let rsQuestao = await prisma.$queryRawUnsafe(sql)
+
+        return rsQuestao
+
+    } catch (error){
+        return false
+    }
+
+}
+
 module.exports = {
     selectQuestoesAternativas,
     insertQuestaoAlternativa,
     selectUltimoIdQuestao,
     selectAlternativaById,
-    selectQuestaoById
+    selectAllQuestoes
+
 }

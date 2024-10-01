@@ -11,6 +11,62 @@ const professorDAO = require('../model/DAO/professor.js');
 const data = require('./validacoes.js')
 
 
+
+const getValidarProf = async(email, senha, contentType) => {
+    
+    try {
+
+        if(String(contentType).toLowerCase() == 'application/json'){
+    
+            let emailProf = email
+            let senhaProf = senha
+            let profJSON = {}
+
+            if(emailProf == '' || emailProf == undefined || senhaProf == '' || senhaProf == undefined){
+            
+                return message.ERROR_REQUIRED_FIELDS // 400
+               
+
+            } else {
+
+                let dadosProfessor = await professorDAO.selectValidarProf(emailProf, senhaProf)
+               
+              
+
+                if(dadosProfessor){
+
+                    if(dadosProfessor.length > 0){         
+
+                     
+                        profJSON.status = message.SUCESS_VALIDATED_ITEM.status       
+                        profJSON.status_code = message.SUCESS_VALIDATED_ITEM.status_code       
+                        profJSON.message = message.SUCESS_VALIDATED_ITEM.message       
+                        profJSON.professor = dadosProfessor
+                
+                        return profJSON
+                    } else {
+                   
+                        return message.ERROR_NOT_FOUND // 404
+                    }
+
+                } else {
+                    return message.ERROR_INTERNAL_SERVER_DB // 500
+                }
+            }
+            
+        }else{
+          
+            return message.ERROR_CONTENT_TYPE // 415
+        }
+
+    } catch (error) {
+        
+        message.ERROR_INTERNAL_SERVER // 500
+    }
+
+}
+
+
 const getListarProfessores = async function () {
 
     // Cri o objeto JSON
@@ -291,7 +347,7 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
 
 
 
-    /*********************************** Aluno Perfil ************************************** */
+    /*********************************** Professor Perfil ************************************** */
 
     const setAtualizarFotoPerfilProfessor = async function (id, dadosProfessor, contentType){
 
@@ -432,5 +488,6 @@ module.exports = {
     setAtualizarProfessor,
     setExcluirProfessor,
     setAtualizarFotoPerfilProfessor,
-    setAtualizarSenhaProf
+    setAtualizarSenhaProf,
+    getValidarProf
 }

@@ -10,6 +10,9 @@ CREATE TABLE `tbl_usuario_teste` (
   `data` DATE NOT NULL)	
 ENGINE = InnoDB;
 
+
+select * from tbl_usuario_teste;
+
 CREATE TABLE `tbl_resposta_usuario` (
   `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `id_alternativa` INT NOT NULL,
@@ -20,13 +23,18 @@ CREATE TABLE `tbl_resposta_usuario` (
     FOREIGN KEY (`id_usuario_teste`) REFERENCES `tbl_usuario_teste` (`id_usuario_teste`))
 ENGINE = InnoDB;
 
+select * from tbl_resposta_usuario;
+
 CREATE TABLE `tbl_resultado` (
   `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `pontuacao` INT NOT NULL,
-  `id_resposta_usuario` INT NOT NULL,
+  `id_usuario_teste` INT NOT NULL,
   CONSTRAINT `fk_tbl_resultado_tbl_resposta_usuario`
     FOREIGN KEY (`id_resposta_usuario`) REFERENCES `tbl_resposta_usuario` (`id`))
 ENGINE = InnoDB;
+
+alter table tbl_resultado
+ change column id_resposta_usuario id_usuario_teste INT NOT NULL;
 
 CREATE TABLE `tbl_professor` (
   `id_professor` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -71,32 +79,6 @@ ENGINE = InnoDB;
 select * from tbl_perguntas;
 select * from tbl_alternativas;
 
-/*
-DELIMITER //
-
-CREATE PROCEDURE inserir_questao_com_alternativas (
-    IN p_pergunta VARCHAR(250),
-    IN p_video VARCHAR(255),
-    IN p_alternativa VARCHAR(100),
-    IN p_status VARCHAR(30)
-)
-BEGIN
-    DECLARE v_id_pergunta INT;
-
- 
-    INSERT INTO tbl_perguntas (pergunta, video)
-    VALUES (p_pergunta, p_video);
-
-   
-    SET v_id_pergunta = LAST_INSERT_ID();
-
-  
-    INSERT INTO tbl_alternativas (alternativa, status, id_pergunta)
-    VALUES (p_alternativa, p_status, v_id_pergunta);
-END//
-
-CALL inserir_questao_com_alternativas ( 'qual seu nome?', ' xxxxxxxxxxxx', 'joao', 1 );
-*/
 
 drop procedure inserir_questao_com_alternativas;
 
@@ -150,15 +132,46 @@ END//
 
 DELIMITER ;
 
+
 CALL inserir_questao_com_alternativas(
     'Qual é a capital da França?', 
     'video1.mp4', 
     'Paris,1;Londres,0;Berlim,0'
 );
+CALL inserir_questao_com_alternativas(
+    'Qual é a capital do Brasil?', 
+    'video1.mp4', 
+    'Brasilia,1;Rio de Janeiro,0;Salvador,0'
+);
+
+DELIMITER $$
+CREATE PROCEDURE `inserir_resultado_usuario` (IN p_id_usuario_teste INT)
+BEGIN
+    DECLARE pontuacao INT;
+
+    -- Calcula a pontuação
+    SELECT COUNT(*) INTO pontuacao
+    FROM tbl_resposta_usuario AS r
+    INNER JOIN tbl_alternativas AS a ON r.id_alternativa = a.id_alternativa
+    WHERE r.id_usuario_teste = p_id_usuario_teste
+      AND a.status = 1;
+
+    -- Insere o resultado e o usuário na tabela
+    INSERT INTO tbl_resultado (id_usuario_teste, pontuacao)
+    VALUES (p_id_usuario_teste, pontuacao)
+    ON DUPLICATE KEY UPDATE pontuacao = pontuacao;
+END $$
+DELIMITER ;
+
+call inserir_resultado_usuario(1);
+
+
+
+
 
 
 create view pergunta_alternativas as
-select p.id_pergunta, p.pergunta, p.video, a.alternativa, a.status
+select p.id_pergunta, p.pergunta, p.video, a.id_alternativa, a.alternativa, a.status
 from tbl_alternativas as a
 inner join tbl_perguntas as p
 on a.id_pergunta = p.id_pergunta;
@@ -167,23 +180,7 @@ on a.id_pergunta = p.id_pergunta;
 select * from pergunta_alternativas where id_pergunta = 2;
 
 
-insert into tbl_aluno ( 
-                                nome,
-                                data_cadastro,
-                                email,
-                                senha,
-                                data_nascimento,
-                                foto_perfil
-                                ) values (
-                                    'Leticia',
-                                    '2001-10-23',
-                                    'lele@lele',
-                                    '12345',
-                                    '2000-10-23',
-                                    'xxxxxxxx'
-                                );
-                                
-                                
+
                                 
                                 insert into tbl_aluno ( 
                                 nome, 
@@ -195,8 +192,8 @@ insert into tbl_aluno (
                                 ) values (
                                     'ju',
                                     '2000-6-8',
-                                    'lladgfdf',
-                                    MD5('1234'),
+                                    'teste@teste',
+                                    MD5('12345678'),
                                     '2000-09-12',
                                      null
                                 );

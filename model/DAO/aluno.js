@@ -181,11 +181,10 @@ const updateAluno = async function (id, dadosAluno) {
         let rsAluno = await prisma.$executeRawUnsafe(sql)
 
         if (rsAluno)
-        return rsAluno
-        else
-        return false 
+      return rsAluno
+
     }catch(error){
-        console.log(error);
+
         return false
     }
 

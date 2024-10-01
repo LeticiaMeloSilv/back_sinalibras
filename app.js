@@ -8,8 +8,6 @@
 const express = require('express')
 const cors = require ('cors')
 const bodyParser = require('body-parser')
-const {request} = require('http')
-const {access} = require('fs')
 
 const app = express()
 
@@ -126,7 +124,6 @@ app.put('/v1/sinalibras/aluno/edit/:id', cors(), bodyParserJson, async function(
 app.delete('/v1/sinalibras/aluno/delete/:id', cors(), async function(request,response){
 
     let idUsuario = request.params.id
-    console.log(idUsuario);
     
     let dadosUsuario = await controllerAluno.setExcluirAluno(idUsuario)
     
@@ -209,12 +206,23 @@ app.delete('/v1/sinalibras/professor/delete/:id', cors(), async function(request
 //ok
 })
 
+app.get('/v1/sinalibras/professor/validacao', cors(), bodyParserJson, async (request, response, next) => {
+
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+    let dadosUsuario = await controllerProfessor.getValidarProf(dadosBody.email, dadosBody.senha, contentType)
+    response.status(dadosUsuario.status_code);
+    response.json(dadosUsuario)
+//ok
+})
+
+
 app.get('/v1/sinalibras/professor/listar', cors(), async function(request, response){
 
-    //Chama a função da controller para retornar os professores
+   
     let dadosProfessores = await controllerProfessor.getListarProfessores();
 
-    //Validação para retornar o JSON dos filmes ou retornar o 404
+   
     if(dadosProfessores){
         response.json(dadosProfessores);
         response.status(200);
@@ -317,7 +325,7 @@ app.get('/v1/sinalibras/questao/:id', cors(), async function(request,response,ne
     let idQuestao = request.params.id;
 
     //Encaminh o ID para o controller buscar o filme
-    let dadosQuestao = await controllerQuestao.getBuscarQuestoes(idQuestao)
+    let dadosQuestao = await controllerQuestao.getBuscarQuestaoid(idQuestao)
 
 
     response.status(dadosQuestao.status_code);
@@ -325,6 +333,16 @@ app.get('/v1/sinalibras/questao/:id', cors(), async function(request,response,ne
 
 });
 
+app.get('/v1/sinalibras/questao', cors(), async function(request, response,next){
+ 
+    //Encaminh o ID para o controller buscar o filme
+    let dadosQuestao = await controllerQuestao.getAllQuestoes()
+
+
+    response.status(200);
+    response.json(dadosQuestao);
+
+});
 
 
 app.listen('8080', function(){
