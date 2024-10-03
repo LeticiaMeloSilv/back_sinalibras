@@ -16,13 +16,19 @@ const selectValidarAluno = async function (email,senha){
  let sql = `select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta
  where email = '${email}' and senha = md5('${senha}')`
 
-    let rsUsuario = await prisma.$queryRawUnsafe
+
+
+    let rsUsuario = await prisma.$queryRawUnsafe(sql)
+
+
     if(rsUsuario){
-        return rsAluno
+       
+        return rsUsuario
     }else{
         return false
     }
 }
+
 
 
 const selectAllAlunos = async function (){
@@ -173,12 +179,12 @@ const updateAluno = async function (id, dadosAluno) {
     
     
         let rsAluno = await prisma.$executeRawUnsafe(sql)
-    
+
         if (rsAluno)
-        return true
-        else
-        return false 
+      return rsAluno
+
     }catch(error){
+
         return false
     }
 

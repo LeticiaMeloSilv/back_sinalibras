@@ -16,9 +16,9 @@ const selectValidarProf = async function (email,senha){
     let sql = `select tp.id_professor, tp.nome, tp.email from tbl_professor as tp 
     where email = '${email}' and senha = md5('${senha}')`
    
-       let rsProfessor = await prisma.$queryRawUnsafe
+       let rsProfessor = await prisma.$queryRawUnsafe(sql)
        if(rsProfessor){
-           return rsAluno
+           return rsProfessor
        }else{
            return false
        }

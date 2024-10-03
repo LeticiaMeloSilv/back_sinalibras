@@ -8,6 +8,7 @@
 
 const message = require('../modulo/config.js')
 const questaoDAO = require('../model/DAO/questoes.js');
+const { getListarAlunos } = require('./controller_aluno.js');
 
 
 
@@ -59,7 +60,7 @@ const setInserirNovaQuestao = async function (dadosQuestao, contentType) {
     }
 }
 
-const getBuscarQuestoes = async function (id){
+const getBuscarQuestaoid = async function (id){
     let idquestao = id 
 
    
@@ -74,7 +75,7 @@ const getBuscarQuestoes = async function (id){
             if(dadosQuestao){
             let jsonQuestao = {}
          
-            let questaoJSON = {}
+            
             let alternativas = []
       
 
@@ -95,7 +96,7 @@ const getBuscarQuestoes = async function (id){
             });
 
             
-    
+            let questaoJSON = {}
             if (dadosQuestao.length > 0) {
                 questaoJSON.questao = jsonQuestao;
                 questaoJSON.status_code = 200;
@@ -112,10 +113,51 @@ const getBuscarQuestoes = async function (id){
 
 }
 
-getBuscarQuestoes(1)
+
+const getAllQuestoes = async function () {
+    let dadosQuestao = await questaoDAO.selectAllQuestoes();
+    
+    if (dadosQuestao) {
+        const listaQuestoes = {};
+        
+        dadosQuestao.forEach(questao => {
+            const { id_pergunta, pergunta, video, id_alternativa, alternativa, status } = questao;
+            console.log(questao);
+            if (!listaQuestoes[id_pergunta]) {
+                listaQuestoes[id_pergunta] = {
+                    id_pergunta,
+                    pergunta,
+                    video,
+                    alternativas: []
+                };
+            }
+
+            listaQuestoes[id_pergunta].alternativas.push({
+                id_alternativa,
+                alternativa: alternativa || "Alternativa não fornecida",
+                status
+            });
+        });
+
+        
+        const responseJSON = {
+            questoes: Object.values(listaQuestoes),
+            status_code: 200
+        };
+
+        return responseJSON;
+    } else {
+        return message.ERROR_INTERNAL_SERVER_DB; // 500
+    }
+};
+
+
+
+
 
 
 module.exports = {
     setInserirNovaQuestao,
-    getBuscarQuestoes
+    getBuscarQuestaoid,
+    getAllQuestoes
 }

@@ -10,6 +10,61 @@ const message = require('../modulo/config.js')
 const alunoDao = require('../model/DAO/aluno.js');
 const data = require('./validacoes.js')
 
+const getValidarAluno = async(email, senha, contentType) => {
+    
+    try {
+
+        if(String(contentType).toLowerCase() == 'application/json'){
+    
+            let emailAluno = email
+            let senhaAluno = senha
+            let alunoJSON = {}
+
+            if(emailAluno == '' || emailAluno == undefined || senhaAluno == '' || senhaAluno == undefined){
+            
+                return message.ERROR_REQUIRED_FIELDS // 400
+               
+
+            } else {
+
+                let dadosAluno = await alunoDao.selectValidarAluno(emailAluno, senhaAluno)
+               
+              
+
+                if(dadosAluno){
+
+                    if(dadosAluno.length > 0){         
+
+                     
+                        alunoJSON.status = message.SUCESS_VALIDATED_ITEM.status       
+                        alunoJSON.status_code = message.SUCESS_VALIDATED_ITEM.status_code       
+                        alunoJSON.message = message.SUCESS_VALIDATED_ITEM.message       
+                        alunoJSON.aluno = dadosAluno
+                
+                        return alunoJSON
+                    } else {
+                   
+                        return message.ERROR_NOT_FOUND // 404
+                    }
+
+                } else {
+                    return message.ERROR_INTERNAL_SERVER_DB // 500
+                }
+            }
+            
+        }else{
+          
+            return message.ERROR_CONTENT_TYPE // 415
+        }
+
+    } catch (error) {
+        
+        message.ERROR_INTERNAL_SERVER // 500
+    }
+
+}
+
+
 
 const getListarAlunos = async function () {
 
@@ -17,27 +72,31 @@ const getListarAlunos = async function () {
     let usuariosJSON = {};
 
     //Chama a funcão do DAO para retornar os dados da tabela de filmes
-    let dadosUsuarios = await alunoDao.selectAllAlunos();
+    let dadosAlunos = await alunoDao.selectAllAlunos();
    
        
 
-    if(dadosUsuarios.data_nascimento){
-        dadosUsuarios.data_nascimento = data.converterDataBR(dadosUsuarios.data_nascimento)
+    if(dadosAlunos.data_nascimento){
+        dadosAlunos.data_nascimento = data.converterDataBR(dadosAlunos.data_nascimento)
     }
 
     // Validação para verificar s existem dados 
-    if (dadosUsuarios) {
+    if (dadosAlunos) {
 
-        if (dadosUsuarios.length > 0) {
+        if (dadosAlunos.length > 0) {
              // Cria o JSON para devolver para o APP
-            usuariosJSON.alunos = dadosUsuarios;
-            usuariosJSON.quantidade = dadosUsuarios.length;
+            usuariosJSON.alunos = dadosAlunos;
+            usuariosJSON.quantidade = dadosAlunos.length;
             usuariosJSON.status_code = 200;
+          
             return usuariosJSON;
+           
         } else {
+            
             return message.ERROR_NOT_FOUND
         }
     } else {
+        console.log('corno3');
         return message.ERROR_INTERNAL_SERVER_DB;
     }
 
@@ -53,14 +112,14 @@ const getBuscarAlunoById = async function (id){
     } else {
 
        
-        let dadosUsuario= await alunoDao.selectByIdAluno(idUsuario);
+        let dadosAluno= await alunoDao.selectByIdAluno(idUsuario);
 
        
-        if (dadosUsuario) {
+        if (dadosAluno) {
 
         
-            if (dadosUsuario.length > 0) {
-                usuarioJSON.aluno = dadosUsuario;
+            if (dadosAluno.length > 0) {
+                usuarioJSON.aluno = dadosAluno;
                 usuarioJSON.status_code = 200;
 
                 return usuarioJSON
@@ -86,12 +145,12 @@ const getBuscarAlunoNome = async (nome) => {
         return message.ERROR_INVALID_ID
     } else {
     
-        let dadosUsuarios = await alunoDao.selectAlunoByNome(nome)
+        let dadosAlunos = await alunoDao.selectAlunoByNome(nome)
 
-        if (dadosUsuarios) {
-            if (dadosUsuarios.length > 0) {
+        if (dadosAlunos) {
+            if (dadosAlunos.length > 0) {
                 
-                usuariosJSON.alunos = dadosUsuarios;
+                usuariosJSON.alunos = dadosAlunos;
                 usuariosJSON.status_code = 200;
 
                 return usuariosJSON;
@@ -108,19 +167,19 @@ const getBuscarAlunoNome = async (nome) => {
 const getBuscarAlunoEmail = async (email) => {
     // Cria o objeto JSON
 
-    let emailUsuario = email
+    let emailAluno = email
     let usuariosJSON = {};
 
-    if (emailUsuario == '' || emailUsuario == undefined) {
+    if (emailAluno == '' || emailAluno == undefined) {
         return message.ERROR_INVALID_ID
     } else {
     
-        let dadosUsuarios = await alunoDao.selectAlunoByEmail(email)
+        let dadosAlunos = await alunoDao.selectAlunoByEmail(email)
 
 
-        if (dadosUsuarios) {
-            if (dadosUsuarios.length > 0) {
-                usuariosJSON.alunos = dadosUsuarios;
+        if (dadosAlunos) {
+            if (dadosAlunos.length > 0) {
+                usuariosJSON.alunos = dadosAlunos;
                 usuariosJSON.status_code = 200;
 
                 // console.log(usuariosJSON)
@@ -228,13 +287,13 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
 
                     if (String(contentType).toLowerCase() == 'application/json'){
 
-                        let updateSenhaAlunoJSON= {}
+                        let updateAlunoJSON= {}
 
                         if(
                             dadosAluno.nome == '' || dadosAluno.nome == undefined || dadosAluno.nome == null || dadosAluno.nome.length > 255||
                             dadosAluno.email == "" || dadosAluno.email == undefined || dadosAluno.email == null|| dadosAluno.email.length > 255||
                             dadosAluno.senha == "" || dadosAluno.senha == undefined || dadosAluno.senha == null||  dadosAluno.senha.length > 8 || 
-                             dadosAluno.foto_perfil == undefined || dadosAluno.foto_perfil == "" || dadosAluno.foto_perfil.length > 255
+                          dadosAluno.foto_perfil.length > 255
                          ){
                             return message.ERROR_REQUIRED_FIELDS
                          }
@@ -243,16 +302,17 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
                             return message.ERROR_INVALID_DATA 
                         }
 
-                            let fotoPerfilAlunoAtualizado = await alunoDao.updateAluno(id, dadosAluno)
+                            let alunoAtualizado = await alunoDao.updateAluno(id, dadosAluno)
+                           
             
-                            if (fotoPerfilAlunoAtualizado){
+                            if (alunoAtualizado){
                             
-                               updateSenhaAlunoJSON.aluno = dadosAluno
-                               updateSenhaAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
-                               updateSenhaAlunoJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
-                               updateSenhaAlunoJSON.message = message.SUCESS_UPDATED_ITEM.message
+                               updateAlunoJSON.aluno = dadosAluno
+                               updateAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
+                               updateAlunoJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
+                               updateAlunoJSON.message = message.SUCESS_UPDATED_ITEM.message
                                 
-                                return updateSenhaAlunoJSON//201
+                                return updateAlunoJSON//201
                             }else {
                           
                                 return message.ERROR_INTERNAL_SERVER_DB // 500 
@@ -288,13 +348,13 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
               
                 
             } else {
-                let dadosUsuario = await alunoDao.selectByIdAluno(idUsuario);
-                console.log(dadosUsuario);
+                let dadosAluno = await alunoDao.selectByIdAluno(idUsuario);
+                console.log(dadosAluno);
                 
-                let verificarId = dadosUsuario.length
+                let verificarId = dadosAluno.length
                 if (verificarId > 0) {
                     
-                    dadosUsuario = await alunoDao.deleteAluno(idUsuario)
+                    dadosAluno = await alunoDao.deleteAluno(idUsuario)
                    
                     
                     
@@ -410,7 +470,7 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
                     
                                     if (senhaAtualizada){
                                     
-                                       //updateSenhaAlunoJSON.DadosUsuario = dadosAluno
+                                       //updateSenhaAlunoJSON.dadosAluno = dadosAluno
                                        updateSenhaAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
                                        updateSenhaAlunoJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
                                        updateSenhaAlunoJSON.message = message.SUCESS_UPDATED_ITEM.message
@@ -440,7 +500,9 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
                 }
             
             }
-        
+
+
+           
 
 
 
@@ -455,5 +517,6 @@ module.exports = {
     setAtualizarAluno,
     setExcluirAluno,
     setAtualizarFotoPerfilAluno,
-    setAtualizarSenhaAluno
+    setAtualizarSenhaAluno,
+    getValidarAluno
 }
