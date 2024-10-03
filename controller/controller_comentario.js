@@ -99,9 +99,10 @@ const setDeleteComentario = async function(id){
 
             let comentarioId = await comentarioDAO.selectComentarioById(idComentario)
 
-            if(comentarioId.length>0){
+            if(comentarioId){
                
                 let comentarioDelete = await comentarioDAO.deleteComentario(idComentario)
+             
 
                 if(comentarioDelete){
                     return message.SUCESS_DELETED_ITEM
@@ -114,6 +115,7 @@ const setDeleteComentario = async function(id){
         }
 
     }catch(error){
+    
         return message.ERROR_INTERNAL_SERVER
     }
 }
@@ -123,3 +125,4 @@ module.exports = {
     getAllComentariosVideo,
     setDeleteComentario
 }
+//campos passou aquiiiiiiiiiiiiiiiiiii

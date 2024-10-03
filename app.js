@@ -44,8 +44,7 @@ app.get('/v1/sinalibras/aluno/validacao', cors(), bodyParserJson, async (request
     response.json(dadosUsuario)
 //ok
 })
-
-app.get('/v1/sinalibras/alunos', cors(), async function(request, response){
+app.post('/v1/sinalibras/alunos', cors(), async function(request, response){
 
     //Chama a função da controller para retorNAR FILMES
     let dadosUsuarios = await controllerAluno.getListarAlunos();
@@ -223,7 +222,7 @@ app.delete('/v1/sinalibras/professor/:id', cors(), async function(request,respon
 //ok
 })
 
-app.get('/v1/sinalibras/professor/validacao', cors(), bodyParserJson, async (request, response, next) => {
+app.post('/v1/sinalibras/professor/validacao', cors(), bodyParserJson, async (request, response, next) => {
 
     let contentType = request.headers['content-type']
     let dadosBody = request.body
