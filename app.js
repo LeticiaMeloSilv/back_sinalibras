@@ -524,7 +524,7 @@ app.get('/v1/sinalibras/videosNivel/:id', cors(), async function(request, respon
 })
 
 /************************ COMENTARIOS ************************/
-=======
+
     //Encaminh o ID para o controller buscar o filme
     let dadosQuestao = await controllerQuestao.getBuscarQuestaoid(idQuestao)
 
@@ -544,7 +544,7 @@ app.post('/v1/sinalibras/videoaula/comentario', cors(), bodyParserJson, async fu
     }
 
 })
-=======
+
 app.get('/v1/sinalibras/questao', cors(), async function(request, response,next){
  
     //Encaminh o ID para o controller buscar o filme
