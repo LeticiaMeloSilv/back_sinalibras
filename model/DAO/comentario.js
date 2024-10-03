@@ -23,14 +23,13 @@ const insertComentario = async function(dadosComentario){
 }
 
 const deleteComentario = async function(id){
-    let sql = `delete from tbl_comentario_aula where id = ${id}`
+    let sql = `delete from tbl_comentario_aula where id_comentario = ${id}`
 
         let rsComentario = await prisma.$executeRawUnsafe(sql)
 
         if(rsComentario)
-        return rsComentario
-        else 
-        return false
+        return true
+     
 }
 
 const selectComentariosVideo = async function(id){
@@ -44,13 +43,24 @@ const selectComentariosVideo = async function(id){
     return false
 }
 
+const selectComentarioById = async function (id){
+    let sql = `delete from tbl_comentario_aula where id_comentario = ${id}`
+
+    let rsDelete = await prisma.$executeRawUnsafe(sql)
+
+    if(rsDelete)
+    return rsDelete
+    else
+    return false
+}
+
 const selectLastId = async function (){
     try{
         let sql = `select cast(last_insert_id()as DECIMAL) as id_comentario from tbl_comentario_aula limit 1;`
  
         let rsComentario = await prisma.$queryRawUnsafe(sql)
-        console.log(rsComentario);
-        return rsComentario[0].id_comentario
+    
+        return rsComentario
  
         
      } catch (error) {
@@ -65,5 +75,6 @@ module.exports = {
     insertComentario,
     deleteComentario,
     selectComentariosVideo,
+    selectComentarioById,
     selectLastId
 }
