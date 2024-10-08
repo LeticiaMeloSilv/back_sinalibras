@@ -30,7 +30,7 @@ CREATE TABLE `tbl_resultado` (
   `pontuacao` INT NOT NULL,
   `id_usuario_teste` INT NOT NULL,
   CONSTRAINT `fk_tbl_resultado_tbl_resposta_usuario`
-    FOREIGN KEY (`id_resposta_usuario`) REFERENCES `tbl_resposta_usuario` (`id`))
+    FOREIGN KEY (`id_usuario_teste`) REFERENCES `tbl_resposta_usuario` (`id`))
 ENGINE = InnoDB;
 
 alter table tbl_resultado
