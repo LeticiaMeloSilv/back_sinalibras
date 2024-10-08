@@ -235,7 +235,7 @@ app.get('/v1/sinalibras/professor/validacao', cors(), bodyParserJson, async (req
 
     
 
-app.get('/v1/sinalibras/professor/listar', cors(), async function(request, response){
+app.get('/v1/sinalibras/professores', cors(), async function(request, response){
 
    
     let dadosProfessores = await controllerProfessor.getListarProfessores();
@@ -253,7 +253,7 @@ app.get('/v1/sinalibras/professor/listar', cors(), async function(request, respo
 
 })
 
-app.get('/v1/sinalibras/professor/buscar/:id', cors(), async function(request,response,next){
+app.get('/v1/sinalibras/professor/:id', cors(), async function(request,response,next){
 
     let idProfessor = request.params.id;
 
@@ -379,7 +379,7 @@ app.post('/v1/sinalibras/modulo', cors(), bodyParserJson, async function(request
 })
 
 
-app.delete('/v1/sinalibras/deleteModulo/:id', cors(), async function(request, response){
+app.delete('/v1/sinalibras/modulo/:id', cors(), async function(request, response){
     let idModulo = request.params.id
 
 
@@ -394,7 +394,7 @@ app.delete('/v1/sinalibras/deleteModulo/:id', cors(), async function(request, re
 
 })
 
-app.put('/v1/sinalibras/updateModulos/:id', cors(), bodyParserJson, async function(request, response){
+app.put('/v1/sinalibras/modulo/:id', cors(), bodyParserJson, async function(request, response){
 
     let idModulo = request.params.id
     let contentType = request.headers['content-type']
@@ -473,7 +473,7 @@ app.post('/v1/sinalibras/nivel', cors(), bodyParserJson, async function(request,
 })
 
 
-app.delete('/v1/sinalibras/deleteNivel/:id', cors(), async function(request, response){
+app.delete('/v1/sinalibras/nivel/:id', cors(), async function(request, response){
     let idNivel = request.params.id
 
 
@@ -488,7 +488,7 @@ app.delete('/v1/sinalibras/deleteNivel/:id', cors(), async function(request, res
 
 })
 
-app.put('/v1/sinalibras/updateNivel/:id', cors(), bodyParserJson, async function(request, response){
+app.put('/v1/sinalibras/nivel/:id', cors(), bodyParserJson, async function(request, response){
 
     let idNivel = request.params.id
     let contentType = request.header['content-type']
@@ -551,7 +551,7 @@ app.get('/v1/sinalibras/videoaula/comentarios/:id', cors(), async function (requ
     }
 })
 
-app.delete('/v1/sinalibras/videoaula/deleteComentario/:id', cors(), async function (request, response){
+app.delete('/v1/sinalibras/videoaula/comentario/:id', cors(), async function (request, response){
     let idComentario = request.params.id
     let deleteComentario = await controllerComentario.setDeleteComentario(idComentario)
 
@@ -565,7 +565,7 @@ app.delete('/v1/sinalibras/videoaula/deleteComentario/:id', cors(), async functi
 })
 
 
-app.listen('8080', function(){
+app.listen('50000', function(){
     console.log("API funcionando e aguardando requisições")
 
 })
