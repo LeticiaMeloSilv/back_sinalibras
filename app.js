@@ -233,11 +233,7 @@ app.get('/v1/sinalibras/professor/validacao', cors(), bodyParserJson, async (req
 //ok
 })
 
-    //Chama a função da controller para retorNAR FILMES
-    let dadosProfessores = await controllerProfessor.getListarProfessores();
-
-    //Validação para retornar o JSON dos filmes ou retornar o 404
-    if(dadosProfessores.length > 0){
+    
 
 app.get('/v1/sinalibras/professor/listar', cors(), async function(request, response){
 
@@ -446,6 +442,7 @@ app.get('/v1/sinalibras/nivel/:id', cors(), async function(request, response, ne
         response.json({message: 'Nenhum registro foi encontrado'})
     }
 
+})
 
 app.get('/v1/sinalibras/niveis', cors(), async function (request, response){
     let dadosNivel = await controllerNivel.getListaNivel()
@@ -524,10 +521,6 @@ app.get('/v1/sinalibras/videosNivel/:id', cors(), async function(request, respon
 })
 
 /************************ COMENTARIOS ************************/
-=======
-    //Encaminh o ID para o controller buscar o filme
-    let dadosQuestao = await controllerQuestao.getBuscarQuestaoid(idQuestao)
-
 
 app.post('/v1/sinalibras/videoaula/comentario', cors(), bodyParserJson, async function(request, response){
     let contentType = request.headers['content-type']
@@ -544,27 +537,35 @@ app.post('/v1/sinalibras/videoaula/comentario', cors(), bodyParserJson, async fu
     }
 
 })
-=======
-app.get('/v1/sinalibras/questao', cors(), async function(request, response,next){
- 
-    //Encaminh o ID para o controller buscar o filme
-    let dadosQuestao = await controllerQuestao.getAllQuestoes()
+
+app.get('/v1/sinalibras/videoaula/comentarios/:id', cors(), async function (request, response){
+    let idVideo = request.params.id
+    let dadosComentario = await controllerComentario.getAllComentariosVideo(idVideo)
+
+    if(dadosComentario){
+        response.status(200)
+        response.json(dadosComentario)
+    }else{
+        response.status(404)
+        response.json({message: 'Não há dados no banco'})
+    }
+})
+
+app.delete('/v1/sinalibras/videoaula/deleteComentario/:id', cors(), async function (request, response){
+    let idComentario = request.params.id
+    let deleteComentario = await controllerComentario.setDeleteComentario(idComentario)
+
+    if(deleteComentario){
+        response.status(200)
+        response.json(deleteComentario)
+    }else{
+        response.status(404)
+        response.json({message: 'Não foi possível excluir esse comentário'})
+    }
+})
 
 
-    response.status(200);
-    response.json(dadosQuestao);
+app.listen('8080', function(){
+    console.log("API funcionando e aguardando requisições")
 
-});
-
-
-/******************************** VIDEOAULAS  *****************************/
-
-app.get('/v1/sinalibras/videoaulas', cors(), async function(request, response){
-    let contentType = request.headers['content-type']
-
-    let dadosBody = request.body
-    let dadosVideoaula = await controllerVideoaula.getListaVideoaulas()
-
-    response.status(dadosVideoaula.status_code)
-    response.json(dadosVideoaula)
 })
