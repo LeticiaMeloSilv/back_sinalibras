@@ -224,7 +224,12 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
             }
                
            
+            let validaçãoEmail = await alunoDao.validarDados(dadosAluno.email)
 
+
+            if(validaçãoEmail){
+                return message.ERROR_CONFLIT_EMAIL
+            }else{
 
                 let novoAluno= await alunoDao.insertAluno(dadosAluno)
                 
@@ -253,6 +258,7 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
                 
             
             }
+        }
         
         }else{
             return message.ERROR_CONTENT_TYPE//415

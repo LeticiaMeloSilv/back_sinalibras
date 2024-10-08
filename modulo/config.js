@@ -14,7 +14,8 @@ const ERROR_NOT_FOUND = {status: false, status_code: 404, message: 'Não foram e
 const ERROR_INTERNAL_SERVER_DB = {status: false, status_code: 500, message: 'Não foi possível processar a requisição devido ao um problema na comunicação com o Banco de Dados. Contate o ADM da API !!'};
 const ERROR_INTERNAL_SERVER = {status: false, status_code: 500, message: 'Não foi possível processar a requisição devido ao um problema na camada de negócio/controle da aplicação. Contate o ADM da API !!'};
 const ERROR_NOT_FOUND_ID = {status: false, status_code: 404, message: 'Não foi encontrado o ID  na requisição!!'};
-const ERROR_CONTENT_TYPE = { status: false, status_code: 415, message: 'O content-type encaminhado na requisição não é suportado pelo servidor. Deve-se encaminhar apenas requisções com application/json !!'}
+const ERROR_CONTENT_TYPE = { status: false, status_code: 415, message: 'O content-type encaminhado na requisição não é suportado pelo servidor. Deve-se encaminhar apenas requisções com application/json !!'};
+const ERROR_CONFLIT_EMAIL = {status: false, status_code: 422, message: 'Não foi possível processar sua solicitação: o email informado já existe!!'};
 
 /**********************Mensagens de SUCESSO *****************************/ 
 const SUCESS_CREATED_ITEM = {status: true, status_code: 201, message: 'Item criado com sucesso !!'};
@@ -36,5 +37,6 @@ module.exports = {
     ERROR_NOT_FOUND_ID,
     SUCESS_UPDATED_ITEM,
     ERROR_INVALID_DATA,
-    SUCESS_VALIDATED_ITEM
+    SUCESS_VALIDATED_ITEM,
+    ERROR_CONFLIT_EMAIL
 }

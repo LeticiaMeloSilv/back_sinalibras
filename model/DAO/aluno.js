@@ -31,8 +31,17 @@ const selectValidarAluno = async function (email,senha){
 
 
 
-constValidarDados = async function (email){
-     
+const validarDados = async function (email){
+     let sql = `select ta.nome, ta.email from tbl_aluno as ta where email = 'teste@teste';`
+
+     let rsAluno = await prisma.$queryRawUnsafe(sql)
+
+
+     if(rsAluno){
+        return true
+     }else{
+        return false 
+     }
     
 }
 
@@ -304,5 +313,6 @@ module.exports = {
     deleteAluno,
     updateAlunoFotoPerfil,
     updateSenhaAluno,
-    selectValidarAluno
+    selectValidarAluno,
+    validarDados
 }
