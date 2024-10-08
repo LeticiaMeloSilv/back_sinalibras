@@ -31,6 +31,12 @@ const selectValidarAluno = async function (email,senha){
 
 
 
+constValidarDados = async function (email){
+     
+    
+}
+
+
 const selectAllAlunos = async function (){
     
     let sql = 'select * from tbl_aluno'

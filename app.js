@@ -77,11 +77,11 @@ app.get('/v1/sinalibras/aluno/:id', cors(), async function(request,response,next
 
 app.get('/v1/sinalibras/aluno/nome/:nome', cors(), async function(request,response,next){
 
-        let nomeUsuario = request.query.nome
-        let usuariosNome = await controllerAluno.getBuscarAlunoNome(nomeUsuario)
+        let nome = request.query.nome
+        let usuariosNome = await controllerAluno.getBuscarAlunoNome(nome)
     
             response.json(usuariosNome);
-             response.status(usuariosNome.status_code)
+            response.status(usuariosNome.status_code)
 
             
     //ok        
@@ -90,11 +90,11 @@ app.get('/v1/sinalibras/aluno/nome/:nome', cors(), async function(request,respon
 
 app.get('/v1/sinalibras/aluno/email/:email', cors(), async function(request,response,next){
 
-        let emailUsuario = request.query.email
-        let usuarios = await controllerAluno.getBuscarAlunoEmail(emailUsuario)
+        let email = request.query.email
+        let usuarios = await controllerAluno.getBuscarAlunoEmail(email)
     
             response.json(usuarios);
-             response.status(usuarios.status_code)
+            response.status(usuarios.status_code)
 
 //ok
 })
@@ -318,12 +318,6 @@ app.get('/v1/sinalibras/questao/:id', cors(), async function(request,response,ne
     response.json(dadosQuestao);
 
 });
-
-
-
-app.listen('8080', function(){
-    console.log("API funcionando e aguardando requisições");
-})
 
 
 /****************************** MODULOS ***************************************/
@@ -565,7 +559,11 @@ app.delete('/v1/sinalibras/videoaula/comentario/:id', cors(), async function (re
 })
 
 
-app.listen('50000', function(){
+
+
+
+app.listen('8080', function(){
+   
     console.log("API funcionando e aguardando requisições")
 
 })

@@ -141,11 +141,12 @@ const getBuscarAlunoNome = async (nome) => {
     let nomeUsuario = nome
     let usuariosJSON = {};
 
+  
     if (nomeUsuario == '' || nomeUsuario == undefined) {
         return message.ERROR_INVALID_ID
     } else {
     
-        let dadosAlunos = await alunoDao.selectAlunoByNome(nome)
+        let dadosAlunos = await alunoDao.selectAlunoByNome(nomeUsuario)
 
         if (dadosAlunos) {
             if (dadosAlunos.length > 0) {
@@ -153,7 +154,8 @@ const getBuscarAlunoNome = async (nome) => {
                 usuariosJSON.alunos = dadosAlunos;
                 usuariosJSON.status_code = 200;
 
-                return usuariosJSON;
+                return usuariosJSON
+
             } else {
                 return message.ERROR_NOT_FOUND;
             }
@@ -179,11 +181,9 @@ const getBuscarAlunoEmail = async (email) => {
 
         if (dadosAlunos) {
             if (dadosAlunos.length > 0) {
+
                 usuariosJSON.alunos = dadosAlunos;
                 usuariosJSON.status_code = 200;
-
-                // console.log(usuariosJSON)
-
                 return usuariosJSON;
             } else {
                 return message.ERROR_NOT_FOUND;
