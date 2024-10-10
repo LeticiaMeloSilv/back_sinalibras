@@ -224,13 +224,12 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
             }
                
            
-            let validaçãoEmail = await alunoDao.validarDados(dadosAluno.email)
+            let validacaoEmail = await alunoDao.validarDados(dadosAluno.email)
+            console.log(validacaoEmail);
+            
 
 
-            if(validaçãoEmail){
-                return message.ERROR_CONFLIT_EMAIL
-            }else{
-
+            if(validacaoEmail == ''){
                 let novoAluno= await alunoDao.insertAluno(dadosAluno)
                 
                 
@@ -255,9 +254,9 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
                 }else {
                     
                     return message.ERROR_INTERNAL_SERVER_DB // 500 
-                
-            
             }
+            }else{
+                return message.ERROR_CONFLIT_EMAIL    
         }
         
         }else{
@@ -352,18 +351,14 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
             if (idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)) {
                 return message.ERROR_INVALID_ID; //400
               
-                
             } else {
                 let dadosAluno = await alunoDao.selectByIdAluno(idUsuario);
-                console.log(dadosAluno);
                 
                 let verificarId = dadosAluno.length
                 if (verificarId > 0) {
                     
                     dadosAluno = await alunoDao.deleteAluno(idUsuario)
                    
-                    
-                    
                     return message.SUCESS_DELETED_ITEM
                 } else {
                     return message.ERROR_NOT_FOUND_ID
