@@ -122,7 +122,7 @@ const getAllQuestoes = async function () {
         
         dadosQuestao.forEach(questao => {
             const { id_pergunta, pergunta, video, id_alternativa, alternativa, status } = questao;
-            console.log(questao);
+         
             if (!listaQuestoes[id_pergunta]) {
                 listaQuestoes[id_pergunta] = {
                     id_pergunta,

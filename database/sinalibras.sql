@@ -11,7 +11,20 @@ CREATE TABLE `tbl_usuario_teste` (
 ENGINE = InnoDB;
 
 
-select * from tbl_usuario_teste;
+CREATE TABLE `tbl_perguntas` (
+  `id_pergunta` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `pergunta` VARCHAR(250) NOT NULL,
+  `video` VARCHAR(255) NOT NULL)
+ENGINE = InnoDB;
+
+CREATE TABLE `tbl_alternativas` (
+  `id_alternativa` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `alternativa` VARCHAR(255) NOT NULL,
+  `status` TINYINT NOT NULL,
+  `id_pergunta` INT NOT NULL,
+  CONSTRAINT `fk_tbl_alternativas_tbl_perguntas`
+    FOREIGN KEY (`id_pergunta`) REFERENCES `tbl_perguntas` (`id_pergunta`))
+ENGINE = InnoDB;
 
 CREATE TABLE `tbl_resposta_usuario` (
   `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -23,7 +36,7 @@ CREATE TABLE `tbl_resposta_usuario` (
     FOREIGN KEY (`id_usuario_teste`) REFERENCES `tbl_usuario_teste` (`id_usuario_teste`))
 ENGINE = InnoDB;
 
-select * from tbl_resposta_usuario;
+
 
 CREATE TABLE `tbl_resultado` (
   `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -33,8 +46,7 @@ CREATE TABLE `tbl_resultado` (
     FOREIGN KEY (`id_usuario_teste`) REFERENCES `tbl_resposta_usuario` (`id`))
 ENGINE = InnoDB;
 
-alter table tbl_resultado
- change column id_resposta_usuario id_usuario_teste INT NOT NULL;
+
 
 CREATE TABLE `tbl_professor` (
   `id_professor` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -60,27 +72,40 @@ CREATE TABLE `tbl_aluno` (
 ENGINE = InnoDB;
 
 
-CREATE TABLE `tbl_perguntas` (
-  `id_pergunta` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `pergunta` VARCHAR(250) NOT NULL,
-  `video` VARCHAR(255) NOT NULL)
-ENGINE = InnoDB;
 
-CREATE TABLE `tbl_alternativas` (
-  `id_alternativa` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `alternativa` VARCHAR(255) NOT NULL,
-  `status` TINYINT NOT NULL,
-  `id_pergunta` INT NOT NULL,
-  CONSTRAINT `fk_tbl_alternativas_tbl_perguntas`
-    FOREIGN KEY (`id_pergunta`) REFERENCES `tbl_perguntas` (`id_pergunta`))
-ENGINE = InnoDB;
 
 
 select * from tbl_perguntas;
 select * from tbl_alternativas;
 
+/*
+DELIMITER //
 
-drop procedure inserir_questao_com_alternativas;
+CREATE PROCEDURE inserir_questao_com_alternativas (
+    IN p_pergunta VARCHAR(250),
+    IN p_video VARCHAR(255),
+    IN p_alternativa VARCHAR(100),
+    IN p_status VARCHAR(30)
+)
+BEGIN
+    DECLARE v_id_pergunta INT;
+
+ 
+    INSERT INTO tbl_perguntas (pergunta, video)
+    VALUES (p_pergunta, p_video);
+
+   
+    SET v_id_pergunta = LAST_INSERT_ID();
+
+  
+    INSERT INTO tbl_alternativas (alternativa, status, id_pergunta)
+    VALUES (p_alternativa, p_status, v_id_pergunta);
+END//
+
+CALL inserir_questao_com_alternativas ( 'qual seu nome?', ' xxxxxxxxxxxx', 'joao', 1 );
+*/
+
+
 
 DELIMITER //
 
@@ -97,51 +122,43 @@ BEGIN
     DECLARE v_end INT;
     DECLARE v_delimiter CHAR(1);
 
-    -- Define o delimitador
+
     SET v_delimiter = ';';
 
-    -- Insere a pergunta e captura o ID da pergunta
+   
     INSERT INTO tbl_perguntas (pergunta, video)
     VALUES (p_pergunta, p_video);
     SET v_id_pergunta = LAST_INSERT_ID();
 
-    -- Inicializa a posição
+
     SET v_pos = 1;
 
-    -- Loop para processar cada alternativa
+
     WHILE CHAR_LENGTH(p_alternativas) > 0 DO
-        -- Encontra a próxima alternativa
+ 
         SET v_end = LOCATE(v_delimiter, p_alternativas);
         IF v_end = 0 THEN
             SET v_end = CHAR_LENGTH(p_alternativas) + 1;
         END IF;
 
-        -- Extraí a alternativa e o status
+   
         SET v_alternativa = SUBSTRING_INDEX(p_alternativas, v_delimiter, 1);
         SET v_status = SUBSTRING_INDEX(v_alternativa, ',', -1);
         SET v_alternativa = SUBSTRING_INDEX(v_alternativa, ',', 1);
 
-        -- Insere a alternativa na tabela
         INSERT INTO tbl_alternativas (alternativa, status, id_pergunta)
         VALUES (v_alternativa, v_status, v_id_pergunta);
 
-        -- Remove a alternativa processada
+     
         SET p_alternativas = SUBSTRING(p_alternativas, v_end + 1);
     END WHILE;
 END//
-
-DELIMITER ;
 
 
 CALL inserir_questao_com_alternativas(
     'Qual é a capital da França?', 
     'video1.mp4', 
     'Paris,1;Londres,0;Berlim,0'
-);
-CALL inserir_questao_com_alternativas(
-    'Qual é a capital do Brasil?', 
-    'video1.mp4', 
-    'Brasilia,1;Rio de Janeiro,0;Salvador,0'
 );
 
 DELIMITER $$
@@ -159,28 +176,26 @@ BEGIN
     -- Insere o resultado e o usuário na tabela
     INSERT INTO tbl_resultado (id_usuario_teste, pontuacao)
     VALUES (p_id_usuario_teste, pontuacao)
-    ON DUPLICATE KEY UPDATE pontuacao = pontuacao;
+    ON DUPLICATE KEY UPDATE pontuacao = GREATEST(pontuacao, VALUES(pontuacao));
 END $$
 DELIMITER ;
 
-call inserir_resultado_usuario(1);
-
-
-
-
+call inserir_resultado_usuario(11);
+SELECT * FROM tbl_resposta_usuario ;
 
 
 create view pergunta_alternativas as
-select p.id_pergunta, p.pergunta, p.video, a.id_alternativa, a.alternativa, a.status
+select p.id_pergunta, p.pergunta, p.video, a.alternativa, a.status
 from tbl_alternativas as a
 inner join tbl_perguntas as p
 on a.id_pergunta = p.id_pergunta;
 
 
-select * from pergunta_alternativas where id_pergunta = 2;
+SELECT * FROM tbl_resposta_usuario WHERE id_usuario_teste = 2;
+select * from tbl_resposta_usuario;
 
 
-
+                                
                                 
                                 insert into tbl_aluno ( 
                                 nome, 
@@ -192,17 +207,19 @@ select * from pergunta_alternativas where id_pergunta = 2;
                                 ) values (
                                     'ju',
                                     '2000-6-8',
-                                    'teste@teste',
+                                    'ju@ju',
                                     MD5('12345678'),
                                     '2000-09-12',
                                      null
                                 );
-
 
 select * from tbl_aluno;
 select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta where email = 'mu@mu' and senha = md5('1234566');
 
 select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta
  where email = 'mu@mu' and senha = md5('1234567');
+ 
+ select id_aluno, nome, email, data_nascimento, foto_perfil  from tbl_aluno where id_aluno = 1
+ 
  
  

@@ -184,6 +184,17 @@ app.post('/v1/sinalibras/usuario', cors(), bodyParserJson, async function (reque
 //ok
 })
 
+app.post('/v1/sinalibras/resultado_quiz', cors(), bodyParserJson, async function (request, response) {
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+
+    let resultadoNovaResposta = await controllerProfessor.setInserirRespostaQuiz(dadosBody, contentType);
+
+    response.status(resultadoNovaResposta.status_code); 
+    response.json(resultadoNovaResposta);
+});
+
 
 /*********************** Professor *****************************/
 
@@ -307,12 +318,11 @@ app.post('/v1/sinalibras/questao', cors(), bodyParserJson, async function (reque
 })
 
 
-app.get('/v1/sinalibras/questao/:id', cors(), async function(request,response,next){
+app.get('/v1/sinalibras/questoes', cors(), async function(request,response,next){
 
-    let idQuestao = request.params.id;
 
     //Encaminh o ID para o controller buscar o filme
-    let dadosQuestao = await controllerQuestao.getBuscarQuestoes(idQuestao)
+    let dadosQuestao = await controllerQuestao.getAllQuestoes()
 
     response.status(dadosQuestao.status_code);
     response.json(dadosQuestao);

@@ -31,7 +31,7 @@ const selectValidarAluno = async function (email,senha){
 
 
 
-const validarDados = async function (email){
+const selectVerificarEmail = async function (email){
     try{
      let sql = `select ta.nome, ta.email from tbl_aluno as ta where email = '${email}';`
 
@@ -52,7 +52,7 @@ const validarDados = async function (email){
 
 const selectAllAlunos = async function (){
     
-    let sql = 'select * from tbl_aluno'
+    let sql = 'select id_aluno, nome, email, data_nascimento, foto_perfil  from tbl_aluno'
 
     let rsAluno = await prisma.$queryRawUnsafe(sql);
     
@@ -64,7 +64,7 @@ const selectAllAlunos = async function (){
 
 const selectByIdAluno = async function (id){
     try{
-        let sql = `select * from tbl_aluno where id_aluno = ${id}`
+        let sql = `select id_aluno, nome, email, data_nascimento, foto_perfil  from tbl_aluno where id_aluno = ${id}`
 
         let rsUsuario = await prisma.$queryRawUnsafe(sql)
 
@@ -321,5 +321,5 @@ module.exports = {
     updateAlunoFotoPerfil,
     updateSenhaAluno,
     selectValidarAluno,
-    validarDados
+    selectVerificarEmail
 }

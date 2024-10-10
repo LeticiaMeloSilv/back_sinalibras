@@ -23,11 +23,29 @@ const selectValidarProf = async function (email,senha){
            return false
        }
    }
+   
+const selectVerificarEmail = async function (email){
+    try{
+     let sql = `select ta.nome, ta.email from tbl_professor as ta where email = '${email}';`
+
+     let rsAluno = await prisma.$queryRawUnsafe(sql)
+
+
+     if(rsAluno){
+        return rsAluno
+     }else{
+        return false 
+     }
+    }catch(error){
+        return false
+    }
+    
+}
 
 
 const selectAllProfessores = async function (){
     
-    let sql = 'select * from tbl_professor'
+    let sql = 'select id_professor, nome, email, data_nascimento, foto_perfil from tbl_professor'
 
     let rsProfessor = await prisma.$queryRawUnsafe(sql);
     
@@ -39,7 +57,7 @@ const selectAllProfessores = async function (){
 
 const selectByIdProfessor = async function (id){
     try{
-        let sql = `select * from tbl_professor where id_professor = ${id}`
+        let sql = `select id_professor, nome, email, data_nascimento, foto_perfil from tbl_professor where id_professor = ${id}`
 
         let rsProfessor = await prisma.$queryRawUnsafe(sql)
 
@@ -190,7 +208,7 @@ const deleteProfessor = async function (id){
 
 const selectProfessorByNome = async function (nome){
     try{
-        let sql = `select * from tbl_professor where nome LIKE "%${nome}%"`
+        let sql = `select id_professor, nome, email, data_nascimento, foto_perfil from tbl_professor where nome LIKE "%${nome}%"`
        
         let rsProfessor = await prisma.$queryRawUnsafe(sql);
         return rsProfessor;
@@ -203,7 +221,7 @@ const selectProfessorByNome = async function (nome){
 
 const selectProfessorByEmail = async function (email){
     try{
-        let sql = `select * from tbl_professor where email LIKE "%${email}%"`
+        let sql = `select id_professor, nome, email, data_nascimento, foto_perfil from tbl_professor where email LIKE "%${email}%"`
 
         let rsProfessor = await prisma.$queryRawUnsafe(sql)
 
@@ -270,5 +288,6 @@ module.exports = {
     insertProfessor,
     updateProfessorFotoPerfil,
     updateSenhaProfessor,
-    selectValidarProf
+    selectValidarProf,
+    selectVerificarEmail
 }

@@ -224,8 +224,8 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
             }
                
            
-            let validacaoEmail = await alunoDao.validarDados(dadosAluno.email)
-            console.log(validacaoEmail);
+            let validacaoEmail = await alunoDao.selectVerificarEmail(dadosAluno.email)
+         
             
 
 
