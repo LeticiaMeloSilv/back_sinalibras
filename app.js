@@ -44,8 +44,7 @@ app.get('/v1/sinalibras/aluno/validacao', cors(), bodyParserJson, async (request
     response.json(dadosUsuario)
 //ok
 })
-
-app.get('/v1/sinalibras/alunos', cors(), async function(request, response){
+app.post('/v1/sinalibras/alunos', cors(), async function(request, response){
 
     //Chama a função da controller para retorNAR FILMES
     let dadosUsuarios = await controllerAluno.getListarAlunos();
@@ -234,7 +233,7 @@ app.delete('/v1/sinalibras/professor/:id', cors(), async function(request,respon
 //ok
 })
 
-app.get('/v1/sinalibras/professor/validacao', cors(), bodyParserJson, async (request, response, next) => {
+app.post('/v1/sinalibras/professor/validacao', cors(), bodyParserJson, async (request, response, next) => {
 
     let contentType = request.headers['content-type']
     let dadosBody = request.body
@@ -244,7 +243,7 @@ app.get('/v1/sinalibras/professor/validacao', cors(), bodyParserJson, async (req
 //ok
 })
 
-    
+
 
 app.get('/v1/sinalibras/professores', cors(), async function(request, response){
 
@@ -328,6 +327,7 @@ app.get('/v1/sinalibras/questoes', cors(), async function(request,response,next)
     response.json(dadosQuestao);
 
 });
+
 
 
 /****************************** MODULOS ***************************************/
@@ -555,7 +555,9 @@ app.get('/v1/sinalibras/videoaula/comentarios/:id', cors(), async function (requ
     }
 })
 
-app.delete('/v1/sinalibras/videoaula/comentario/:id', cors(), async function (request, response){
+
+app.delete('/v1/sinalibras/videoaula/deleteComentario/:id', cors(), async function (request, response){
+
     let idComentario = request.params.id
     let deleteComentario = await controllerComentario.setDeleteComentario(idComentario)
 
@@ -572,9 +574,15 @@ app.delete('/v1/sinalibras/videoaula/comentario/:id', cors(), async function (re
 
 
 
+
+
+app.listen('8080', function(){
+    console.log("API funcionando e aguardando requisições");
+});
 app.listen('8080', function(){
    
     console.log("API funcionando e aguardando requisições")
 
 })
+
 

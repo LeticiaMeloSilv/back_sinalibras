@@ -20,7 +20,7 @@ const ERROR_CONFLIT_EMAIL = {status: false, status_code: 422, message: 'Não foi
 /**********************Mensagens de SUCESSO *****************************/ 
 const SUCESS_CREATED_ITEM = {status: true, status_code: 201, message: 'Item criado com sucesso !!'};
 const SUCESS_UPDATED_ITEM = {status: true, status_code: 201, message: 'Item atualizado com sucesso !!'};
-const SUCESS_DELETED_ITEM = {status: true, status_code:200, message: 'Item deletado ocm sucesso !!'}
+const SUCESS_DELETED_ITEM = {status: true, status_code:200, message: 'Item deletado com sucesso !!'}
 const SUCESS_VALIDATED_ITEM = {status: true, status_code:200, message: 'Usuário validado com sucesso!!'}
 
 
