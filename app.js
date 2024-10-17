@@ -328,6 +328,59 @@ app.get('/v1/sinalibras/questoes', cors(), async function(request,response,next)
 
 });
 
+/**************************************** videoaulas ************************************/
+
+app.get('/v1/sinalibras/videoaulas', cors(), async function(request, response){
+
+   
+    let dadosVideoaula = await controllerVideoaula.getListaVideoaulas()
+
+   
+    if(dadosVideoaula){
+      response.json(dadosVideoaula);
+        response.status(200);
+    }else{
+        response.status(404);
+        response.json({message: 'Nenhum registro foi encontrado'})
+        
+    }
+
+    //ok
+
+})
+
+
+app.delete('/v1/sinalibras/deleteVideoaula/:id', cors(), async function(request, response){
+    let idVideoaula = request.params.id
+
+    let excluirVideo = controllerVideoaula.setExcluirVideoaula(idVideoaula)
+
+    if(excluirVideo){
+        response.status(200)
+        response.json(excluirVideo)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+
+}) 
+
+
+app.post('/v1/sinalibras/videoaula', cors(), bodyParserJson, async function(request, response){
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+
+    let novaVideoaula = await controllerVideoaula.inserirNovaVideoaula(dadosBody, contentType)
+
+    if(novaVideoaula){
+        response.status(200)
+        response.json(novaVideoaula)
+    }else{
+        response.status(404)
+        response.json({message: 'Não foi possível inserir no banco'})
+    }
+
+})
 
 
 /****************************** MODULOS ***************************************/
@@ -579,10 +632,6 @@ app.delete('/v1/sinalibras/videoaula/deleteComentario/:id', cors(), async functi
 app.listen('8080', function(){
     console.log("API funcionando e aguardando requisições");
 });
-app.listen('8080', function(){
-   
-    console.log("API funcionando e aguardando requisições")
 
-})
 
 

@@ -3,6 +3,7 @@ const videoaulaDAO = require ('../model/DAO/videoaula.js')
 const nivelDAO = require ('../model/DAO/nivel.js')
 const moduloDAO = require ('../model/DAO/modulo.js')
 const professorDAO = require ('../model/DAO/professor.js')
+const comentarioDAO = require('../model/DAO/comentario.js')
 const { Prisma } = require('@prisma/client')
 
 const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
@@ -37,19 +38,23 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
 
                 if (status){
                     let novaVideoaula = await videoaulaDAO.insertVideoaula(dadosVideoaula)
+
+                    console.log(novaVideoaula);
+    
                     if(novaVideoaula){
                         let ultimoId = await videoaulaDAO.selectUltimoId()
-                        dadosVideoaula.id = Number(ultimoId[0].id)
-                    }
+                        dadosVideoaula.id_videoaula = Number(ultimoId[0].id)
 
-                    if (novaVideoaula){
+                        console.log(dadosVideoaula);
+                        
+                    
 
                         novaVideoaulaJson.videoaula = dadosVideoaula
                         novaVideoaulaJson.status = message.SUCESS_CREATED_ITEM.status
-                        novaVideoaula.status_code = message.SUCESS_CREATED_ITEM.status_code
-                        novaVideoaula.message = message.SUCESS_CREATED_ITEM.message
+                        novaVideoaulaJson.status_code = message.SUCESS_CREATED_ITEM.status_code
+                        novaVideoaulaJson.message = message.SUCESS_CREATED_ITEM.message
 
-                        return novaVideoaula
+                        return novaVideoaulaJson
                     }else {
                         return message.ERROR_INTERNAL_SERVER_DB
                     }
@@ -159,28 +164,32 @@ const getListaVideoaulas = async function (){
 
     let dadosVideoaula = await videoaulaDAO.selectAllVideoaula()
 
-    console.log(dadosVideoaula);
-
     if(dadosVideoaula){
 
         if(dadosVideoaula.length>0){
 
             for (let videoaula of dadosVideoaula){
-                let nivelVideoaula = await nivelDAO.selectNivelById(videoaula.id_nivel)
-                delete videoaula.id_nivel    
+                let nivelVideoaula = await nivelDAO.selectNivelById(videoaula.id_nivel)   
                 videoaula.nivel = nivelVideoaula
+                delete videoaula.id_nivel 
                 
             }
 
             for (let videoaula of dadosVideoaula){
                 let moduloVideoaula = await moduloDAO.selectModuloById(videoaula.id_modulo)
-                delete videoaula.id_modulo
                 videoaula.modulo = moduloVideoaula
+                delete videoaula.id_modulo
             }
             for (let videoaula of dadosVideoaula){
                 let professorVideoaula = await professorDAO.selectByIdProfessor(videoaula.id_professor)
-                delete videoaula.id_professor
                 videoaula.professor = professorVideoaula
+                delete videoaula.id_professor
+            }
+
+            for (let videoaula of dadosVideoaula){
+                let comentarioVideoaula = await comentarioDAO.selectComentariosVideo(videoaula.id_videoaula)
+                videoaula.comentarios = comentarioVideoaula
+                delete videoaula.id_comentario
             }
 
 

@@ -32,8 +32,8 @@
                  '${dadosVideoaula.duracao}', 
                  '${dadosVideoaula.foto_capa}',
                  '${dadosVideoaula.data}',
-                 '${dadosVideoaula.id_nivel}'
-                 '${dadosVideoaula.id_modulo}'
+                 '${dadosVideoaula.id_nivel}',
+                 '${dadosVideoaula.id_modulo}',
                  '${dadosVideoaula.id_professor}'
              )`
          }else{
@@ -48,22 +48,21 @@
                  id_professor
              ) values (
                  '${dadosVideoaula.titulo}',
-                 '${dadosVideoaula.descricao}',
-                 null, 
+                 null,
+                 '${dadosVideoaula.duracao}',
                  '${dadosVideoaula.foto_capa}',
                  '${dadosVideoaula.data}',
-                 '${dadosVideoaula.id_nivel}'
-                 '${dadosVideoaula.id_modulo}'
+                 '${dadosVideoaula.id_nivel}',
+                 '${dadosVideoaula.id_modulo}',
                  '${dadosVideoaula.id_professor}'
              )`
          }
  
          let rsVideoaula = await prisma.$executeRawUnsafe(sql)
  
-         if(rsVideoaula)
-             return true
-         else 
-             return false
+            if(rsVideoaula)
+            return true
+        
      } catch (error){
          return false 
      }
@@ -129,8 +128,7 @@
  
          if(rsVideoaula)
              return true
-         else 
-             return false
+       
  
      }catch(error){
          return false
@@ -146,13 +144,11 @@
  
          let rsVideoaula = await prisma.$queryRawUnsafe(sql)
  
-         console.log(rsVideoaula);
        
  
          if(rsVideoaula.length > 0)
              return rsVideoaula
-         else
-             return false
+     
  
       }catch(error){
          return false
@@ -169,8 +165,7 @@
  
          if(rsVideoaula)
              return rsVideoaula
-         else 
-             return false
+     
      }catch(error){
          return false
      }
