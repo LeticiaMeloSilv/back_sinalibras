@@ -31,9 +31,28 @@ const selectValidarAluno = async function (email,senha){
 
 
 
+const selectVerificarEmail = async function (email){
+    try{
+     let sql = `select ta.nome, ta.email from tbl_aluno as ta where email = '${email}';`
+
+     let rsAluno = await prisma.$queryRawUnsafe(sql)
+
+
+     if(rsAluno){
+        return rsAluno
+     }else{
+        return false 
+     }
+    }catch(error){
+        return false
+    }
+    
+}
+
+
 const selectAllAlunos = async function (){
     
-    let sql = 'select * from tbl_aluno'
+    let sql = 'select id_aluno, nome, email, data_nascimento, foto_perfil  from tbl_aluno'
 
     let rsAluno = await prisma.$queryRawUnsafe(sql);
     
@@ -45,7 +64,7 @@ const selectAllAlunos = async function (){
 
 const selectByIdAluno = async function (id){
     try{
-        let sql = `select * from tbl_aluno where id_aluno = ${id}`
+        let sql = `select id_aluno, nome, email, data_nascimento, foto_perfil  from tbl_aluno where id_aluno = ${id}`
 
         let rsUsuario = await prisma.$queryRawUnsafe(sql)
 
@@ -53,8 +72,7 @@ const selectByIdAluno = async function (id){
        
 
     } catch (error){
-        console.log(error);
-        
+   
         return false
     }
 
@@ -193,18 +211,23 @@ const updateAluno = async function (id, dadosAluno) {
 
     
 const deleteAluno = async function (id){
-  
-     
+
     try {
    
        let sql = `delete from tbl_aluno where id_aluno = ${id}`
    
        let rsAluno = await prisma.$executeRawUnsafe(sql);  
+
  
        return rsAluno
       
+       if(rsAluno)
+       return true
+       else
+       return false
+
+      
      } catch (error) {
-        
        return false
        }
    
@@ -231,6 +254,8 @@ const selectAlunoByEmail = async function (email){
 
         if(rsAluno)
         return rsAluno
+        else
+        return false
     }catch(error){
         return false
     }
@@ -273,9 +298,11 @@ const updateSenhaAluno = async function  (id, dadosAluno) {
                 WHERE id_aluno = ${id}`
 
           let rsAluno = await prisma.$executeRawUnsafe(sql)    
-          if(rsAluno){
+          if(rsAluno)
             return rsAluno
-          }  
+        else 
+        return false
+          
     }catch(error){
         return false 
     }
@@ -297,5 +324,6 @@ module.exports = {
     deleteAluno,
     updateAlunoFotoPerfil,
     updateSenhaAluno,
-    selectValidarAluno
+    selectValidarAluno,
+    selectVerificarEmail
 }

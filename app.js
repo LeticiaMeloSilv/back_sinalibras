@@ -76,11 +76,11 @@ app.get('/v1/sinalibras/aluno/:id', cors(), async function(request,response,next
 
 app.get('/v1/sinalibras/aluno/nome/:nome', cors(), async function(request,response,next){
 
-        let nomeUsuario = request.query.nome
-        let usuariosNome = await controllerAluno.getBuscarAlunoNome(nomeUsuario)
+        let nome = request.query.nome
+        let usuariosNome = await controllerAluno.getBuscarAlunoNome(nome)
     
             response.json(usuariosNome);
-             response.status(usuariosNome.status_code)
+            response.status(usuariosNome.status_code)
 
             
     //ok        
@@ -89,11 +89,11 @@ app.get('/v1/sinalibras/aluno/nome/:nome', cors(), async function(request,respon
 
 app.get('/v1/sinalibras/aluno/email/:email', cors(), async function(request,response,next){
 
-        let emailUsuario = request.query.email
-        let usuarios = await controllerAluno.getBuscarAlunoEmail(emailUsuario)
+        let email = request.query.email
+        let usuarios = await controllerAluno.getBuscarAlunoEmail(email)
     
             response.json(usuarios);
-             response.status(usuarios.status_code)
+            response.status(usuarios.status_code)
 
 //ok
 })
@@ -183,6 +183,17 @@ app.post('/v1/sinalibras/usuario', cors(), bodyParserJson, async function (reque
 //ok
 })
 
+app.post('/v1/sinalibras/resultado_quiz', cors(), bodyParserJson, async function (request, response) {
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+
+    let resultadoNovaResposta = await controllerProfessor.setInserirRespostaQuiz(dadosBody, contentType);
+
+    response.status(resultadoNovaResposta.status_code); 
+    response.json(resultadoNovaResposta);
+});
+
 
 /*********************** Professor *****************************/
 
@@ -233,7 +244,8 @@ app.post('/v1/sinalibras/professor/validacao', cors(), bodyParserJson, async (re
 })
 
 
-app.get('/v1/sinalibras/professor/listar', cors(), async function(request, response){
+
+app.get('/v1/sinalibras/professores', cors(), async function(request, response){
 
    
     let dadosProfessores = await controllerProfessor.getListarProfessores();
@@ -251,7 +263,7 @@ app.get('/v1/sinalibras/professor/listar', cors(), async function(request, respo
 
 })
 
-app.get('/v1/sinalibras/professor/buscar/:id', cors(), async function(request,response,next){
+app.get('/v1/sinalibras/professor/:id', cors(), async function(request,response,next){
 
     let idProfessor = request.params.id;
 
@@ -305,20 +317,16 @@ app.post('/v1/sinalibras/questao', cors(), bodyParserJson, async function (reque
 })
 
 
-app.get('/v1/sinalibras/questao/:id', cors(), async function(request,response,next){
+app.get('/v1/sinalibras/questoes', cors(), async function(request,response,next){
 
-    let idQuestao = request.params.id;
 
     //Encaminh o ID para o controller buscar o filme
-    let dadosQuestao = await controllerQuestao.getBuscarQuestoes(idQuestao)
+    let dadosQuestao = await controllerQuestao.getAllQuestoes()
 
     response.status(dadosQuestao.status_code);
     response.json(dadosQuestao);
 
 });
-
-
-
 
 
 
@@ -375,7 +383,7 @@ app.post('/v1/sinalibras/modulo', cors(), bodyParserJson, async function(request
 })
 
 
-app.delete('/v1/sinalibras/deleteModulo/:id', cors(), async function(request, response){
+app.delete('/v1/sinalibras/modulo/:id', cors(), async function(request, response){
     let idModulo = request.params.id
 
 
@@ -390,7 +398,7 @@ app.delete('/v1/sinalibras/deleteModulo/:id', cors(), async function(request, re
 
 })
 
-app.put('/v1/sinalibras/updateModulos/:id', cors(), bodyParserJson, async function(request, response){
+app.put('/v1/sinalibras/modulo/:id', cors(), bodyParserJson, async function(request, response){
 
     let idModulo = request.params.id
     let contentType = request.headers['content-type']
@@ -469,7 +477,7 @@ app.post('/v1/sinalibras/nivel', cors(), bodyParserJson, async function(request,
 })
 
 
-app.delete('/v1/sinalibras/deleteNivel/:id', cors(), async function(request, response){
+app.delete('/v1/sinalibras/nivel/:id', cors(), async function(request, response){
     let idNivel = request.params.id
 
 
@@ -484,7 +492,7 @@ app.delete('/v1/sinalibras/deleteNivel/:id', cors(), async function(request, res
 
 })
 
-app.put('/v1/sinalibras/updateNivel/:id', cors(), bodyParserJson, async function(request, response){
+app.put('/v1/sinalibras/nivel/:id', cors(), bodyParserJson, async function(request, response){
 
     let idNivel = request.params.id
     let contentType = request.header['content-type']
@@ -547,7 +555,9 @@ app.get('/v1/sinalibras/videoaula/comentarios/:id', cors(), async function (requ
     }
 })
 
+
 app.delete('/v1/sinalibras/videoaula/deleteComentario/:id', cors(), async function (request, response){
+
     let idComentario = request.params.id
     let deleteComentario = await controllerComentario.setDeleteComentario(idComentario)
 
@@ -565,6 +575,14 @@ app.delete('/v1/sinalibras/videoaula/deleteComentario/:id', cors(), async functi
 
 
 
+
 app.listen('8080', function(){
     console.log("API funcionando e aguardando requisições");
 });
+app.listen('8080', function(){
+   
+    console.log("API funcionando e aguardando requisições")
+
+})
+
+

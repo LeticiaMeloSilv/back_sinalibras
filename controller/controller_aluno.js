@@ -141,11 +141,12 @@ const getBuscarAlunoNome = async (nome) => {
     let nomeUsuario = nome
     let usuariosJSON = {};
 
+  
     if (nomeUsuario == '' || nomeUsuario == undefined) {
         return message.ERROR_INVALID_ID
     } else {
     
-        let dadosAlunos = await alunoDao.selectAlunoByNome(nome)
+        let dadosAlunos = await alunoDao.selectAlunoByNome(nomeUsuario)
 
         if (dadosAlunos) {
             if (dadosAlunos.length > 0) {
@@ -153,7 +154,8 @@ const getBuscarAlunoNome = async (nome) => {
                 usuariosJSON.alunos = dadosAlunos;
                 usuariosJSON.status_code = 200;
 
-                return usuariosJSON;
+                return usuariosJSON
+
             } else {
                 return message.ERROR_NOT_FOUND;
             }
@@ -179,11 +181,9 @@ const getBuscarAlunoEmail = async (email) => {
 
         if (dadosAlunos) {
             if (dadosAlunos.length > 0) {
+
                 usuariosJSON.alunos = dadosAlunos;
                 usuariosJSON.status_code = 200;
-
-                // console.log(usuariosJSON)
-
                 return usuariosJSON;
             } else {
                 return message.ERROR_NOT_FOUND;
@@ -224,8 +224,12 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
             }
                
            
+            let validacaoEmail = await alunoDao.selectVerificarEmail(dadosAluno.email)
+         
+            
 
 
+            if(validacaoEmail == ''){
                 let novoAluno= await alunoDao.insertAluno(dadosAluno)
                 
                 
@@ -250,9 +254,10 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
                 }else {
                     
                     return message.ERROR_INTERNAL_SERVER_DB // 500 
-                
-            
             }
+            }else{
+                return message.ERROR_CONFLIT_EMAIL    
+        }
         
         }else{
             return message.ERROR_CONTENT_TYPE//415
@@ -346,18 +351,14 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
             if (idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)) {
                 return message.ERROR_INVALID_ID; //400
               
-                
             } else {
                 let dadosAluno = await alunoDao.selectByIdAluno(idUsuario);
-                console.log(dadosAluno);
                 
                 let verificarId = dadosAluno.length
                 if (verificarId > 0) {
                     
                     dadosAluno = await alunoDao.deleteAluno(idUsuario)
                    
-                    
-                    
                     return message.SUCESS_DELETED_ITEM
                 } else {
                     return message.ERROR_NOT_FOUND_ID

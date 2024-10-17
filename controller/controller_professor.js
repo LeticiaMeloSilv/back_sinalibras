@@ -9,7 +9,7 @@
 const message = require('../modulo/config.js')
 const professorDAO = require('../model/DAO/professor.js');
 const data = require('./validacoes.js')
-const userQuizDAO = require('../model/DAO/preCadastroProfessor.js')
+const preCadastroProfDAO = require('../model/DAO/preCadastroProfessor.js')
 
 
 
@@ -212,6 +212,11 @@ const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
             if (!dadosProfessor.data_nascimento || !data.validarData(dadosProfessor.data_nascimento)) {
                 return message.ERROR_INVALID_DATA 
             }
+
+
+            let verificarEmail = await professorDAO.selectVerificarEmail(dadosProfessor.email)
+
+            if(verificarEmail ==''){
                
                 let novoProfessor = await professorDAO.insertProfessor(dadosProfessor)
                
@@ -235,6 +240,10 @@ const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
                 
             
             }
+
+        }else{
+            return message.ERROR_CONFLIT_EMAIL
+        } 
         
         }else{
             return message.ERROR_CONTENT_TYPE//415
@@ -365,16 +374,12 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
                 ){
                     return message.ERROR_REQUIRED_FIELDS
                 }
-    
-                if (!dadosUser.data || dadosUser.data == undefined|| dadosUser.data == null) {
-                    return message.ERROR_INVALID_DATA 
-                }
-                   
-                    let user = await userQuizDAO.insertUsuarioQuiz(dadosUser)
+                   //adicionar validação do email
+                    let user = await preCadastroProfDAO.insertUsuarioQuiz(dadosUser)
                    
                     if (user){
                     
-                        let ultimoID = await userQuizDAO.selectUltimoIdUserQuiz()
+                        let ultimoID = await preCadastroProfDAO.selectUltimoIdUserQuiz()
                        
                         dadosUser.id = Number(ultimoID[0].id_usuario_teste)
                         
@@ -402,6 +407,113 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
             return message.ERROR_INTERNAL_SERVER //500 erro na controller
         }
     }
+
+
+    // const setInserirResultadoQuiz = async function (dadosUser, contentType) {
+    
+    //     try{
+
+            
+          
+    //         if (String(contentType).toLowerCase() == 'application/json'){
+              
+    //             let usuarioJson = {}
+    
+    //             if(
+    //                dadosUser.id_alternativa == ""   || dadosUser.id_alternativa == undefined   || dadosUser.id_alternativa == null   ||  isNaN(dadosUser.id_alternativa) ||
+    //                dadosUser.id_usuario_teste == "" || dadosUser.id_usuario_teste == undefined || dadosUser.id_usuario_teste == null ||isNaN(dadosUser.id_usuario_teste)
+    //             ){
+    //                 return message.ERROR_REQUIRED_FIELDS
+    //             }
+
+    //                 let arrayRespostas = []
+
+    //                 arrayRespostas.push(dadosUser)
+                   
+    //                 let user = await preCadastroProfDAO.insertRespostaUsuario(arrayRespostas)
+                   
+    //                 if (user){
+                    
+    //                     let ultimoID = await userQuizDAO.selectUltimoIdUserQuiz()
+                       
+    //                     dadosUser.id = Number(ultimoID[0].id_usuario_teste)
+                        
+    //                 }
+                    
+    //                 if (user){
+    //                     usuarioJson.usuario = dadosUser
+    //                     usuarioJson.status = message.SUCESS_CREATED_ITEM.status
+    //                     usuarioJson.status_code = message.SUCESS_CREATED_ITEM.status_code
+    //                     usuarioJson.message = message.SUCESS_CREATED_ITEM.message
+                        
+    //                     return usuarioJson //201
+    //                 }else {
+    //                     return message.ERROR_INTERNAL_SERVER_DB // 500 
+                    
+                
+    //             }
+            
+    //         }else{
+    //             return message.ERROR_CONTENT_TYPE//415
+    //         }
+            
+    //     }catch(error){
+            
+    //         return message.ERROR_INTERNAL_SERVER //500 erro na controller
+    //     }
+    // }
+
+    const setInserirRespostaQuiz = async function (dadosUser, contentType) {
+        try {
+            if (String(contentType).toLowerCase() === 'application/json') {
+                let usuarioJson = {};
+    
+              
+                if (
+                    !Array.isArray(dadosUser) || 
+                    dadosUser.some(usuario => 
+                        !usuario.id_alternativa || 
+                        isNaN(usuario.id_alternativa) || 
+                        !usuario.id_usuario_teste || 
+                        isNaN(usuario.id_usuario_teste)
+                    )
+                ) {
+                    return message.ERROR_REQUIRED_FIELDS;
+                }
+    
+              
+                let user = await preCadastroProfDAO.insertRespostaUsuario(dadosUser);
+    
+                if (user) {
+                    let ultimoID = await preCadastroProfDAO.selectUltimoIdRespostaQuiz()
+                       
+                    dadosUser.id = Number(ultimoID[0].id)
+
+                    //erro da procedure 
+                    //let resultadoQuiz = await preCadastroProfDAO.insertResultadoUsuario(dadosUser.id_usuario_teste)
+                    //Está inserindo na tbl_resposta_usuario
+    
+                    usuarioJson.usuario = dadosUser;
+                    //usuarioJson.resultado = resultadoQuiz
+                    usuarioJson.status = message.SUCESS_CREATED_ITEM.status;
+                    usuarioJson.status_code = message.SUCESS_CREATED_ITEM.status_code;
+                    usuarioJson.message = message.SUCESS_CREATED_ITEM.message;
+    
+                    return usuarioJson// 201
+                } else {
+                    return message.ERROR_INTERNAL_SERVER_DB; // 500
+                }
+            } else {
+                return message.ERROR_CONTENT_TYPE; // 415
+            }
+        } catch (error) {
+            console.error("Erro na controller:", error);
+            return message.ERROR_INTERNAL_SERVER; // 500 erro na controller
+        }
+    };
+    
+
+    
 
     /*********************************** Professor Perfil ************************************** */
 
@@ -546,5 +658,6 @@ module.exports = {
     setAtualizarFotoPerfilProfessor,
     setAtualizarSenhaProf,
     getValidarProf,
-    setInserirUsuarioQuiz
+    setInserirUsuarioQuiz,
+    setInserirRespostaQuiz
 }
