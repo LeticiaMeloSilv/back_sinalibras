@@ -68,7 +68,7 @@
      }
  }
  
- const updateVideoaula = async function (dadosVideoaula, id){
+ const updateVideoaula = async function (id, dadosVideoaula){
  
      let sql 
      
@@ -83,7 +83,7 @@
  
                  sql = `update tbl_videoaula set
                  titulo = '${dadosVideoaula.titulo}', 
-                 descricao = '${dadosVideoaula.descricao}',
+                 descricao = null,
                  duracao = '${dadosVideoaula.duracao}', 
                  foto_capa = '${dadosVideoaula.foto_capa}', 
                  data = '${dadosVideoaula.data}', 
@@ -96,7 +96,7 @@
              }else{
                  sql = `update tbl_videoaula set
                  titulo = '${dadosVideoaula.titulo}', 
-                 descricao = null,
+                 descricao = '${dadosVideoaula.descricao}',
                  duracao = '${dadosVideoaula.duracao}', 
                  foto_capa = '${dadosVideoaula.foto_capa}', 
                  data = '${dadosVideoaula.data}', 
@@ -112,27 +112,26 @@
  
              if(rsVideoaula)
                  return true
-             else 
-                 return false
+           
      } catch (error){
          return false
      }
  }
  
- const deleteVideoaula = async function (dadosVideoaula, id){
+ const deleteVideoaula = async function (id){
  
-     try{
+        try{
          let sql = `delete from tbl_videoaula where id_videoaula = ${id}`
  
          let rsVideoaula = await prisma.$executeRawUnsafe(sql)
  
          if(rsVideoaula)
-             return true
+            return true
        
  
-     }catch(error){
+        }catch(error){
          return false
-     }
+        }
      
  }
  

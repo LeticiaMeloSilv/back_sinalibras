@@ -39,7 +39,6 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
                 if (status){
                     let novaVideoaula = await videoaulaDAO.insertVideoaula(dadosVideoaula)
 
-                    console.log(novaVideoaula);
     
                     if(novaVideoaula){
                         let ultimoId = await videoaulaDAO.selectUltimoId()
@@ -68,13 +67,14 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
     }
 }
 
-const setAtualizarVideoaula = async function (dadosVideoaula, contentType, id){
+const setAtualizarVideoaula = async function (id, dadosVideoaula, contentType){
     let idVideo = id
 
     if(idVideo == undefined || idVideo == null || idVideo == '' || isNaN(idVideo)){
+        
         return message.ERROR_INVALID_ID
     } else {
-        let idVideoaula = await videoaulaDAO.selectVideoaulaById(idVideoaula)
+        let idVideoaula = await videoaulaDAO.selectVideoaulaById(idVideo)
         
         if(idVideoaula > 0){
 
@@ -145,10 +145,12 @@ const setExcluirVideoaula = async function (id){
         }else{
              let dadosVideoaula = await videoaulaDAO.selectVideoaulaById(idVideo)
              
+             
              if(dadosVideoaula.length>0){
 
-                dadosVideoaula = await videoaulaDAO.deleteVideoaula(idVideo)
+                deleteVideoaula = await videoaulaDAO.deleteVideoaula(idVideo)
                 return message.SUCESS_DELETED_ITEM
+                
              }else{
                 return message.ERROR_NOT_FOUND_ID
              }
