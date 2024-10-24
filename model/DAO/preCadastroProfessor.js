@@ -198,6 +198,7 @@ module.exports = {
     insertResultadoUsuario,
     selectVerificarEmail,
     selectValidarUsuario,
-    insertResultadoUsuario
+    insertResultadoUsuario,
+    selectPontuacao
 }
 

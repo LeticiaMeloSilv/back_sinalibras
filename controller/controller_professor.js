@@ -490,15 +490,18 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
 
                     let resultadoQuiz = await preCadastroProfDAO.insertResultadoUsuario(dadosUser.id_usuario_teste)
 
-                    dadosUser.pontuacao = resultadoQuiz
-    
+                 
+                    //let resultado = await preCadastroProfDAO.selectPontuacao(dadosUser.id_usuario_teste)
+                 
+
                     usuarioJson.usuario = dadosUser;
-                    //usuarioJson.resultado = resultadoQuiz
+                    //usuarioJson.pontuacao = resultado;
                     usuarioJson.status = message.SUCESS_CREATED_ITEM.status;
                     usuarioJson.status_code = message.SUCESS_CREATED_ITEM.status_code;
                     usuarioJson.message = message.SUCESS_CREATED_ITEM.message;
     
                     return usuarioJson// 201
+                    
                 } else {
                     return message.ERROR_INTERNAL_SERVER_DB; // 500
                 }
