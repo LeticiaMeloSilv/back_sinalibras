@@ -22,14 +22,15 @@ const insertUsuarioQuiz = async function (dadosUsuario) {
         sql =  `insert into tbl_usuario_teste 
                                     (
                                     email,
-                                    data
+                                    data_cadastro
                                     )values(
                                     '${dadosUsuario.email}',
-                                    '${dadosUsuario.data}'
+                                    '${dadosUsuario.data_cadastro}'
                                     )`
 
        let rsUser = await prisma.$executeRawUnsafe(sql)
-
+       
+        
        if(rsUser)
         return rsUser
     else
@@ -37,6 +38,9 @@ const insertUsuarioQuiz = async function (dadosUsuario) {
        
     
     }catch(error){
+        console.log(error);
+        
+        
         return false 
     }
 
@@ -107,7 +111,7 @@ const insertResultadoUsuario = async function (id) {
     let sql 
     try{
 
-        sql =  `call inserir_resultado_usuario(${id});`
+        sql =  `call inserir_resultado_usuario(${id})`
 
        let rsUser = await prisma.$executeRawUnsafe(sql)
 
@@ -125,16 +129,53 @@ const insertResultadoUsuario = async function (id) {
 }
 
 
+const selectPontuacao = async function (id){
+    try{
+     let sql = `SELECT pontuacao FROM tbl_resultado where id_usuario_teste = ${id};`
+
+     let rsPontuacao = await prisma.$queryRawUnsafe(sql)
+
+
+     if(rsPontuacao){
+        return rsPontuacao
+     }else{
+        return false 
+     }
+    }catch(error){
+        return false
+    }
+    
+}
+
 
 const selectVerificarEmail = async function (email){
     try{
      let sql = `select ta.email from tbl_usuario_teste as ta where email = '${email}';`
 
-     let rsAluno = await prisma.$queryRawUnsafe(sql)
+     let rsProfessor = await prisma.$queryRawUnsafe(sql)
 
 
-     if(rsAluno){
-        return rsAluno
+     if(rsProfessor){
+        return rsProfessor
+     }else{
+        return false 
+     }
+    }catch(error){
+        return false
+    }
+    
+}
+
+
+const selectValidarUsuario = async function (email){
+    try{
+     let sql = `select tu.id_usuario_teste, tu.email, tu.data_cadastro from tbl_usuario_teste as tu where email = '${email}';`
+
+     let rsUser = await prisma.$queryRawUnsafe(sql)
+
+
+     if(rsUser){
+        return rsUser
      }else{
         return false 
      }
@@ -149,13 +190,14 @@ const selectVerificarEmail = async function (email){
 
 
 
-
 module.exports = {
     insertUsuarioQuiz,
     selectUltimoIdUserQuiz,
     insertRespostaUsuario,
     selectUltimoIdRespostaQuiz,
     insertResultadoUsuario,
-    selectVerificarEmail
+    selectVerificarEmail,
+    selectValidarUsuario,
+    insertResultadoUsuario
 }
 

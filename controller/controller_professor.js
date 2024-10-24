@@ -45,7 +45,7 @@ const getValidarProf = async(email, senha, contentType) => {
                         profJSON.status = message.SUCESS_VALIDATED_ITEM.status       
                         profJSON.status_code = message.SUCESS_VALIDATED_ITEM.status_code       
                         profJSON.message = message.SUCESS_VALIDATED_ITEM.message       
-                        profJSON.professor = dadosProfessor
+                        profJSON.professor = dadosProfessor[0]
                 
                         return profJSON
                     } else {
@@ -114,7 +114,7 @@ const getBuscarProfessorById = async function (id){
 
         
             if (dadosProfessor.length > 0) {
-                professorJSON.professor = dadosProfessor;
+                professorJSON.professor = dadosProfessor[0];
                 professorJSON.status_code = 200;
 
                 return professorJSON
@@ -370,18 +370,19 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
                 let usuarioJson = {}
     
                 if(
-                   dadosUser.email == ""      || dadosUser.email == undefined || dadosUser.email == null|| dadosUser.email.length > 255
+                   dadosUser.email == "" || dadosUser.email == undefined || dadosUser.email == null|| dadosUser.email.length > 255
                 ){
                     return message.ERROR_REQUIRED_FIELDS
                 }
                    //adicionar validação do email
                     let user = await preCadastroProfDAO.insertUsuarioQuiz(dadosUser)
+                    
                    
                     if (user){
                     
                         let ultimoID = await preCadastroProfDAO.selectUltimoIdUserQuiz()
                        
-                        dadosUser.id = Number(ultimoID[0].id_usuario_teste)
+                        dadosUser.id_usuario_teste = Number(ultimoID[0].id_usuario_teste)
                         
                     }
                     
@@ -393,9 +394,7 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
                         
                         return usuarioJson //201
                     }else {
-                        return message.ERROR_INTERNAL_SERVER_DB // 500 
-                    
-                
+                        return message.ERROR_INTERNAL_SERVER_DB // 500                 
                 }
             
             }else{
@@ -489,9 +488,9 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
                        
                     dadosUser.id = Number(ultimoID[0].id)
 
-                    //erro da procedure 
-                    //let resultadoQuiz = await preCadastroProfDAO.insertResultadoUsuario(dadosUser.id_usuario_teste)
-                    //Está inserindo na tbl_resposta_usuario
+                    let resultadoQuiz = await preCadastroProfDAO.insertResultadoUsuario(dadosUser.id_usuario_teste)
+
+                    dadosUser.pontuacao = resultadoQuiz
     
                     usuarioJson.usuario = dadosUser;
                     //usuarioJson.resultado = resultadoQuiz

@@ -68,6 +68,7 @@ const selectByIdAluno = async function (id){
 
         let rsUsuario = await prisma.$queryRawUnsafe(sql)
 
+
         return rsUsuario
        
 

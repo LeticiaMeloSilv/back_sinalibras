@@ -39,7 +39,7 @@ const getValidarAluno = async(email, senha, contentType) => {
                         alunoJSON.status = message.SUCESS_VALIDATED_ITEM.status       
                         alunoJSON.status_code = message.SUCESS_VALIDATED_ITEM.status_code       
                         alunoJSON.message = message.SUCESS_VALIDATED_ITEM.message       
-                        alunoJSON.aluno = dadosAluno
+                        alunoJSON.aluno = dadosAluno[0]
                 
                         return alunoJSON
                     } else {
@@ -119,9 +119,11 @@ const getBuscarAlunoById = async function (id){
 
         
             if (dadosAluno.length > 0) {
-                usuarioJSON.aluno = dadosAluno;
+                usuarioJSON.aluno = dadosAluno[0];
                 usuarioJSON.status_code = 200;
-
+                
+console.log(usuarioJSON);
+console.log("-------------------------------------------------");
                 return usuarioJSON
 
             } else {
