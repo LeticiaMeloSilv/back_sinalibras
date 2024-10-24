@@ -83,7 +83,7 @@
  
                  sql = `update tbl_videoaula set
                  titulo = '${dadosVideoaula.titulo}', 
-                 descricao = null,
+                 descricao = '${dadosVideoaula.descricao}',
                  duracao = '${dadosVideoaula.duracao}', 
                  foto_capa = '${dadosVideoaula.foto_capa}', 
                  data = '${dadosVideoaula.data}', 
@@ -96,7 +96,7 @@
              }else{
                  sql = `update tbl_videoaula set
                  titulo = '${dadosVideoaula.titulo}', 
-                 descricao = '${dadosVideoaula.descricao}',
+                 descricao = null,
                  duracao = '${dadosVideoaula.duracao}', 
                  foto_capa = '${dadosVideoaula.foto_capa}', 
                  data = '${dadosVideoaula.data}', 
@@ -172,18 +172,22 @@
  
  const selectVideoaulaByNome = async function (titulo){
      try{
+
  
-         let sql = `select * from tbl_videoaula where titulo LIKE "%${titulo}%"`
+         let sql = `select * from tbl_videoaula where titulo LIKE '%${titulo}%'`
+         
          let rsVideoaula = await prisma.$queryRawUnsafe(sql)
+         console.log(rsVideoaula);
  
          if(rsVideoaula)
-             return true
-         else
-             return false
+             return rsVideoaula
+        
      }catch(error){
          return false
      }
  }
+
+
  
  
  const selectUltimoId = async function (){

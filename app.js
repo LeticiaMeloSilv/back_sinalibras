@@ -396,6 +396,47 @@ app.put('/v1/sinalibras/updateVideoaula/:id', cors(), bodyParserJson, async func
 
 })
 
+app.get('/v1/sinalibras/videoaula/:id', cors(), async function(request, response){
+
+   let idVideo = request.params.id
+
+   
+    let dadosVideoaula = await controllerVideoaula.getVideoaulaById(idVideo)
+
+   
+    if(dadosVideoaula){
+      response.json(dadosVideoaula);
+        response.status(200);
+    }else{
+        response.status(404);
+        response.json({message: 'Nenhum registro foi encontrado'})
+        
+    }
+
+    //ok
+
+})
+
+app.get('/v1/sinalibras/videoaula/titulo/:titulo', cors(), async function(request, response){
+
+   let tituloVideo = request.params.titulo
+
+    let dadosVideoaula = await controllerVideoaula.getVideoaulaByNome(tituloVideo)
+
+   
+    if(dadosVideoaula){
+      response.json(dadosVideoaula);
+        response.status(200);
+    }else{
+        response.status(404);
+        response.json({message: 'Nenhum registro foi encontrado'})
+        
+    }
+
+    //ok
+
+})
+
 
 /****************************** MODULOS ***************************************/
 
