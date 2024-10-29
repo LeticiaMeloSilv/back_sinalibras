@@ -79,8 +79,12 @@ const insertRespostaUsuario = async function (dadosUsuario) {
 
         let rsUser = await prisma.$executeRawUnsafe(sql);
 
-        return rsUser ? rsUser : false;
-
+        
+    if(rsUser)
+        return true
+    else
+    return false
+    
     } catch (error) {
         console.error("Erro ao inserir dados:", error);
         return false;
@@ -116,7 +120,7 @@ const insertResultadoUsuario = async function (id) {
        let rsUser = await prisma.$executeRawUnsafe(sql)
 
        if(rsUser)
-        return rsUser
+        return true
         else
         return false
        
@@ -131,10 +135,11 @@ const insertResultadoUsuario = async function (id) {
 
 const selectPontuacao = async function (id){
     try{
+        console.log(id);
      let sql = `SELECT pontuacao FROM tbl_resultado where id_usuario_teste = ${id};`
-
+            console.log(sql);
      let rsPontuacao = await prisma.$queryRawUnsafe(sql)
-
+console.log(rsPontuacao);
 
      if(rsPontuacao){
         return rsPontuacao
