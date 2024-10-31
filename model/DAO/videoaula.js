@@ -68,7 +68,7 @@
      }
  }
  
- const updateVideoaula = async function (dadosVideoaula, id){
+ const updateVideoaula = async function (id, dadosVideoaula){
  
      let sql 
      
@@ -112,27 +112,26 @@
  
              if(rsVideoaula)
                  return true
-             else 
-                 return false
+           
      } catch (error){
          return false
      }
  }
  
- const deleteVideoaula = async function (dadosVideoaula, id){
+ const deleteVideoaula = async function (id){
  
-     try{
+        try{
          let sql = `delete from tbl_videoaula where id_videoaula = ${id}`
  
          let rsVideoaula = await prisma.$executeRawUnsafe(sql)
  
          if(rsVideoaula)
-             return true
+            return true
        
  
-     }catch(error){
+        }catch(error){
          return false
-     }
+        }
      
  }
  
@@ -173,18 +172,22 @@
  
  const selectVideoaulaByNome = async function (titulo){
      try{
+
  
-         let sql = `select * from tbl_videoaula where titulo LIKE "%${titulo}%"`
+         let sql = `select * from tbl_videoaula where titulo LIKE '%${titulo}%'`
+         
          let rsVideoaula = await prisma.$queryRawUnsafe(sql)
+         console.log(rsVideoaula);
  
          if(rsVideoaula)
-             return true
-         else
-             return false
+             return rsVideoaula
+        
      }catch(error){
          return false
      }
  }
+
+
  
  
  const selectUltimoId = async function (){

@@ -353,7 +353,7 @@ app.get('/v1/sinalibras/videoaulas', cors(), async function(request, response){
 app.delete('/v1/sinalibras/deleteVideoaula/:id', cors(), async function(request, response){
     let idVideoaula = request.params.id
 
-    let excluirVideo = controllerVideoaula.setExcluirVideoaula(idVideoaula)
+    let excluirVideo =  await controllerVideoaula.setExcluirVideoaula(idVideoaula)
 
     if(excluirVideo){
         response.status(200)
@@ -379,6 +379,61 @@ app.post('/v1/sinalibras/videoaula', cors(), bodyParserJson, async function(requ
         response.status(404)
         response.json({message: 'Não foi possível inserir no banco'})
     }
+
+})
+
+app.put('/v1/sinalibras/updateVideoaula/:id', cors(), bodyParserJson, async function(request,response){
+    let contentType = request.headers['content-type']
+    let idVideoaula = request.params.id
+
+    let dadosBody = request.body
+    let resultadoNovaVideoaula = await controllerVideoaula.setAtualizarVideoaula(idVideoaula, dadosBody, contentType)
+
+    response.status(resultadoNovaVideoaula.status_code)
+    response.json(resultadoNovaVideoaula)
+
+    //ok
+
+})
+
+app.get('/v1/sinalibras/videoaula/:id', cors(), async function(request, response){
+
+   let idVideo = request.params.id
+
+   
+    let dadosVideoaula = await controllerVideoaula.getVideoaulaById(idVideo)
+
+   
+    if(dadosVideoaula){
+      response.json(dadosVideoaula);
+        response.status(200);
+    }else{
+        response.status(404);
+        response.json({message: 'Nenhum registro foi encontrado'})
+        
+    }
+
+    //ok
+
+})
+
+app.get('/v1/sinalibras/videoaula/titulo/:titulo', cors(), async function(request, response){
+
+   let tituloVideo = request.params.titulo
+
+    let dadosVideoaula = await controllerVideoaula.getVideoaulaByNome(tituloVideo)
+
+   
+    if(dadosVideoaula){
+      response.json(dadosVideoaula);
+        response.status(200);
+    }else{
+        response.status(404);
+        response.json({message: 'Nenhum registro foi encontrado'})
+        
+    }
+
+    //ok
 
 })
 

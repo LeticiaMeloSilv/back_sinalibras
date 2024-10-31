@@ -39,7 +39,6 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
                 if (status){
                     let novaVideoaula = await videoaulaDAO.insertVideoaula(dadosVideoaula)
 
-                    console.log(novaVideoaula);
     
                     if(novaVideoaula){
                         let ultimoId = await videoaulaDAO.selectUltimoId()
@@ -68,15 +67,17 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
     }
 }
 
-const setAtualizarVideoaula = async function (dadosVideoaula, contentType, id){
+const setAtualizarVideoaula = async function (id, dadosVideoaula, contentType){
     let idVideo = id
 
     if(idVideo == undefined || idVideo == null || idVideo == '' || isNaN(idVideo)){
+        
         return message.ERROR_INVALID_ID
     } else {
-        let idVideoaula = await videoaulaDAO.selectVideoaulaById(idVideoaula)
+        let idVideoaula = await videoaulaDAO.selectVideoaulaById(idVideo)
         
-        if(idVideoaula > 0){
+        
+        if(idVideoaula){
 
             try{
                 if(String(contentType).toLowerCase () == 'application/json'){
@@ -97,15 +98,15 @@ const setAtualizarVideoaula = async function (dadosVideoaula, contentType, id){
                             if(dadosVideoaula.descricao.length>255){
                                 return message.ERROR_REQUIRED_FIELDS
                             } else {
-                                validate = true 
+                                status = true 
                             }
                                  
                         } else {
-                            validate = true
+                            status = true
                         }
 
-                        if(validate){
-                            let videoAtualizado = await videoaulaDAO.updateVideoaula(dadosVideoaula.id)
+                        if(status){
+                            let videoAtualizado = await videoaulaDAO.updateVideoaula(idVideo, dadosVideoaula)
 
                             if(videoAtualizado){
 
@@ -145,10 +146,12 @@ const setExcluirVideoaula = async function (id){
         }else{
              let dadosVideoaula = await videoaulaDAO.selectVideoaulaById(idVideo)
              
+             
              if(dadosVideoaula.length>0){
 
-                dadosVideoaula = await videoaulaDAO.deleteVideoaula(idVideo)
+                deleteVideoaula = await videoaulaDAO.deleteVideoaula(idVideo)
                 return message.SUCESS_DELETED_ITEM
+                
              }else{
                 return message.ERROR_NOT_FOUND_ID
              }
@@ -207,10 +210,64 @@ const getListaVideoaulas = async function (){
     }
 }
 
+const getVideoaulaById = async function(id){
+
+
+    let idVideo = id
+
+    if(idVideo == null || idVideo == "" || idVideo == undefined || isNaN(idVideo)){
+        return message.ERROR_INVALID_ID
+    }else{
+
+        let dadosVideoaula = await videoaulaDAO.selectVideoaulaById(idVideo)
+
+        if(dadosVideoaula){
+
+            let videoaulaJson = {}
+
+                videoaulaJson.video = dadosVideoaula
+                videoaulaJson.status_code = 200
+
+                return videoaulaJson
+            
+        }else{
+            return message.ERROR_NOT_FOUND
+        }
+    }
+
+}
+const getVideoaulaByNome = async function(titulo){
+
+    let tituloVideo = titulo
+    if(tituloVideo == null || tituloVideo == "" || tituloVideo == undefined){
+    
+        return message.ERROR_INVALID_ID
+    }else{
+
+        let dadosVideoaula = await videoaulaDAO.selectVideoaulaByNome(tituloVideo)
+
+        if(dadosVideoaula){
+
+            let videoaulaJson = {}
+
+                videoaulaJson.video = dadosVideoaula
+                videoaulaJson.status_code = 200
+
+                return videoaulaJson
+            
+        }else{
+            return message.ERROR_NOT_FOUND
+        }
+    }
+
+}
+
 
 module.exports = {
     inserirNovaVideoaula,
     setAtualizarVideoaula,
     setExcluirVideoaula,
-    getListaVideoaulas
+    getListaVideoaulas,
+    getVideoaulaById,
+    getVideoaulaByNome
 }
