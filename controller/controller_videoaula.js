@@ -14,10 +14,10 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
 
             let novaVideoaulaJson = {}
 
-            if(dadosVideoaula.titulo == null || dadosVideoaula.duracao == null || dadosVideoaula.foto_capa == null || dadosVideoaula.data == null || dadosVideoaula.id_nivel == null || dadosVideoaula.id_modulo == null || dadosVideoaula.id_professor == null ||
-                dadosVideoaula.titulo == '' || dadosVideoaula.duracao == '' || dadosVideoaula.foto_capa == '' || dadosVideoaula.data == '' || dadosVideoaula.id_nivel == '' || dadosVideoaula.id_modulo == '' || dadosVideoaula.id_professor == '' ||
-                dadosVideoaula.titulo == undefined || dadosVideoaula.duracao == undefined || dadosVideoaula.foto_capa == undefined || dadosVideoaula.data == undefined || dadosVideoaula.id_nivel == undefined || dadosVideoaula.id_modulo == undefined || dadosVideoaula.id_professor == undefined ||
-                dadosVideoaula.titulo.length > 50 || dadosVideoaula.duracao.length > 8 || dadosVideoaula.foto_capa.length > 255 || dadosVideoaula.data.length != 10 || isNaN(dadosVideoaula.id_nivel) || isNaN(dadosVideoaula.id_modulo) || isNaN(dadosVideoaula.id_professor)
+            if(dadosVideoaula.titulo == null || dadosVideoaula.duracao == null || dadosVideoaula.foto_capa == null || dadosVideoaula.data == null || dadosVideoaula.id_nivel == null || dadosVideoaula.id_modulo == null || dadosVideoaula.id_professor == null ||dadosVideoaula.url_video==null||
+                dadosVideoaula.titulo == '' || dadosVideoaula.duracao == '' || dadosVideoaula.foto_capa == '' || dadosVideoaula.data == '' || dadosVideoaula.id_nivel == '' || dadosVideoaula.id_modulo == '' || dadosVideoaula.id_professor == '' ||dadosVideoaula.url_video==''||
+                dadosVideoaula.titulo == undefined || dadosVideoaula.duracao == undefined || dadosVideoaula.foto_capa == undefined || dadosVideoaula.data == undefined || dadosVideoaula.id_nivel == undefined || dadosVideoaula.id_modulo == undefined || dadosVideoaula.id_professor == undefined ||dadosVideoaula.url_video==undefined||
+                dadosVideoaula.titulo.length > 50 || dadosVideoaula.duracao.length > 8 || dadosVideoaula.foto_capa.length > 255 || dadosVideoaula.data.length != 10 || isNaN(dadosVideoaula.id_nivel) || isNaN(dadosVideoaula.id_modulo) || isNaN(dadosVideoaula.id_professor)||dadosVideoaula.url_video.length>255
             ){
                 return message.ERROR_REQUIRED_FIELDS
             }else{
@@ -39,6 +39,7 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
                 if (status){
                     let novaVideoaula = await videoaulaDAO.insertVideoaula(dadosVideoaula)
 
+                    console.log(novaVideoaula);
     
                     if(novaVideoaula){
                         let ultimoId = await videoaulaDAO.selectUltimoId()
@@ -67,26 +68,24 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
     }
 }
 
-const setAtualizarVideoaula = async function (id, dadosVideoaula, contentType){
+const setAtualizarVideoaula = async function (dadosVideoaula, contentType, id){
     let idVideo = id
 
     if(idVideo == undefined || idVideo == null || idVideo == '' || isNaN(idVideo)){
-        
         return message.ERROR_INVALID_ID
     } else {
-        let idVideoaula = await videoaulaDAO.selectVideoaulaById(idVideo)
+        let idVideoaula = await videoaulaDAO.selectVideoaulaById(idVideoaula)
         
-        
-        if(idVideoaula){
+        if(idVideoaula > 0){
 
             try{
                 if(String(contentType).toLowerCase () == 'application/json'){
                     let updateVideoJson = {}
 
-                    if(dadosVideoaula.titulo == null || dadosVideoaula.duracao == null || dadosVideoaula.foto_capa == null || dadosVideoaula.data == null || dadosVideoaula.id_nivel == null || dadosVideoaula.id_modulo == null || dadosVideoaula.id_professor == null ||
-                        dadosVideoaula.titulo == '' || dadosVideoaula.duracao == '' || dadosVideoaula.foto_capa == '' || dadosVideoaula.data == '' || dadosVideoaula.id_nivel == '' || dadosVideoaula.id_modulo == '' || dadosVideoaula.id_professor == '' ||
-                        dadosVideoaula.titulo == undefined || dadosVideoaula.duracao == undefined || dadosVideoaula.foto_capa == undefined || dadosVideoaula.data == undefined || dadosVideoaula.id_nivel == undefined || dadosVideoaula.id_modulo == undefined || dadosVideoaula.id_professor == undefined ||
-                        dadosVideoaula.titulo.length > 50 || dadosVideoaula.duracao.length > 8 || dadosVideoaula.foto_capa.length > 255 || dadosVideoaula.data.length != 10 || isNaN(dadosVideoaula.id_nivel) || isNaN(dadosVideoaula.id_modulo) || isNaN(dadosVideoaula.id_professor)
+                    if(dadosVideoaula.titulo == null || dadosVideoaula.duracao == null || dadosVideoaula.foto_capa == null || dadosVideoaula.id_nivel == null || dadosVideoaula.id_modulo == null ||
+                        dadosVideoaula.titulo == '' || dadosVideoaula.duracao == '' || dadosVideoaula.foto_capa == '' ||  dadosVideoaula.id_nivel == '' || dadosVideoaula.id_modulo == '' || 
+                        dadosVideoaula.titulo == undefined || dadosVideoaula.duracao == undefined || dadosVideoaula.foto_capa == undefined ||  dadosVideoaula.id_nivel == undefined || dadosVideoaula.id_modulo == undefined || 
+                        dadosVideoaula.titulo.length > 50 || dadosVideoaula.duracao.length > 8 || dadosVideoaula.foto_capa.length > 255 || isNaN(dadosVideoaula.id_nivel) || isNaN(dadosVideoaula.id_modulo) 
                     ){
                         return message.ERROR_REQUIRED_FIELDS
                     } else {
@@ -98,15 +97,15 @@ const setAtualizarVideoaula = async function (id, dadosVideoaula, contentType){
                             if(dadosVideoaula.descricao.length>255){
                                 return message.ERROR_REQUIRED_FIELDS
                             } else {
-                                status = true 
+                                validate = true 
                             }
                                  
                         } else {
-                            status = true
+                            validate = true
                         }
 
-                        if(status){
-                            let videoAtualizado = await videoaulaDAO.updateVideoaula(idVideo, dadosVideoaula)
+                        if(validate){
+                            let videoAtualizado = await videoaulaDAO.updateVideoaula(dadosVideoaula.id)
 
                             if(videoAtualizado){
 
@@ -146,12 +145,10 @@ const setExcluirVideoaula = async function (id){
         }else{
              let dadosVideoaula = await videoaulaDAO.selectVideoaulaById(idVideo)
              
-             
              if(dadosVideoaula.length>0){
 
-                deleteVideoaula = await videoaulaDAO.deleteVideoaula(idVideo)
+                dadosVideoaula = await videoaulaDAO.deleteVideoaula(idVideo)
                 return message.SUCESS_DELETED_ITEM
-                
              }else{
                 return message.ERROR_NOT_FOUND_ID
              }
@@ -210,64 +207,10 @@ const getListaVideoaulas = async function (){
     }
 }
 
-const getVideoaulaById = async function(id){
-
-
-    let idVideo = id
-
-    if(idVideo == null || idVideo == "" || idVideo == undefined || isNaN(idVideo)){
-        return message.ERROR_INVALID_ID
-    }else{
-
-        let dadosVideoaula = await videoaulaDAO.selectVideoaulaById(idVideo)
-
-        if(dadosVideoaula){
-
-            let videoaulaJson = {}
-
-                videoaulaJson.video = dadosVideoaula
-                videoaulaJson.status_code = 200
-
-                return videoaulaJson
-            
-        }else{
-            return message.ERROR_NOT_FOUND
-        }
-    }
-
-}
-const getVideoaulaByNome = async function(titulo){
-
-    let tituloVideo = titulo
-    if(tituloVideo == null || tituloVideo == "" || tituloVideo == undefined){
-    
-        return message.ERROR_INVALID_ID
-    }else{
-
-        let dadosVideoaula = await videoaulaDAO.selectVideoaulaByNome(tituloVideo)
-
-        if(dadosVideoaula){
-
-            let videoaulaJson = {}
-
-                videoaulaJson.video = dadosVideoaula
-                videoaulaJson.status_code = 200
-
-                return videoaulaJson
-            
-        }else{
-            return message.ERROR_NOT_FOUND
-        }
-    }
-
-}
-
 
 module.exports = {
     inserirNovaVideoaula,
     setAtualizarVideoaula,
     setExcluirVideoaula,
-    getListaVideoaulas,
-    getVideoaulaById,
-    getVideoaulaByNome
+    getListaVideoaulas
 }

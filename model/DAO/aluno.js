@@ -13,6 +13,8 @@ const prisma = new PrismaClient();
 
 
 const selectValidarAluno = async function (email,senha){
+    console.log("NÃO É POSSIVEL");
+
  let sql = `select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta
  where email = '${email}' and senha = md5('${senha}')`
 
@@ -175,9 +177,7 @@ const updateAluno = async function (id, dadosAluno) {
     
         sql = `update tbl_aluno set
             nome =  '${dadosAluno.nome}',
-            data_cadastro =  '${dadosAluno.data_cadastro}',
             email =  '${dadosAluno.email}',
-            senha =  '${dadosAluno.senha}',
             data_nascimento =  '${dadosAluno.data_nascimento}',
             foto_perfil = '${dadosAluno.foto_perfil}'
             where tbl_aluno.id_aluno = ${id}`
@@ -186,9 +186,7 @@ const updateAluno = async function (id, dadosAluno) {
 
                 sql = `update tbl_aluno set
                 nome =  '${dadosAluno.nome}',
-                data_cadastro =  '${dadosAluno.data_cadastro}',
                 email =  '${dadosAluno.email}',
-                senha =  md5('${dadosAluno.senha}'),
                 data_nascimento =  '${dadosAluno.data_nascimento}',
                 foto_perfil = null
                 where tbl_aluno.id_aluno = ${id}`

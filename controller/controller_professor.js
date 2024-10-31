@@ -441,18 +441,22 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
                     let ultimoID = await preCadastroProfDAO.selectUltimoIdRespostaQuiz()
                        
                     dadosUser.id = Number(ultimoID[0].id)
+                    console.log(dadosUser);
+                    console.log("CARALHO"+dadosUser[0].id_usuario_teste);
 
          
-                    let resultadoQuiz = await preCadastroProfDAO.insertResultadoUsuario(dadosUser.id_usuario_teste)
+                    let resultadoQuiz = await preCadastroProfDAO.insertResultadoUsuario(dadosUser[0].id_usuario_teste)
            
-    
+                    console.log(resultadoQuiz);
+
                     if(resultadoQuiz){
 
-                    let resultado = await preCadastroProfDAO.selectPontuacao(dadosUser.id_usuario_teste)
-            
-
+                    let resultado = await preCadastroProfDAO.selectPontuacao(dadosUser[0].id_usuario_teste)
+                    const stringResultado = JSON.stringify(resultado);
+                    const pontuacao = stringResultado.split(":")[1].replace("}", "0").replace("]", " ").trim();
+                    
                         usuarioJson.usuario = dadosUser;
-                        usuarioJson.pontuacao = resultado;
+                        usuarioJson.pontuacao = pontuacao;
                         usuarioJson.status = message.SUCESS_CREATED_ITEM.status;
                         usuarioJson.status_code = message.SUCESS_CREATED_ITEM.status_code;
                         usuarioJson.message = message.SUCESS_CREATED_ITEM.message;
@@ -460,20 +464,23 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
                         return usuarioJson// 201
                     
                     }else{
+                        console.log('1500');
                         return message.ERROR_INTERNAL_SERVER_DB
                     }
                  
                    
                     
                 } else {
-                  
+                    console.log('500');
                     return message.ERROR_INTERNAL_SERVER_DB; // 500
                   
                 }
             } else {
+                console.log(contentType);
                 return message.ERROR_CONTENT_TYPE; // 415
             }
         } catch (error) {
+      console.log(error);
       
             return message.ERROR_INTERNAL_SERVER; // 500 erro na controller
         }
@@ -610,7 +617,35 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
             
             }
         
-
+            const getBuscarUsuarioTesteEmail = async (email) => {
+            
+                let emailProfessor = email
+                let professorJSON = {};
+            console.log(emailProfessor);
+            
+                if (emailProfessor == '' || emailProfessor == undefined) {
+                    return message.ERROR_INVALID_ID
+                } else {
+                
+                    let dadosProfessor = await preCadastroProfDAO.selectValidarUsuario(email)
+            
+                    if (dadosProfessor) {
+                        if (dadosProfessor.length > 0) {
+                            
+                            professorJSON.usuario = dadosProfessor[0];
+                            professorJSON.status_code = 200;
+            
+                            return professorJSON;
+                        } else {
+                            return message.ERROR_NOT_FOUND;
+                        }
+                    } else {
+                        return message.ERROR_INTERNAL_SERVER_DB
+                    }
+            
+            
+                }
+            }
 
 
 
@@ -626,5 +661,6 @@ module.exports = {
     setAtualizarSenhaProf,
     getValidarProf,
     setInserirUsuarioQuiz,
-    setInserirRespostaQuiz
+    setInserirRespostaQuiz,
+    getBuscarUsuarioTesteEmail
 }

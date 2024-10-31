@@ -11,13 +11,16 @@ const alunoDao = require('../model/DAO/aluno.js');
 const data = require('./validacoes.js')
 
 const getValidarAluno = async(email, senha, contentType) => {
-    
+    console.log("NÃO É POSSIVEL");
+
     try {
 
         if(String(contentType).toLowerCase() == 'application/json'){
     
             let emailAluno = email
             let senhaAluno = senha
+            console.log(emailAluno);
+            
             let alunoJSON = {}
 
             if(emailAluno == '' || emailAluno == undefined || senhaAluno == '' || senhaAluno == undefined){
@@ -29,6 +32,7 @@ const getValidarAluno = async(email, senha, contentType) => {
 
                 let dadosAluno = await alunoDao.selectValidarAluno(emailAluno, senhaAluno)
                
+              console.log(dadosAluno);
               
 
                 if(dadosAluno){
@@ -299,7 +303,6 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
                         if(
                             dadosAluno.nome == '' || dadosAluno.nome == undefined || dadosAluno.nome == null || dadosAluno.nome.length > 255||
                             dadosAluno.email == "" || dadosAluno.email == undefined || dadosAluno.email == null|| dadosAluno.email.length > 255||
-                            dadosAluno.senha == "" || dadosAluno.senha == undefined || dadosAluno.senha == null||  dadosAluno.senha.length > 8 || 
                           dadosAluno.foto_perfil.length > 255
                          ){
                             return message.ERROR_REQUIRED_FIELDS

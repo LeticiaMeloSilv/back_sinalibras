@@ -70,14 +70,18 @@ const insertRespostaUsuario = async function (dadosUsuario) {
     try {
         const colunas = ['id_alternativa', 'id_usuario_teste'];
         const valores = [];
+        if (valores) {
+            valores.splice(0,valores.length)
+        }
 
         dadosUsuario.forEach(usuario => {
             valores.push(`('${usuario.id_alternativa}', '${usuario.id_usuario_teste}')`);
         });
 
-        sql = `insert into  tbl_resposta_usuario (${colunas.join(', ')}) values ${valores.join(', ')};`;
+        sql = `insert into tbl_resposta_usuario (${colunas.join(', ')}) values ${valores.join(', ')};`;
 
         let rsUser = await prisma.$executeRawUnsafe(sql);
+console.log(rsUser);
 
         
     if(rsUser)
@@ -174,9 +178,10 @@ const selectVerificarEmail = async function (email){
 
 const selectValidarUsuario = async function (email){
     try{
-     let sql = `select tu.id_usuario_teste, tu.email, tu.data_cadastro from tbl_usuario_teste as tu where email = '${email}';`
+     let sql = `select tu.id_usuario_teste, tu.email, tu.data_cadastro, r.pontuacao from tbl_usuario_teste as tu join tbl_resultado as r on r.id_usuario_teste=tu.id_usuario_teste where email = '${email}';`
 
      let rsUser = await prisma.$queryRawUnsafe(sql)
+console.log(rsUser);
 
 
      if(rsUser){
