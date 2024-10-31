@@ -5,6 +5,7 @@
  * Versão: 1.0
  ***********************************************************/
 
+console.log("teste fork")
 const express = require('express')
 const cors = require ('cors')
 const bodyParser = require('body-parser')
