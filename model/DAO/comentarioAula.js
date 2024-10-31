@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client")
 const { Sql } = require("@prisma/client/runtime/library")
+const { raw } = require("body-parser")
 const prisma = new PrismaClient()
 
 const insertComentario = async function (dadosComentario) {
@@ -47,14 +48,19 @@ const selectComentariosVideo = async function (id) {
 }
 
 const selectComentarioById = async function (id) {
-    let sql = `select * from tbl_comentario_aula where id_comentario = ${id}`
+    try{
 
-    let rsComentario = await prisma.$executeRawUnsafe(sql)
+        let sql = `select * from tbl_comentario_aula where id_comentario = ${id}`
 
-    if (rsComentario)
+        let rsComentario = await prisma.$executeRawUnsafe(sql)
+
+        if(rsComentario)
         return true
-    else
+
+    }catch(error){
         return false
+    }
+    
 }
 
 const selectLastId = async function () {

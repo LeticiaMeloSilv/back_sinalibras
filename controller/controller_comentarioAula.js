@@ -97,25 +97,19 @@ const setDeleteComentario = async function(id){
             return message.ERROR_INVALID_ID
         }else{
 
-            let comentarioId = await comentarioDAO.selectComentarioById(idComentario)
+            let dadosComentario = await comentarioDAO.selectComentarioById(idComentario)
 
-            if(comentarioId){
-               
-                let comentarioDelete = await comentarioDAO.deleteComentario(idComentario)
-             
-
-                if(comentarioDelete){
-                    return message.SUCESS_DELETED_ITEM
-                }else{
-                    return message.ERROR_INTERNAL_SERVER_DB
-                }
+            if(dadosComentario){
+            
+                dadosComentario = await comentarioDAO.deleteComentario(idComentario)
+                return message.SUCESS_DELETED_ITEM
+        
             }else{
                 return message.ERROR_NOT_FOUND_ID
             }
         }
 
     }catch(error){
-    
         return message.ERROR_INTERNAL_SERVER
     }
 }

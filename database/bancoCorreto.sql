@@ -100,7 +100,6 @@ BEGIN
     END WHILE;
 END//
 
-DELIMITER ;
 
 CALL inserir_questao_com_alternativas(
     'Qual é a capital da França?',
@@ -207,13 +206,14 @@ CREATE TABLE `tbl_professor` (
   `nome` VARCHAR(250) NOT NULL,
   `data_cadastro` DATE NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `senha` VARCHAR(255) NOT NULL,
+  `senha` VARCHAR(8) NOT NULL,
   `data_nascimento` DATE NOT NULL,
   `foto_perfil` VARCHAR(255) NULL)
 ENGINE = InnoDB;
  
  select * from tbl_professor;
-
+ 
+ 
 --------------- TABELA DOS POSTS -----------------------
 
 CREATE TABLE `tbl_postagem` (
