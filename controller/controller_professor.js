@@ -12,8 +12,139 @@ const data = require('./validacoes.js')
 const preCadastroProfDAO = require('../model/DAO/preCadastroProfessor.js')
 
 
+/*********************************** Pré cadastro prof ****************************************/
+
+const setInserirUsuarioQuiz = async function (dadosUser, contentType) {
+    
+    try{
+      
+        if (String(contentType).toLowerCase() == 'application/json'){
+          
+            let usuarioJson = {}
+
+            if(
+               dadosUser.email == "" || dadosUser.email == undefined || dadosUser.email == null|| dadosUser.email.length > 255
+            ){
+                return message.ERROR_REQUIRED_FIELDS
+            }
 
 
+
+                let validarEmail = await  preCadastroProfDAO.selectVerificarEmail(dadosUser.email)
+
+                if (validarEmail == ""){
+                let user = await preCadastroProfDAO.insertUsuarioQuiz(dadosUser)
+                
+               
+                if (user){
+                
+                    let ultimoID = await preCadastroProfDAO.selectUltimoIdUserQuiz()
+                   
+                    dadosUser.id_usuario_teste = Number(ultimoID[0].id_usuario_teste)
+                    
+                }
+                
+                if (user){
+                    usuarioJson.usuario = dadosUser
+                    usuarioJson.status = message.SUCESS_CREATED_ITEM.status
+                    usuarioJson.status_code = message.SUCESS_CREATED_ITEM.status_code
+                    usuarioJson.message = message.SUCESS_CREATED_ITEM.message
+                    
+                    return usuarioJson //201
+                }else {
+                    return message.ERROR_INTERNAL_SERVER_DB // 500                 
+            }
+
+        }else{
+            return message.ERROR_CONFLIT_EMAIL
+        }
+        
+        }else{
+            return message.ERROR_CONTENT_TYPE//415
+        }
+        
+    }catch(error){
+        
+        return message.ERROR_INTERNAL_SERVER //500 erro na controller
+    }
+}
+
+
+
+
+const setInserirRespostaQuiz = async function (dadosUser, contentType) {
+    try {
+        if (String(contentType).toLowerCase() === 'application/json') {
+            let usuarioJson = {};
+
+          
+            if (
+                !Array.isArray(dadosUser) || 
+                dadosUser.some(usuario => 
+                    !usuario.id_alternativa || 
+                    isNaN(usuario.id_alternativa) || 
+                    !usuario.id_usuario_teste || 
+                    isNaN(usuario.id_usuario_teste)
+                )
+            ) {
+                return message.ERROR_REQUIRED_FIELDS;
+            }
+
+          
+            let user = await preCadastroProfDAO.insertRespostaUsuario(dadosUser);
+          //esta dando errado a pontuação pois o id do usuário teste está voltando como undefined 
+            if (user) {
+                let ultimoID = await preCadastroProfDAO.selectUltimoIdRespostaQuiz()
+                   
+                dadosUser.id = Number(ultimoID[0].id)
+                console.log(dadosUser);
+                console.log("CARALHO"+dadosUser[0].id_usuario_teste);
+
+     
+                let resultadoQuiz = await preCadastroProfDAO.insertResultadoUsuario(dadosUser[0].id_usuario_teste)
+       
+                console.log(resultadoQuiz);
+
+                if(resultadoQuiz){
+
+                let resultado = await preCadastroProfDAO.selectPontuacao(dadosUser[0].id_usuario_teste)
+                const stringResultado = JSON.stringify(resultado);
+                const pontuacao = stringResultado.split(":")[1].replace("}", "0").replace("]", " ").trim();
+                
+                    usuarioJson.usuario = dadosUser;
+                    usuarioJson.pontuacao = pontuacao;
+                    usuarioJson.status = message.SUCESS_CREATED_ITEM.status;
+                    usuarioJson.status_code = message.SUCESS_CREATED_ITEM.status_code;
+                    usuarioJson.message = message.SUCESS_CREATED_ITEM.message;
+    
+                    return usuarioJson// 201
+                
+                }else{
+                    console.log('1500');
+                    return message.ERROR_INTERNAL_SERVER_DB
+                }
+             
+               
+                
+            } else {
+                console.log('500');
+                return message.ERROR_INTERNAL_SERVER_DB; // 500
+              
+            }
+        } else {
+            console.log(contentType);
+            return message.ERROR_CONTENT_TYPE; // 415
+        }
+    } catch (error) {
+  console.log(error);
+  
+        return message.ERROR_INTERNAL_SERVER; // 500 erro na controller
+    }
+};
+
+
+
+/***************************** professor ***********************/
 
 
 const getValidarProf = async(email, senha, contentType) => {
@@ -355,137 +486,6 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
     }
     
 
-
-    /*********************************** Pré cadastro prof ****************************************/
-
-    const setInserirUsuarioQuiz = async function (dadosUser, contentType) {
-    
-        try{
-          
-            if (String(contentType).toLowerCase() == 'application/json'){
-              
-                let usuarioJson = {}
-    
-                if(
-                   dadosUser.email == "" || dadosUser.email == undefined || dadosUser.email == null|| dadosUser.email.length > 255
-                ){
-                    return message.ERROR_REQUIRED_FIELDS
-                }
-
-
-
-                    let validarEmail = await  preCadastroProfDAO.selectVerificarEmail(dadosUser.email)
-
-                    if (validarEmail == ""){
-                    let user = await preCadastroProfDAO.insertUsuarioQuiz(dadosUser)
-                    
-                   
-                    if (user){
-                    
-                        let ultimoID = await preCadastroProfDAO.selectUltimoIdUserQuiz()
-                       
-                        dadosUser.id_usuario_teste = Number(ultimoID[0].id_usuario_teste)
-                        
-                    }
-                    
-                    if (user){
-                        usuarioJson.usuario = dadosUser
-                        usuarioJson.status = message.SUCESS_CREATED_ITEM.status
-                        usuarioJson.status_code = message.SUCESS_CREATED_ITEM.status_code
-                        usuarioJson.message = message.SUCESS_CREATED_ITEM.message
-                        
-                        return usuarioJson //201
-                    }else {
-                        return message.ERROR_INTERNAL_SERVER_DB // 500                 
-                }
-
-            }else{
-                return message.ERROR_CONFLIT_EMAIL
-            }
-            
-            }else{
-                return message.ERROR_CONTENT_TYPE//415
-            }
-            
-        }catch(error){
-            
-            return message.ERROR_INTERNAL_SERVER //500 erro na controller
-        }
-    }
-
-
-
-
-    const setInserirRespostaQuiz = async function (dadosUser, contentType) {
-        try {
-            if (String(contentType).toLowerCase() === 'application/json') {
-                let usuarioJson = {};
-    
-              
-                if (
-                    !Array.isArray(dadosUser) || 
-                    dadosUser.some(usuario => 
-                        !usuario.id_alternativa || 
-                        isNaN(usuario.id_alternativa) || 
-                        !usuario.id_usuario_teste || 
-                        isNaN(usuario.id_usuario_teste)
-                    )
-                ) {
-                    return message.ERROR_REQUIRED_FIELDS;
-                }
-    
-              
-                let user = await preCadastroProfDAO.insertRespostaUsuario(dadosUser);
-              //esta dando errado a pontuação pois o id do usuário teste está voltando como undefined 
-                if (user) {
-                    let ultimoID = await preCadastroProfDAO.selectUltimoIdRespostaQuiz()
-                       
-                    dadosUser.id = Number(ultimoID[0].id)
-                    console.log(dadosUser);
-                    console.log("CARALHO"+dadosUser[0].id_usuario_teste);
-
-         
-                    let resultadoQuiz = await preCadastroProfDAO.insertResultadoUsuario(dadosUser[0].id_usuario_teste)
-           
-                    console.log(resultadoQuiz);
-
-                    if(resultadoQuiz){
-
-                    let resultado = await preCadastroProfDAO.selectPontuacao(dadosUser[0].id_usuario_teste)
-                    const stringResultado = JSON.stringify(resultado);
-                    const pontuacao = stringResultado.split(":")[1].replace("}", "0").replace("]", " ").trim();
-                    
-                        usuarioJson.usuario = dadosUser;
-                        usuarioJson.pontuacao = pontuacao;
-                        usuarioJson.status = message.SUCESS_CREATED_ITEM.status;
-                        usuarioJson.status_code = message.SUCESS_CREATED_ITEM.status_code;
-                        usuarioJson.message = message.SUCESS_CREATED_ITEM.message;
-        
-                        return usuarioJson// 201
-                    
-                    }else{
-                        console.log('1500');
-                        return message.ERROR_INTERNAL_SERVER_DB
-                    }
-                 
-                   
-                    
-                } else {
-                    console.log('500');
-                    return message.ERROR_INTERNAL_SERVER_DB; // 500
-                  
-                }
-            } else {
-                console.log(contentType);
-                return message.ERROR_CONTENT_TYPE; // 415
-            }
-        } catch (error) {
-      console.log(error);
-      
-            return message.ERROR_INTERNAL_SERVER; // 500 erro na controller
-        }
-    };
-    
 
     
 

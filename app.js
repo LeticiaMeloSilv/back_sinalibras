@@ -45,7 +45,7 @@ app.post('/v1/sinalibras/aluno/validacao', cors(), bodyParserJson, async (reques
     
 //ok
 })
-app.post('/v1/sinalibras/alunos', cors(), async function(request, response){
+app.get('/v1/sinalibras/alunos', cors(), async function(request, response){
 
     //Chama a função da controller para retorNAR FILMES
     let dadosUsuarios = await controllerAluno.getListarAlunos();
@@ -196,7 +196,9 @@ console.log(resultadoNovaResposta);
 
     response.status(resultadoNovaResposta.status_code); 
     response.json(resultadoNovaResposta);
+
 });
+
 app.get('/v1/sinalibras/usuario/email/:email', cors(), async function(request,response,next){
 
     let emailProfessor = request.params.email
@@ -317,6 +319,36 @@ app.get('/v1/sinalibras/professor/email/:email', cors(), async function(request,
            //ok  
      })
 
+/************************************ Perfil professor *****************************************/
+
+app.put('/v1/sinalibras/professor/fotoPerfil/:id', cors(), bodyParserJson, async function(request,response){
+    let contentType = request.headers['content-type']
+    let idUsuario = request.params.id
+
+    let dadosBody = request.body
+    let resultadoNovaFoto = await controllerProfessor.setAtualizarFotoPerfilProfessor(idUsuario, dadosBody, contentType)
+
+    response.status(resultadoNovaFoto.status_code)
+   
+    
+    response.json(resultadoNovaFoto)
+
+    //ok
+})
+
+app.put('/v1/sinalibras/professor/perfil/:id', cors(), bodyParserJson, async function(request,response){
+    let contentType = request.headers['content-type']
+    let idUsuario = request.params.id
+
+    let dadosBody = request.body
+    let resultadoNovaSenha = await controllerProfessor.setAtualizarSenhaProf(idUsuario, dadosBody, contentType)
+
+    response.status(resultadoNovaSenha.status_code)
+   
+    
+    response.json(resultadoNovaSenha)
+    //ok
+})
 
 
 /*********************** Questão *****************************/
@@ -396,6 +428,7 @@ app.post('/v1/sinalibras/videoaula', cors(), bodyParserJson, async function(requ
     }
 
 })
+
 
 
 /****************************** MODULOS ***************************************/
