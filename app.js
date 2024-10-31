@@ -5,7 +5,6 @@
  * Versão: 1.0
  ***********************************************************/
 
-console.log("teste fork")
 const express = require('express')
 const cors = require ('cors')
 const bodyParser = require('body-parser')
@@ -36,13 +35,14 @@ const { log } = require('console')
 
 /************************************ Aluno ******************************/
 
-app.get('/v1/sinalibras/aluno/validacao', cors(), bodyParserJson, async (request, response, next) => {
+app.post('/v1/sinalibras/aluno/validacao', cors(), bodyParserJson, async (request, response, next) => {
 
     let contentType = request.headers['content-type']
     let dadosBody = request.body
     let dadosUsuario = await controllerAluno.getValidarAluno(dadosBody.email, dadosBody.senha, contentType)
     response.status(dadosUsuario.status_code);
     response.json(dadosUsuario)
+    
 //ok
 })
 app.post('/v1/sinalibras/alunos', cors(), async function(request, response){
@@ -115,6 +115,7 @@ app.post('/v1/sinalibras/aluno', cors(), bodyParserJson, async function (request
 app.put('/v1/sinalibras/aluno/:id', cors(), bodyParserJson, async function(request,response){
     let contentType = request.headers['content-type']
     let idUsuario = request.params.id
+    
 
     let dadosBody = request.body
     let ressultadoNovaFoto = await controllerAluno.setAtualizarAluno(idUsuario, dadosBody, contentType)
@@ -188,13 +189,27 @@ app.post('/v1/sinalibras/resultado_quiz', cors(), bodyParserJson, async function
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
+console.log(dadosBody+"dadosBody");
 
     let resultadoNovaResposta = await controllerProfessor.setInserirRespostaQuiz(dadosBody, contentType);
+console.log(resultadoNovaResposta);
 
     response.status(resultadoNovaResposta.status_code); 
     response.json(resultadoNovaResposta);
 });
+app.get('/v1/sinalibras/usuario/email/:email', cors(), async function(request,response,next){
 
+    let emailProfessor = request.params.email
+    console.log(emailProfessor);
+    
+    let professor = await controllerProfessor.getBuscarUsuarioTesteEmail(emailProfessor)
+console.log(professor);
+
+        response.json(professor);
+         response.status(professor.status_code)
+
+       //ok  
+ })
 
 /*********************** Professor *****************************/
 
@@ -235,7 +250,6 @@ app.delete('/v1/sinalibras/professor/:id', cors(), async function(request,respon
 })
 
 app.post('/v1/sinalibras/professor/validacao', cors(), bodyParserJson, async (request, response, next) => {
-
     let contentType = request.headers['content-type']
     let dadosBody = request.body
     let dadosUsuario = await controllerProfessor.getValidarProf(dadosBody.email, dadosBody.senha, contentType)
@@ -351,10 +365,10 @@ app.get('/v1/sinalibras/videoaulas', cors(), async function(request, response){
 })
 
 
-app.delete('/v1/sinalibras/deleteVideoaula/:id', cors(), async function(request, response){
+app.delete('/v1/sinalibras/videoaula/:id', cors(), async function(request, response){
     let idVideoaula = request.params.id
 
-    let excluirVideo =  await controllerVideoaula.setExcluirVideoaula(idVideoaula)
+    let excluirVideo = controllerVideoaula.setExcluirVideoaula(idVideoaula)
 
     if(excluirVideo){
         response.status(200)
@@ -380,61 +394,6 @@ app.post('/v1/sinalibras/videoaula', cors(), bodyParserJson, async function(requ
         response.status(404)
         response.json({message: 'Não foi possível inserir no banco'})
     }
-
-})
-
-app.put('/v1/sinalibras/updateVideoaula/:id', cors(), bodyParserJson, async function(request,response){
-    let contentType = request.headers['content-type']
-    let idVideoaula = request.params.id
-
-    let dadosBody = request.body
-    let resultadoNovaVideoaula = await controllerVideoaula.setAtualizarVideoaula(idVideoaula, dadosBody, contentType)
-
-    response.status(resultadoNovaVideoaula.status_code)
-    response.json(resultadoNovaVideoaula)
-
-    //ok
-
-})
-
-app.get('/v1/sinalibras/videoaula/:id', cors(), async function(request, response){
-
-   let idVideo = request.params.id
-
-   
-    let dadosVideoaula = await controllerVideoaula.getVideoaulaById(idVideo)
-
-   
-    if(dadosVideoaula){
-      response.json(dadosVideoaula);
-        response.status(200);
-    }else{
-        response.status(404);
-        response.json({message: 'Nenhum registro foi encontrado'})
-        
-    }
-
-    //ok
-
-})
-
-app.get('/v1/sinalibras/videoaula/titulo/:titulo', cors(), async function(request, response){
-
-   let tituloVideo = request.params.titulo
-
-    let dadosVideoaula = await controllerVideoaula.getVideoaulaByNome(tituloVideo)
-
-   
-    if(dadosVideoaula){
-      response.json(dadosVideoaula);
-        response.status(200);
-    }else{
-        response.status(404);
-        response.json({message: 'Nenhum registro foi encontrado'})
-        
-    }
-
-    //ok
 
 })
 
@@ -478,7 +437,6 @@ app.post('/v1/sinalibras/modulo', cors(), bodyParserJson, async function(request
     let contentType = request.headers['content-type']
     let dadosBody = request.body
 
-    console.log(contentType);
     let novoModulo = await controllerModulo.inserirNovoModulo(dadosBody, contentType)
 
     if(novoModulo){
@@ -528,6 +486,7 @@ app.put('/v1/sinalibras/modulo/:id', cors(), bodyParserJson, async function(requ
 app.get('/v1/sinalibras/videosModulo/:id', cors(), async function(request, response){
     let idModulo = request.params.id
     let videosModulo = await controllerModulo.getVideosDoModulo(idModulo)
+console.log(videosModulo);
 
     if(videosModulo){
         response.status(200)

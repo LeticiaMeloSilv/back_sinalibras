@@ -203,7 +203,7 @@ const getVideosDoModulo = async function(id){
 
             if(dadosModulo){
                 if(dadosModulo.length>0){
-                    moduloJson.modulo = dadosModulo
+                    moduloJson.video = dadosModulo
                     moduloJson.status_code = 200
                     return moduloJson
                 }else{
