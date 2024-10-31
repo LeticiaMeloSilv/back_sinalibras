@@ -13,7 +13,7 @@ const prisma = new PrismaClient();
 
 
 const selectValidarAluno = async function (email,senha){
-    console.log("NÃO É POSSIVEL");
+
 
  let sql = `select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta
  where email = '${email}' and senha = md5('${senha}')`

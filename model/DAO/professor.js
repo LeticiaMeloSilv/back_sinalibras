@@ -17,6 +17,10 @@ const selectValidarProf = async function (email,senha){
     where email = '${email}' and senha = md5('${senha}')`
    
        let rsProfessor = await prisma.$queryRawUnsafe(sql)
+
+       
+    
+       
        if(rsProfessor){
            return rsProfessor
        }else{
@@ -118,13 +122,16 @@ const insertProfessor = async function(dadosProfessor){
             }
 
         let rsProfessor = await prisma.$executeRawUnsafe(sql)
-
+           
+            
         if(rsProfessor){
             return true
         }else
             return false
 
     } catch(error) {
+        console.log(error);
+        
         return false
     }
 }

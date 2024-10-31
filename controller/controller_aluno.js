@@ -11,7 +11,7 @@ const alunoDao = require('../model/DAO/aluno.js');
 const data = require('./validacoes.js')
 
 const getValidarAluno = async(email, senha, contentType) => {
-    console.log("NÃO É POSSIVEL");
+
 
     try {
 
@@ -19,7 +19,7 @@ const getValidarAluno = async(email, senha, contentType) => {
     
             let emailAluno = email
             let senhaAluno = senha
-            console.log(emailAluno);
+           
             
             let alunoJSON = {}
 
@@ -32,7 +32,7 @@ const getValidarAluno = async(email, senha, contentType) => {
 
                 let dadosAluno = await alunoDao.selectValidarAluno(emailAluno, senhaAluno)
                
-              console.log(dadosAluno);
+           
               
 
                 if(dadosAluno){
@@ -100,7 +100,7 @@ const getListarAlunos = async function () {
             return message.ERROR_NOT_FOUND
         }
     } else {
-        console.log('corno3');
+    
         return message.ERROR_INTERNAL_SERVER_DB;
     }
 
