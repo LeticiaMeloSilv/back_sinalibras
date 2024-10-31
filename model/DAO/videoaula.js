@@ -19,6 +19,7 @@ const insertVideoaula = async function (dadosVideoaula){
         ){
             sql = `insert into tbl_videoaula (
                 titulo,
+                url_video,
                 descricao,
                 duracao, 
                 foto_capa,
@@ -28,6 +29,7 @@ const insertVideoaula = async function (dadosVideoaula){
                 id_professor
             ) values (
                 '${dadosVideoaula.titulo}',
+                '${dadosVideoaula.url_video}',
                 '${dadosVideoaula.descricao}',
                 '${dadosVideoaula.duracao}', 
                 '${dadosVideoaula.foto_capa}',
@@ -39,6 +41,7 @@ const insertVideoaula = async function (dadosVideoaula){
         }else{
             sql = `insert into tbl_videoaula (
                 titulo,
+                url_video,
                 descricao,
                 duracao, 
                 foto_capa,
@@ -48,6 +51,7 @@ const insertVideoaula = async function (dadosVideoaula){
                 id_professor
             ) values (
                 '${dadosVideoaula.titulo}',
+                '${dadosVideoaula.url_video}',
                 null,
                 '${dadosVideoaula.duracao}',
                 '${dadosVideoaula.foto_capa}',
@@ -115,7 +119,7 @@ const updateVideoaula = async function (dadosVideoaula, id){
     }
 }
 
-const deleteVideoaula = async function (dadosVideoaula, id){
+const deleteVideoaula = async function (id){
 
     try{
         let sql = `delete from tbl_videoaula where id_videoaula = ${id}`
@@ -127,6 +131,7 @@ const deleteVideoaula = async function (dadosVideoaula, id){
       
 
     }catch(error){
+        console.log(error);
         return false
     }
     

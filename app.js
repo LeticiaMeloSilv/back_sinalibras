@@ -30,7 +30,9 @@ const controllerQuestao = require('./controller/controller_questao')
 const controllerVideoaula = require('./controller/controller_videoaula')
 const controllerNivel = require('./controller/controller_nivel')
 const controllerModulo = require('./controller/controller_modulo')
-const controllerComentario = require('./controller/controller_comentario')
+const controllerComentarioAula = require('./controller/controller_comentarioAula')
+const controllerPostagem = require('./controller/controller_postagem')
+const controllerComentarioPostagem = require('./controller/controller_comentarioPostagem')
 const { log } = require('console')
 
 /************************************ Aluno ******************************/
@@ -625,13 +627,13 @@ app.get('/v1/sinalibras/videosNivel/:id', cors(), async function(request, respon
 
 })
 
-/************************ COMENTARIOS ************************/
+/************************ COMENTARIOS AULA ************************/
 
 app.post('/v1/sinalibras/videoaula/comentario', cors(), bodyParserJson, async function(request, response){
     let contentType = request.headers['content-type']
     let dadosBody = request.body
 
-    let novoComentario = await controllerComentario.setInserirNovoComentario(dadosBody, contentType)
+    let novoComentario = await controllerComentarioAula.setInserirNovoComentario(dadosBody, contentType)
 
     if(novoComentario){
         response.status(200)
@@ -645,7 +647,7 @@ app.post('/v1/sinalibras/videoaula/comentario', cors(), bodyParserJson, async fu
 
 app.get('/v1/sinalibras/videoaula/comentarios/:id', cors(), async function (request, response){
     let idVideo = request.params.id
-    let dadosComentario = await controllerComentario.getAllComentariosVideo(idVideo)
+    let dadosComentario = await controllerComentarioAula.getAllComentariosVideo(idVideo)
 
     if(dadosComentario){
         response.status(200)
@@ -657,10 +659,112 @@ app.get('/v1/sinalibras/videoaula/comentarios/:id', cors(), async function (requ
 })
 
 
-app.delete('/v1/sinalibras/videoaula/deleteComentario/:id', cors(), async function (request, response){
+app.delete('/v1/sinalibras/videoaula/comentario/:id', cors(), async function (request, response){
 
     let idComentario = request.params.id
-    let deleteComentario = await controllerComentario.setDeleteComentario(idComentario)
+    let deleteComentario = await controllerComentarioAula.setDeleteComentario(idComentario)
+
+    if(deleteComentario){
+        response.status(200)
+        response.json(deleteComentario)
+    }else{
+        response.status(404)
+        response.json({message: 'Não foi possível excluir esse comentário'})
+    }
+})
+
+/**************************************** POSTAGENS ************************************/
+
+app.get('/v1/sinalibras/postagens', cors(), async function(request, response){
+
+   
+    let dadosPostagem = await controllerPostagem.getListaPostagens()
+
+   
+    if(dadosPostagem){
+      response.json(dadosPostagem);
+        response.status(200);
+    }else{
+        response.status(404);
+        response.json({message: 'Nenhum registro foi encontrado'})
+        
+    }
+
+    //ok
+
+})
+
+
+app.delete('/v1/sinalibras/postagem/:id', cors(), async function(request, response){
+    let idPostagem = request.params.id
+
+    let excluirPostagem = controllerPostagem.setExcluirPostagem(idPostagem)
+
+    if(excluirPostagem){
+        response.status(200)
+        response.json(excluirPostagem)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+
+}) 
+
+
+app.post('/v1/sinalibras/postagem', cors(), bodyParserJson, async function(request, response){
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+
+    let novaPostagem = await controllerPostagem.inserirNovaPostagem(dadosBody, contentType)
+
+    if(novaPostagem){
+        response.status(200)
+        response.json(novaPostagem)
+    }else{
+        response.status(404)
+        response.json({message: 'Não foi possível inserir no banco'})
+    }
+
+})
+
+
+
+/************************ COMENTARIOS POSTAGEM ************************/
+
+app.post('/v1/sinalibras/postagem/comentario', cors(), bodyParserJson, async function(request, response){
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+
+    let novoComentario = await controllerComentarioPostagem.setInserirNovoComentario(dadosBody, contentType)
+
+    if(novoComentario){
+        response.status(200)
+        response.json(novoComentario)
+    }else{
+        response.status(404)
+        response.json({message: 'Não foi possível inserir no banco'})
+    }
+
+})
+
+app.get('/v1/sinalibras/postagem/comentarios/:id', cors(), async function (request, response){
+    let idPostagem = request.params.id
+    let dadosComentario = await controllerComentarioPostagem.getAllComentariosPostagem(idPostagem)
+
+    if(dadosComentario){
+        response.status(200)
+        response.json(dadosComentario)
+    }else{
+        response.status(404)
+        response.json({message: 'Não há dados no banco'})
+    }
+})
+
+
+app.delete('/v1/sinalibras/postagem/comentario/:id', cors(), async function (request, response){
+
+    let idComentario = request.params.id
+    let deleteComentario = await controllerComentarioPostagem.setDeleteComentario(idComentario)
 
     if(deleteComentario){
         response.status(200)
@@ -680,6 +784,5 @@ app.delete('/v1/sinalibras/videoaula/deleteComentario/:id', cors(), async functi
 app.listen('8080', function(){
     console.log("API funcionando e aguardando requisições");
 });
-
 
 
