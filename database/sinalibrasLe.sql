@@ -87,32 +87,7 @@ select * from tbl_aluno;
 select * from tbl_perguntas;
 select * from tbl_alternativas;
 
-/*
-DELIMITER //
 
-CREATE PROCEDURE inserir_questao_com_alternativas (
-    IN p_pergunta VARCHAR(250),
-    IN p_video VARCHAR(255),
-    IN p_alternativa VARCHAR(100),
-    IN p_status VARCHAR(30)
-)
-BEGIN
-    DECLARE v_id_pergunta INT;
-
- 
-    INSERT INTO tbl_perguntas (pergunta, video)
-    VALUES (p_pergunta, p_video);
-
-   
-    SET v_id_pergunta = LAST_INSERT_ID();
-
- 
-    INSERT INTO tbl_alternativas (alternativa, status, id_pergunta)
-    VALUES (p_alternativa, p_status, v_id_pergunta);
-END//
-
-CALL inserir_questao_com_alternativas ( 'qual seu nome?', ' xxxxxxxxxxxx', 'joao', 1 );
-*/
 
 DELIMITER //
 
