@@ -4,7 +4,7 @@ const message = require('../modulo/config.js')
 const inserirNovoNivel = async function(dadosNivel, contentType){
     try{
 
-        if(String(contentType).toLowerCase == 'application/json'){
+        if(String(contentType).toLowerCase() == 'application/json'){
             let novoNivelJson = {}
 
             if(dadosNivel.nivel == undefined || dadosNivel.nivel == null || dadosNivel.nivel == '' || dadosNivel.nivel.length>20){
@@ -18,7 +18,7 @@ const inserirNovoNivel = async function(dadosNivel, contentType){
 
                     if(novoNivel){
                         let ultimoId = nivelDAO.selectLastId()
-                        dadosNivel.id = ultimoId
+                        dadosNivel.id = Number(ultimoId[0].id)
 
                         novoNivelJson.nivel = dadosNivel
                         novoNivelJson.status = message.SUCESS_CREATED_ITEM.status
@@ -156,15 +156,12 @@ const setExcluirNivel = async function (id){
             
 
             if(dadosNivel){
-                
-                if(dadosNivel.length>0){
-                    nivelJson.nivel = dadosNivel
-                    nivelJson.status_code = 200
 
-                    return nivelJson
-                }else{
-                    return message.ERROR_NOT_FOUND
-                }
+                nivelJson.nivel = dadosNivel
+                nivelJson.status_code = 200
+
+                return nivelJson
+                            
             }else{
              
                 return message.ERROR_INTERNAL_SERVER_DB
@@ -177,39 +174,6 @@ const setExcluirNivel = async function (id){
     }
  }
 
-const getVideosDoNivel = async function(id){
-    try{
-
-        let idNivel = id
-
-        let nivelJson = {}
-
-        if(idNivel == null || idNivel == ' ' || isNaN(idNivel) || idNivel == undefined){
-            return message.ERROR_INVALID_ID
-        }else{
-            let dadosNivel = await nivelDAO.selectVideosNivel(idNivel)
-
-            console.log(dadosNivel);
-
-            if(dadosNivel){
-                if(dadosNivel.length>0){
-                    nivelJson.videos = dadosNivel
-                    nivelJson.status_code = 200
-
-                    return nivelJson
-                }else{
-                    return message.ERROR_NOT_FOUND
-                }
-            }else{
-                return message.ERROR_INTERNAL_SERVER_DB
-            }
-        }
-
-    }catch (error){
-        return message.ERROR_INTERNAL_SERVER_DB
-    }
-}
-
 
 
 module.exports = {
@@ -217,6 +181,5 @@ module.exports = {
     setAtualizarNivel,
     setExcluirNivel,
     getListaNivel,
-    getNivelById,
-    getVideosDoNivel
+    getNivelById
 }

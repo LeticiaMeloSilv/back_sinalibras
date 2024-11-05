@@ -184,46 +184,7 @@ const setExcluirModulo = async function (id){
     }
  }
 
-const getVideosDoModulo = async function(id){
-    try{
 
-        let idModulo = id
-
-        let moduloJson = {}
-
-        if(idModulo == null || idModulo == ' ' || isNaN(idModulo) || idModulo == undefined){
-            return message.ERROR_INVALID_ID
-        }else{
-
-            let moduloId = await moduloDAO.selectModuloById(idModulo)
-
-            if(moduloId){
-
-                let dadosModulo = await moduloDAO.selectVideosModulo(idModulo)
-
-            if(dadosModulo){
-                if(dadosModulo.length>0){
-                    moduloJson.video = dadosModulo
-                    moduloJson.status_code = 200
-                    return moduloJson
-                }else{
-                    return message.ERROR_NOT_FOUND
-                }
-            }else{
-                return message.ERROR_INTERNAL_SERVER_DB
-            }
-
-            }else{
-                return message.ERROR_NOT_FOUND_ID
-            }
-
-            
-        }
-
-    }catch (error){
-        return message.ERROR_INTERNAL_SERVER
-    }
-}
 
 
 
@@ -232,6 +193,5 @@ module.exports = {
     setAtualizarModulo,
     setExcluirModulo,
     getListaModulo,
-    getModuloById,
-    getVideosDoModulo
+    getModuloById
 }

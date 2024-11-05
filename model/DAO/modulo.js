@@ -82,21 +82,6 @@ const selectModuloById = async function (id){
     }
 }
 
-const selectVideosModulo = async function (id){
-    try{
-
-        let sql = `select * from tbl_videoaula where id_modulo = ${id}`
-
-        let rsModulo = await prisma.$queryRawUnsafe(sql)
-
-
-        if(rsModulo)
-        return rsModulo
-
-    }catch(error){
-        return false
-    }
-}
 
 const selectLastId = async function (){
     try{
@@ -118,6 +103,5 @@ module.exports = {
     deleteModulo,
     selectAllModulos,
     selectModuloById,
-    selectVideosModulo,
     selectLastId
 }
