@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 const insertNivel = async function(dadosNivel){
     try{
 
-        let sql = `insert into tbl_nivel (nivel) values ('${dadosNivel.nivel})`
+        let sql = `insert into tbl_nivel (nivel) values ('${dadosNivel.nivel}')`
 
         let rsNivel = await prisma.$executeRawUnsafe(sql)
 

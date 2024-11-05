@@ -112,6 +112,10 @@ const selectLastId = async function (){
     }
 }
 
+
+
+
+
 module.exports = {
     insertModulo,
     updateModulo,
@@ -119,5 +123,6 @@ module.exports = {
     selectAllModulos,
     selectModuloById,
     selectVideosModulo,
-    selectLastId
+    selectLastId,
+   
 }

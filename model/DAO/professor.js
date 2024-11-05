@@ -282,6 +282,24 @@ const updateSenhaProfessor = async function  (id, dadosProfessor) {
 }
 
 
+
+const selectInfoPeril = async function (id){
+    try{
+        let sql = `select nome, foto_perfil from tbl_professor where id_professor = ${id}`
+
+        let rsProfessor = await prisma.$queryRawUnsafe(sql)
+
+        if(rsProfessor)
+        return rsProfessor
+    }catch(error){
+        return false
+    }
+}
+
+
+
+
+
 module.exports = {
     selectAllProfessores,
     selectByIdProfessor,
@@ -294,5 +312,6 @@ module.exports = {
     updateProfessorFotoPerfil,
     updateSenhaProfessor,
     selectValidarProf,
-    selectVerificarEmail
+    selectVerificarEmail,
+    selectInfoPeril
 }

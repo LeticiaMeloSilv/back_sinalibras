@@ -10,6 +10,7 @@ const message = require('../modulo/config.js')
 const professorDAO = require('../model/DAO/professor.js');
 const data = require('./validacoes.js')
 const preCadastroProfDAO = require('../model/DAO/preCadastroProfessor.js')
+const videoaulaDAO = require('../model/DAO/videoaula.js')
 
 
 /*********************************** Pré cadastro prof ****************************************/
@@ -69,6 +70,35 @@ const setInserirUsuarioQuiz = async function (dadosUser, contentType) {
     }
 }
 
+const getBuscarUsuarioTesteEmail = async (email) => {
+            
+    let emailProfessor = email
+    let professorJSON = {};
+
+    if (emailProfessor == '' || emailProfessor == undefined) {
+        return message.ERROR_INVALID_ID
+    } else {
+    
+        let dadosProfessor = await preCadastroProfDAO.selectValidarUsuario(email)
+
+        if (dadosProfessor) {
+            if (dadosProfessor.length > 0) {
+                
+                professorJSON.usuario = dadosProfessor[0];
+                professorJSON.status_code = 200;
+
+                return professorJSON;
+            } else {
+                return message.ERROR_NOT_FOUND;
+            }
+        } else {
+            return message.ERROR_INTERNAL_SERVER_DB
+        }
+
+
+    }
+}
+
 
 
 
@@ -92,13 +122,13 @@ const setInserirRespostaQuiz = async function (dadosUser, contentType) {
 
           
             let user = await preCadastroProfDAO.insertRespostaUsuario(dadosUser);
-          //esta dando errado a pontuação pois o id do usuário teste está voltando como undefined 
+     
             if (user) {
                 let ultimoID = await preCadastroProfDAO.selectUltimoIdRespostaQuiz()
                    
                 dadosUser.id = Number(ultimoID[0].id)
                 console.log(dadosUser);
-                console.log("CARALHO"+dadosUser[0].id_usuario_teste);
+                console.log(dadosUser[0].id_usuario_teste);
 
      
                 let resultadoQuiz = await preCadastroProfDAO.insertResultadoUsuario(dadosUser[0].id_usuario_teste)
@@ -144,7 +174,7 @@ const setInserirRespostaQuiz = async function (dadosUser, contentType) {
 
 
 
-/***************************** professor ***********************/
+/****************************************************** professor *********************************************/
 
 
 const getValidarProf = async(email, senha, contentType) => {
@@ -616,38 +646,52 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
                 }
             
             }
-        
-            const getBuscarUsuarioTesteEmail = async (email) => {
+
+
+         const getInfoPerfilProfessor = async function (id){
+                let idProfessor = id 
             
-                let emailProfessor = email
-                let professorJSON = {};
-            console.log(emailProfessor);
+                let professorJSON = {}
             
-                if (emailProfessor == '' || emailProfessor == undefined) {
-                    return message.ERROR_INVALID_ID
+                if (idProfessor == '' || idProfessor == undefined || isNaN(idProfessor)) {
+                    return message.ERROR_INVALID_ID; //400
                 } else {
-                
-                    let dadosProfessor = await preCadastroProfDAO.selectValidarUsuario(email)
             
+                   
+                    let dadosProfessor = await professorDAO.selectInfoPeril(idProfessor)
+            
+                   
                     if (dadosProfessor) {
+            
+                    
                         if (dadosProfessor.length > 0) {
-                            
-                            professorJSON.usuario = dadosProfessor[0];
+
+
+                            for (let professor of dadosProfessor){
+                                let infoVideoAula = await videoaulaDAO.selectVideosByIdProfessor(professor.id_professor)   
+                                professor.videoaula = infoVideoAula 
+                            }
+                
+                            professorJSON.professor = dadosProfessor[0];
                             professorJSON.status_code = 200;
             
-                            return professorJSON;
+                            return professorJSON
+            
                         } else {
-                            return message.ERROR_NOT_FOUND;
+                            return message.ERROR_NOT_FOUND; //404
                         }
+            
                     } else {
-                        return message.ERROR_INTERNAL_SERVER_DB
+                        return message.ERROR_INTERNAL_SERVER_DB; //500
                     }
-            
-            
                 }
+            
             }
 
 
+        
+
+ getInfoPerfilProfessor(1);
 
 module.exports = {
     getListarProfessores,
@@ -662,5 +706,6 @@ module.exports = {
     getValidarProf,
     setInserirUsuarioQuiz,
     setInserirRespostaQuiz,
-    getBuscarUsuarioTesteEmail
+    getBuscarUsuarioTesteEmail,
+    getInfoPerfilProfessor
 }
