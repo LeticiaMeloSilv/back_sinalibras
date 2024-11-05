@@ -126,7 +126,10 @@ BEGIN
     END WHILE;
 END//
 
+
+
 delimiter ;
+
 
 CALL inserir_questao_com_alternativas(
     'Qual é a capital da França?', 
@@ -207,6 +210,26 @@ select * from tbl_resposta_usuario;
 select * from tbl_aluno;
 select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta where email = 'mu@mu' and senha = md5('1234566');
 
+
+--------------- TABELA DE PROFESSORES ---------
+CREATE TABLE `tbl_professor` (
+  `id_professor` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `nome` VARCHAR(250) NOT NULL,
+  `data_cadastro` DATE NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `senha` VARCHAR(8) NOT NULL,
+  `data_nascimento` DATE NOT NULL,
+  `foto_perfil` VARCHAR(255) NULL)
+ENGINE = InnoDB;
+ 
+ select * from tbl_professor;
+ 
+ 
+--------------- TABELA DOS POSTS -----------------------
+
+CREATE TABLE `tbl_postagem` (
+  `id_postagem` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+
 select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta
  where email = 'mu@mu' and senha = md5('1234567');
  
@@ -216,6 +239,7 @@ select ta.id_aluno, ta.nome, ta.email from tbl_aluno as ta
  
  CREATE TABLE `tbl_post` (
   `id_post` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+
   `texto` VARCHAR(250) NOT NULL,
   `foto_postagem` VARCHAR(255) NULL,
   `id_professor` INT NOT NULL,

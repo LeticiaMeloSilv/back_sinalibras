@@ -127,11 +127,10 @@ const deleteVideoaula = async function (id){
         let rsVideoaula = await prisma.$executeRawUnsafe(sql)
 
         if(rsVideoaula)
-            return true
+            return rsVideoaula
       
 
     }catch(error){
-        console.log(error);
         return false
     }
     
