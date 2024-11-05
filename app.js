@@ -33,7 +33,7 @@ const controllerModulo = require('./controller/controller_modulo')
 const controllerComentarioAula = require('./controller/controller_comentarioAula')
 const controllerPostagem = require('./controller/controller_postagem')
 const controllerComentarioPostagem = require('./controller/controller_comentarioPostagem')
-const { log } = require('console')
+
 
 /************************************ Aluno ******************************/
 
