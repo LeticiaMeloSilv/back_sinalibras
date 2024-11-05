@@ -63,9 +63,7 @@ const insertVideoaula = async function (dadosVideoaula){
         }
 
         let rsVideoaula = await prisma.$executeRawUnsafe(sql)
-
-           if(rsVideoaula)
-           return true
+        return rsVideoaula
        
     } catch (error){
         return false 
@@ -87,22 +85,28 @@ const updateVideoaula = async function (dadosVideoaula, id){
 
                 sql = `update tbl_videoaula set
                 titulo = '${dadosVideoaula.titulo}', 
+                url_video = '${dadosVideoaula.url_video}', 
                 descricao = '${dadosVideoaula.descricao}',
                 duracao = '${dadosVideoaula.duracao}', 
                 foto_capa = '${dadosVideoaula.foto_capa}', 
+                data = '${dadosVideoaula.data}', 
                 id_nivel = '${dadosVideoaula.id_nivel}', 
                 id_modulo = '${dadosVideoaula.id_modulo}', 
+                id_professor = '${dadosVideoaula.id_professor}',
 
                 where id_videoaula = ${id}`
 
             }else{
                 sql = `update tbl_videoaula set
                 titulo = '${dadosVideoaula.titulo}', 
+                url_video = '${dadosVideoaula.url_video}', 
                 descricao = null,
                 duracao = '${dadosVideoaula.duracao}', 
                 foto_capa = '${dadosVideoaula.foto_capa}', 
+                data = '${dadosVideoaula.data}', 
                 id_nivel = '${dadosVideoaula.id_nivel}', 
                 id_modulo = '${dadosVideoaula.id_modulo}', 
+                id_professor = '${dadosVideoaula.id_professor}' 
                 
                 where id_videoaula = ${id}`
 
@@ -110,10 +114,8 @@ const updateVideoaula = async function (dadosVideoaula, id){
 
             let rsVideoaula = await prisma.$executeRawUnsafe(sql)
 
-            if(rsVideoaula)
-                return true
-            else 
-                return false
+            return rsVideoaula
+
     } catch (error){
         return false
     }
@@ -126,35 +128,12 @@ const deleteVideoaula = async function (id){
 
         let rsVideoaula = await prisma.$executeRawUnsafe(sql)
 
-        if(rsVideoaula)
-            return rsVideoaula
-      
+        return rsVideoaula
 
     }catch(error){
         return false
     }
     
-}
-
-const selectAllVideoaula = async function (){
-
-     try{
-
-        let sql = `select  * from tbl_videoaula order by data desc;`
-
-        let rsVideoaula = await prisma.$queryRawUnsafe(sql)
-
-      
-
-        if(rsVideoaula.length > 0)
-            return rsVideoaula
-    
-
-     }catch(error){
-        return false
-     }
-
-     
 }
 
 const selectVideoaulaById = async function (id){
@@ -163,8 +142,7 @@ const selectVideoaulaById = async function (id){
         let sql = `select * from tbl_videoaula where id_videoaula = ${id}`
         let rsVideoaula = await prisma.$queryRawUnsafe(sql)
 
-        if(rsVideoaula)
-            return rsVideoaula
+       return rsVideoaula
     
     }catch(error){
         return false
@@ -177,15 +155,41 @@ const selectVideoaulaByNome = async function (titulo){
         let sql = `select * from tbl_videoaula where titulo LIKE "%${titulo}%"`
         let rsVideoaula = await prisma.$queryRawUnsafe(sql)
 
-        if(rsVideoaula)
-            return true
-        else
-            return false
+        return rsVideoaula
     }catch(error){
         return false
     }
 }
 
+const selectVideosModulo = async function (id){
+    try{
+
+        let sql = `select * from tbl_videoaula where id_modulo = ${id}`
+
+        let rsModulo = await prisma.$queryRawUnsafe(sql)
+
+        return rsModulo
+
+    }catch(error){
+        return false
+    }
+}
+
+const selectVideosNivel = async function (id){
+    try{
+
+        let sql = `select * from tbl_videoaula where id_nivel = ${id}`
+
+        let rsNivel = await prisma.$queryRawUnsafe(sql)
+
+
+        return rsNivel
+
+
+    }catch(error){
+        return false
+    }
+}
 
 const selectUltimoId = async function (){
     try{
@@ -219,9 +223,14 @@ module.exports = {
     insertVideoaula,
     updateVideoaula,
     deleteVideoaula,
-    selectAllVideoaula,
     selectVideoaulaById,
     selectVideoaulaByNome,
+<<<<<<< HEAD
     selectUltimoId,
     selectVideosByIdProfessor
+=======
+    selectVideosModulo,
+    selectVideosNivel,
+    selectUltimoId
+>>>>>>> e9261ba453573e2e7fe61062aef6225339df17b1
 }

@@ -1,7 +1,7 @@
 const message = require('../modulo/config.js')
 const postagemDAO = require ('../model/DAO/postagem.js')
 const professorDAO = require ('../model/DAO/professor.js')
-const comentarioPostagemDAO = require('../model/DAO/comentarioPostagem.js')
+const comentarioDAO = require('../model/DAO/comentarios.js')
 const { Prisma } = require('@prisma/client')
 
 const inserirNovaPostagem = async function (dadosPostagem, contentType){

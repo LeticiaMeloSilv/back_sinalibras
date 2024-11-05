@@ -30,9 +30,8 @@ const controllerQuestao = require('./controller/controller_questao')
 const controllerVideoaula = require('./controller/controller_videoaula')
 const controllerNivel = require('./controller/controller_nivel')
 const controllerModulo = require('./controller/controller_modulo')
-const controllerComentarioAula = require('./controller/controller_comentarioAula')
+const controllerComentario = require('./controller/controller_comentario')
 const controllerPostagem = require('./controller/controller_postagem')
-const controllerComentarioPostagem = require('./controller/controller_comentarioPostagem')
 
 
 /************************************ Aluno ******************************/
@@ -321,6 +320,7 @@ app.get('/v1/sinalibras/professor/email/:email', cors(), async function(request,
            //ok  
      })
 
+
 /************************************ Perfil professor *****************************************/
 
 app.put('/v1/sinalibras/professor/fotoPerfil/:id', cors(), bodyParserJson, async function(request,response){
@@ -379,38 +379,25 @@ app.get('/v1/sinalibras/questoes', cors(), async function(request,response,next)
 
 /**************************************** videoaulas ************************************/
 
-app.get('/v1/sinalibras/videoaulas', cors(), async function(request, response){
+app.get('/v1/sinalibras/videoaulas/:id', cors(), async function(request, response){
 
+    let idVideo = request.params.id
    
     let dadosVideoaula = await controllerVideoaula.getListaVideoaulas()
 
    
-    if(dadosVideoaula){
-      response.json(dadosVideoaula);
-        response.status(200);
-    }else{
-        response.status(404);
-        response.json({message: 'Nenhum registro foi encontrado'})
-        
-    }
-
-    //ok
-
+    response.status(dadosVideoaula.status_code);
+    response.json(dadosVideoaula)
 })
 
 
 app.delete('/v1/sinalibras/videoaula/:id', cors(), async function(request, response){
     let idVideoaula = request.params.id
 
-    let excluirVideo = controllerVideoaula.setExcluirVideoaula(idVideoaula)
+    let excluirVideo = await controllerVideoaula.setExcluirVideoaula(idVideoaula)
 
-    if(excluirVideo){
-        response.status(200)
-        response.json(excluirVideo)
-    }else{
-        response.status(404)
-        response.json({message: 'Nenhum registro foi encontrado'})
-    }
+    response.status(excluirVideo.status_code)
+    response.json(excluirVideo)
 
 }) 
 
@@ -421,15 +408,39 @@ app.post('/v1/sinalibras/videoaula', cors(), bodyParserJson, async function(requ
 
     let novaVideoaula = await controllerVideoaula.inserirNovaVideoaula(dadosBody, contentType)
 
-    if(novaVideoaula){
+    response.status(novaVideoaula.status_code)
+    response.json(novaVideoaula)
+
+})
+
+app.put('/v1/sinalibras/videoaula/:id', cors(), bodyParserJson, async function(request, response){
+
+    let idVideoaula = request.params.id
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+
+    let videoaulaAtualizado = await controllerVideoaula.setAtualizarVideoaula(idVideoaula, dadosBody, contentType)
+
+    response.status(videoaulaAtualizado.status_code)
+    response.json(videoaulaAtualizado)
+
+})
+
+app.get('/v1/sinalibras/videos/nivel/:id', cors(), async function(request, response){
+    let idNivel = request.params.id
+    let videosNivel = await controllerNivel.getVideosDoNivel(idNivel)
+
+    if(videosNivel){
         response.status(200)
-        response.json(novaVideoaula)
+        response.json(videosNivel)
     }else{
         response.status(404)
-        response.json({message: 'Não foi possível inserir no banco'})
+        response.json({message: 'Nenhum registro foi encontrado'})
     }
 
 })
+
+
 
 
 
@@ -541,41 +552,30 @@ app.get('/v1/sinalibras/nivel/:id', cors(), async function(request, response, ne
 
     let dadosNivel = await controllerNivel.getNivelById(idNivel)
 
-    if(dadosNivel){
-        response.status(200)
+        response.status(dadosNivel.status_code)
         response.json(dadosNivel)
-    }else{
-        response.status(404)
-        response.json({message: 'Nenhum registro foi encontrado'})
-    }
+ 
 
 })
 
 app.get('/v1/sinalibras/niveis', cors(), async function (request, response){
     let dadosNivel = await controllerNivel.getListaNivel()
 
-    if(dadosNivel){
         response.status(200)
         response.json(dadosNivel)
-    }else{
-        response.status(404)
-        response.json({message: 'Nenhum registro foi encontrado'})
-    }
+   
 })
 
 app.post('/v1/sinalibras/nivel', cors(), bodyParserJson, async function(request, response){
     let contentType = request.headers['content-type']
     let dadosBody = request.body
-
+    
     let novoNivel = await controllerNivel.inserirNovoNivel(dadosBody, contentType)
+    console.log(contentType);
 
-    if(novoNivel){
-        response.status(200)
-        response.json(novoNivel)
-    }else{
-        response.status(404)
-        response.json({message: 'Não foi possível inserir no banco'})
-    }
+    response.status(novoNivel.status_code)
+    response.json(novoNivel)
+  
 
 })
 
@@ -585,47 +585,13 @@ app.delete('/v1/sinalibras/nivel/:id', cors(), async function(request, response)
 
 
     let dadosNivel = await controllerNivel.setExcluirNivel(idNivel)
-    if(dadosNivel){
-        response.status(200)
+
+        response.status(dadosNivel.status_code)
         response.json(dadosNivel)
-    }else{
-        response.status(404)
-        response.json({message: 'Nenhum registro foi encontrado'})
-    }
+    
 
 })
 
-app.put('/v1/sinalibras/nivel/:id', cors(), bodyParserJson, async function(request, response){
-
-    let idNivel = request.params.id
-    let contentType = request.header['content-type']
-    let dadosBody = request.body
-
-    let nivelatualizado = await controllerNivel.setAtualizarNivel(idNivel, contentType, dadosBody)
-
-    if(nivelatualizado){
-        response.status(200)
-        response.json(nivelatualizado)
-    }else{
-        response.status(404)
-        response.json({message: 'Nenhum registro foi encontrado'})
-    }
-
-})
-
-app.get('/v1/sinalibras/videosNivel/:id', cors(), async function(request, response){
-    let idNivel = request.params.id
-    let videosNivel = await controllerNivel.getVideosDoNivel(idNivel)
-
-    if(videosNivel){
-        response.status(200)
-        response.json(videosNivel)
-    }else{
-        response.status(404)
-        response.json({message: 'Nenhum registro foi encontrado'})
-    }
-
-})
 
 /************************ COMENTARIOS AULA ************************/
 
@@ -633,7 +599,7 @@ app.post('/v1/sinalibras/videoaula/comentario', cors(), bodyParserJson, async fu
     let contentType = request.headers['content-type']
     let dadosBody = request.body
 
-    let novoComentario = await controllerComentarioAula.setInserirNovoComentario(dadosBody, contentType)
+    let novoComentario = await controllerComentario.setInserirNovoComentarioAula(dadosBody, contentType)
 
     if(novoComentario){
         response.status(200)
@@ -647,7 +613,7 @@ app.post('/v1/sinalibras/videoaula/comentario', cors(), bodyParserJson, async fu
 
 app.get('/v1/sinalibras/videoaula/comentarios/:id', cors(), async function (request, response){
     let idVideo = request.params.id
-    let dadosComentario = await controllerComentarioAula.getAllComentariosVideo(idVideo)
+    let dadosComentario = await controllerComentario.getAllComentariosAula(idVideo)
 
     if(dadosComentario){
         response.status(200)
@@ -662,7 +628,7 @@ app.get('/v1/sinalibras/videoaula/comentarios/:id', cors(), async function (requ
 app.delete('/v1/sinalibras/videoaula/comentario/:id', cors(), async function (request, response){
 
     let idComentario = request.params.id
-    let deleteComentario = await controllerComentarioAula.setDeleteComentario(idComentario)
+    let deleteComentario = await controllerComentario.setDeleteComentarioAula(idComentario)
 
     if(deleteComentario){
         response.status(200)

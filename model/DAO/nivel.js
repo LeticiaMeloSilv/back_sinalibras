@@ -8,10 +8,7 @@ const insertNivel = async function(dadosNivel){
 
         let rsNivel = await prisma.$executeRawUnsafe(sql)
 
-        if(rsNivel)
-        return true
-        else 
-        return false
+       return rsNivel
 
     }catch(error){
         return false
@@ -25,10 +22,7 @@ const updateNivel = async function (id, dadosNivel){
 
         let rsNivel = await prisma.$executeRawUnsafe(sql)
 
-        if(rsNivel)
-        return true 
-        else 
-        return false
+       return rsNivel
 
     }catch(error){
         return false
@@ -82,22 +76,6 @@ const selectNivelById = async function (id){
     }
 }
 
-const selectVideosNivel = async function (id){
-    try{
-
-        let sql = `select * from tbl_videoaula where id_nivel = ${id}`
-
-        let rsNivel = await prisma.$queryRawUnsafe(sql)
-
-        if(rsNivel)
-        return rsNivel
-        else 
-        return false
-
-    }catch(error){
-        return false
-    }
-}
 
 const selectLastId = async function (){
     try{
@@ -119,6 +97,5 @@ module.exports = {
     deleteNivel,
     selectAllNiveis,
     selectNivelById,
-    selectVideosNivel,
     selectLastId
 }
