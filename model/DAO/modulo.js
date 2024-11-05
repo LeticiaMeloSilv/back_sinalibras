@@ -107,11 +107,6 @@ module.exports = {
     deleteModulo,
     selectAllModulos,
     selectModuloById,
-<<<<<<< HEAD
-    selectVideosModulo,
     selectLastId,
-   
-=======
     selectLastId
->>>>>>> e9261ba453573e2e7fe61062aef6225339df17b1
 }

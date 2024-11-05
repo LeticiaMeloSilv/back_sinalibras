@@ -3,12 +3,9 @@ const message = require('../modulo/config.js')
 
 const inserirNovoNivel = async function(dadosNivel, contentType){
     try{
-<<<<<<< HEAD
         console.log(contentType);
         
-=======
 
->>>>>>> e9261ba453573e2e7fe61062aef6225339df17b1
         if(String(contentType).toLowerCase() == 'application/json'){
             let novoNivelJson = {}
 
@@ -22,15 +19,13 @@ const inserirNovoNivel = async function(dadosNivel, contentType){
                     let novoNivel = await nivelDAO.insertNivel(dadosNivel)
                    
                     if(novoNivel){
-<<<<<<< HEAD
                         let ultimoId = await nivelDAO.selectLastId()
-                        console.log(ultimoId);
+                    
                         
                         dadosNivel.id_nivel = Number(ultimoId[0].id)
-=======
-                        let ultimoId = nivelDAO.selectLastId()
+          
                         dadosNivel.id = Number(ultimoId[0].id)
->>>>>>> e9261ba453573e2e7fe61062aef6225339df17b1
+
 
                         novoNivelJson.nivel = dadosNivel
                         novoNivelJson.status = message.SUCESS_CREATED_ITEM.status

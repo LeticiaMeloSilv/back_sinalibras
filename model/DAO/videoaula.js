@@ -225,12 +225,10 @@ module.exports = {
     deleteVideoaula,
     selectVideoaulaById,
     selectVideoaulaByNome,
-<<<<<<< HEAD
     selectUltimoId,
-    selectVideosByIdProfessor
-=======
+    selectVideosByIdProfessor,
     selectVideosModulo,
     selectVideosNivel,
     selectUltimoId
->>>>>>> e9261ba453573e2e7fe61062aef6225339df17b1
+
 }
