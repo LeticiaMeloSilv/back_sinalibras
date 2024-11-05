@@ -1,10 +1,10 @@
 {
   "dependencies": {
-    "@prisma/client": "^5.21.1",
+    "@prisma/client": "^5.22.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "prisma": "^5.21.1"
+    "prisma": "^5.22.0"
   },
   "name": "back_sinalibras",
   "version": "1.0.0",

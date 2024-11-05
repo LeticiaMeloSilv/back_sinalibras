@@ -353,6 +353,8 @@ app.put('/v1/sinalibras/professor/perfil/:id', cors(), bodyParserJson, async fun
 })
 
 
+
+
 /*********************** Questão *****************************/
 
 app.post('/v1/sinalibras/questao', cors(), bodyParserJson, async function (request, response){
@@ -379,15 +381,16 @@ app.get('/v1/sinalibras/questoes', cors(), async function(request,response,next)
 
 /**************************************** videoaulas ************************************/
 
-app.get('/v1/sinalibras/videoaulas/:id', cors(), async function(request, response){
+app.get('/v1/sinalibras/videoaula/:id', cors(), async function(request, response){
 
     let idVideo = request.params.id
    
-    let dadosVideoaula = await controllerVideoaula.getListaVideoaulas()
-
-   
-    response.status(dadosVideoaula.status_code);
+    let dadosVideoaula = await controllerVideoaula.getVideoaulaById(idVideo)
+    
+       response.status(dadosVideoaula.status_code);
     response.json(dadosVideoaula)
+ 
+    
 })
 
 
@@ -440,7 +443,20 @@ app.get('/v1/sinalibras/videos/nivel/:id', cors(), async function(request, respo
 
 })
 
+app.get('/v1/sinalibras/videos/modulo/:id', cors(), async function(request, response){
+    let idModulo = request.params.id
+    let videosModulo = await controllerModulo.getVideosDoModulo(idModulo)
+console.log(videosModulo);
 
+    if(videosModulo){
+        response.status(200)
+        response.json(videosModulo)
+    }else{
+        response.status(404)
+        response.json({message: 'Nenhum registro foi encontrado'})
+    }
+
+})
 
 
 
@@ -522,21 +538,6 @@ app.put('/v1/sinalibras/modulo/:id', cors(), bodyParserJson, async function(requ
     if(moduloAtualizado){
         response.status(200)
         response.json(moduloAtualizado)
-    }else{
-        response.status(404)
-        response.json({message: 'Nenhum registro foi encontrado'})
-    }
-
-})
-
-app.get('/v1/sinalibras/videosModulo/:id', cors(), async function(request, response){
-    let idModulo = request.params.id
-    let videosModulo = await controllerModulo.getVideosDoModulo(idModulo)
-console.log(videosModulo);
-
-    if(videosModulo){
-        response.status(200)
-        response.json(videosModulo)
     }else{
         response.status(404)
         response.json({message: 'Nenhum registro foi encontrado'})
