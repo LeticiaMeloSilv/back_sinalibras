@@ -59,7 +59,7 @@ const getAllComentariosAula = async function (id){
 
         let comentarioJson = {}
         
-        let comentarioVideo = await comentarioDAO.selectComentariosVideo(id)
+        let comentarioVideo = await comentarioDAO.selectComentariosAula(id)
 
         if(comentarioVideo){
 

@@ -6,13 +6,14 @@ const insertNivel = async function(dadosNivel){
 
         let sql = `insert into tbl_nivel (nivel, icon) values ('${dadosNivel.nivel}', '${dadosNivel.icon}')`
 
+        console.log(sql);
         let rsNivel = await prisma.$executeRawUnsafe(sql)
-
+       console.log(rsNivel);
        if(rsNivel)
        return rsNivel
 
     }catch(error){
-
+        console.log(error);
         return false
     }
 }
