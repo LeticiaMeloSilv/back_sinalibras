@@ -123,7 +123,7 @@ select * from pergunta_alternativas where id_pergunta = 3;
 CREATE TABLE `tbl_usuario_teste` (
   `id_usuario_teste` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `email` VARCHAR(255) NOT NULL,
-  `data` DATE NOT NULL)
+  `data_cadastro` DATE NOT NULL)
 ENGINE = InnoDB;
 
 select * from tbl_usuario_teste;

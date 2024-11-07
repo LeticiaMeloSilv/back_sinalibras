@@ -378,7 +378,8 @@ const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
             if(verificarEmail ==''){
                
                 let novoProfessor = await professorDAO.insertProfessor(dadosProfessor)
-               
+                    console.log(novoProfessor);
+                    
                 if (novoProfessor){
                 
                     let ultimoID = await professorDAO.selectUltimoIdProfessor()
@@ -691,7 +692,7 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
 
         
 
- getInfoPerfilProfessor(1);
+ //getInfoPerfilProfessor(1);
 
 module.exports = {
     getListarProfessores,

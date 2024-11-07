@@ -107,6 +107,7 @@ module.exports = {
     deleteModulo,
     selectAllModulos,
     selectModuloById,
+    selectLastId,
+    selectLastId,
     selectLastId
-
 }
