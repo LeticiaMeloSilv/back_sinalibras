@@ -111,14 +111,17 @@ const deleteComentarioPostagem = async function (id) {
 
 
 const selectComentariosPostagem = async function (id) {
-    let sql = `select * from tbl_comentario_postagem where id_postagem = ${id}`
+    try{
+        let sql = `select * from tbl_comentario_postagem where id_postagem = ${id}`
 
-    let rsComentario = await prisma.$queryRawUnsafe(sql)
+        let rsComentario = await prisma.$queryRawUnsafe(sql)
 
-    if (rsComentario)
-        return true
-    else
+        return rsComentario
+
+    }catch(error){
         return false
+    }
+    
 }
 
 const selectComentarioByIdPostagem = async function (id) {

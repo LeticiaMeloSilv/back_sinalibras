@@ -32,7 +32,7 @@ const insertPostagem = async function (dadosPostagem){
             sql = `insert into tbl_postagem (
                 texto,
                 foto_postagem,
-                id_profesor, 
+                id_professor, 
                 data
             ) values (
                 '${dadosPostagem.texto}',
@@ -44,15 +44,14 @@ const insertPostagem = async function (dadosPostagem){
 
         let rsPostagem = await prisma.$executeRawUnsafe(sql)
 
-           if(rsPostagem)
-           return true
+       return rsPostagem
        
     } catch (error){
         return false 
     }
 }
 
-const updatePostagem = async function (dadosPostagem, id){
+const updatePostagem = async function (id, dadosPostagem){
 
     let sql 
     
@@ -86,8 +85,8 @@ const updatePostagem = async function (dadosPostagem, id){
 
             let rsPostagem = await prisma.$executeRawUnsafe(sql)
 
-            if(rsPostagem)
-                return true
+            return rsPostagem
+            
     } catch (error){
         return false
     }
@@ -165,10 +164,10 @@ const selectPostagemById = async function (id){
         let sql = `select * from tbl_postagem where id_postagem = ${id}`
         let rsPostagem = await prisma.$queryRawUnsafe(sql)
 
-        if(rsPostagem)
-            return true
+        return rsPostagem
     
     }catch(error){
+        console.log(error);
         return false
     }
 }

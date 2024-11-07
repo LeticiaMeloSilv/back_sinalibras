@@ -8,9 +8,11 @@ const insertNivel = async function(dadosNivel){
 
         let rsNivel = await prisma.$executeRawUnsafe(sql)
 
+       if(rsNivel)
        return rsNivel
 
     }catch(error){
+
         return false
     }
 }

@@ -3,6 +3,8 @@ const postagemDAO = require ('../model/DAO/postagem.js')
 const professorDAO = require ('../model/DAO/professor.js')
 const comentarioDAO = require('../model/DAO/comentarios.js')
 const videoaulaDAO = require('../model/DAO/videoaula.js')
+const nivelDAO = require('../model/DAO/nivel.js')
+const moduloDAO = require('../model/DAO/modulo.js')
 const { Prisma } = require('@prisma/client')
 
 const inserirNovaPostagem = async function (dadosPostagem, contentType){
@@ -36,7 +38,7 @@ const inserirNovaPostagem = async function (dadosPostagem, contentType){
 
                 if (status){
                     let novaPostagem = await postagemDAO.insertPostagem(dadosPostagem)
-    
+
                     if(novaPostagem){
                         let ultimoId = await postagemDAO.selectUltimoId()
                         dadosPostagem.id_postagem = Number(ultimoId[0].id)
@@ -57,11 +59,12 @@ const inserirNovaPostagem = async function (dadosPostagem, contentType){
             return message.ERROR_CONTENT_TYPE
         }
     } catch (error){
+    
         return message.ERROR_INTERNAL_SERVER
     }
 }
 
-const setAtualizarPostagem = async function (dadosPostagem, id, contentType){
+const setAtualizarPostagem = async function (id, dadosPostagem, contentType){
 
     try{
 
@@ -70,10 +73,8 @@ const setAtualizarPostagem = async function (dadosPostagem, id, contentType){
     if(idPostagem == undefined || idPostagem == null || idPostagem == '' || isNaN(idPostagem)){
         return message.ERROR_INVALID_ID
     } else {
-        let idPostagem = await postagemDAO.selectPostagemById(idPostagem)
-        
-        if(idPostagem){
-
+        let postagem = await postagemDAO.selectPostagemById(idPostagem)
+        if(postagem){
                 if(String(contentType).toLowerCase () == 'application/json'){
                     let updatePostagemJson = {}
 
@@ -94,16 +95,16 @@ const setAtualizarPostagem = async function (dadosPostagem, id, contentType){
                             if(dadosPostagem.foto_postagem.length>255){
                                 return message.ERROR_REQUIRED_FIELDS
                             } else {
-                                validate = true 
+                                status = true 
                             }
                                  
                         } else {
-                            validate = true
+                            status = true
                         }
 
-                        if(validate){
-                            let postagemAtualizado = await postagemDAO.updatePostagem(idPostagem)
-
+                        if(status){
+                            let postagemAtualizado = await postagemDAO.updatePostagem(idPostagem, dadosPostagem)
+                           
                             if(postagemAtualizado){
 
                                 updatePostagemJson.postagem = dadosPostagem
@@ -175,30 +176,30 @@ const getAllFeed = async function (){
             }
 
             for (let postagem of dadosFeed){
-                let comentariopostagem = await comentarioDAO.selectComentariosPostagem(postagem.id_postagem)
-                postagem.comentarios = comentariopostagem
+                let comentarioPostagem = await comentarioDAO.selectComentariosPostagem(postagem.id_postagem)
+                postagem.comentarios = comentarioPostagem
                 delete postagem.id_comentario
             }
             
-            for (let videoaula of dadosVideoaula){
+            for (let videoaula of dadosFeed){
                 let nivelVideoaula = await nivelDAO.selectNivelById(videoaula.id_nivel)   
                 videoaula.nivel = nivelVideoaula
                 delete videoaula.id_nivel 
                 
             }
 
-            for (let videoaula of dadosVideoaula){
+            for (let videoaula of dadosFeed){
                 let moduloVideoaula = await moduloDAO.selectModuloById(videoaula.id_modulo)
                 videoaula.modulo = moduloVideoaula
                 delete videoaula.id_modulo
             }
-            for (let videoaula of dadosVideoaula){
+            for (let videoaula of dadosFeed){
                 let professorVideoaula = await professorDAO.selectByIdProfessor(videoaula.id_professor)
                 videoaula.professor = professorVideoaula
                 delete videoaula.id_professor
             }
 
-            for (let videoaula of dadosVideoaula){
+            for (let videoaula of dadosFeed){
                 let comentarioVideoaula = await comentarioDAO.selectComentariosVideo(videoaula.id_videoaula)
                 videoaula.comentarios = comentarioVideoaula
                 delete videoaula.id_comentario
@@ -214,6 +215,7 @@ const getAllFeed = async function (){
         }
 
     }catch(error){
+        console.log(error);
         return message.ERROR_INTERNAL_SERVER
     }
     

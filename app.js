@@ -558,11 +558,12 @@ app.get('/v1/sinalibras/niveis', cors(), async function (request, response){
 })
 
 app.post('/v1/sinalibras/nivel', cors(), bodyParserJson, async function(request, response){
-    let contentType = request.headers['content-type']
     let dadosBody = request.body
+    let contentType = request.headers['content-type']
+    
     
     let novoNivel = await controllerNivel.inserirNovoNivel(dadosBody, contentType)
-    console.log(contentType);
+
 
     response.status(novoNivel.status_code)
     response.json(novoNivel)
@@ -638,8 +639,6 @@ app.get('/v1/sinalibras/postagem/:id', cors(), async function(request, response)
    
     let dadosPostagem = await controllerPostagem.getPostagemById(idPostagem)
 
-   
- 
     response.json(dadosPostagem);
     response.status(200);
   
@@ -650,16 +649,10 @@ app.get('/v1/sinalibras/postagem/:id', cors(), async function(request, response)
 app.delete('/v1/sinalibras/postagem/:id', cors(), async function(request, response){
     let idPostagem = request.params.id
 
-    let excluirPostagem = controllerPostagem.setExcluirPostagem(idPostagem)
-
-    if(excluirPostagem){
-        response.status(200)
+    let excluirPostagem = await controllerPostagem.setExcluirPostagem(idPostagem)
+        response.status(excluirPostagem.status_code)
         response.json(excluirPostagem)
-    }else{
-        response.status(404)
-        response.json({message: 'Nenhum registro foi encontrado'})
-    }
-
+  
 }) 
 
 
@@ -669,17 +662,38 @@ app.post('/v1/sinalibras/postagem', cors(), bodyParserJson, async function(reque
 
     let novaPostagem = await controllerPostagem.inserirNovaPostagem(dadosBody, contentType)
 
-    if(novaPostagem){
-        response.status(200)
+
+        response.status(novaPostagem.status_code)
         response.json(novaPostagem)
-    }else{
-        response.status(404)
-        response.json({message: 'Não foi possível inserir no banco'})
-    }
+   
 
 })
 
+app.put('/v1/sinalibras/postagem/:id', cors(), bodyParserJson, async function(request, response){
 
+    let idPostagem = request.params.id
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+
+    let postagemAtualizada = await controllerPostagem.setAtualizarPostagem(idPostagem, dadosBody, contentType)
+
+
+        response.status(postagemAtualizada.status_code)
+        response.json(postagemAtualizada)
+   
+
+})
+
+app.get('/v1/sinalibras/feed', cors(), async function(request, response){
+   
+    let dadosFeed = await controllerPostagem.getAllFeed()
+
+    response.status(dadosFeed.status_code);
+    response.json(dadosFeed);
+    
+  
+
+})
 
 /************************ COMENTARIOS POSTAGEM ************************/
 
