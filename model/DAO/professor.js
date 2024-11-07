@@ -76,11 +76,11 @@ const selectAllProfessores = async function (){
 }
 
 const selectByIdProfessor = async function (id){
+    console.log(id);
     try{
         let sql = `select id_professor, nome, email, data_nascimento, foto_perfil from tbl_professor where id_professor = ${id}`
 
         let rsProfessor = await prisma.$queryRawUnsafe(sql)
-
         return rsProfessor
        
 

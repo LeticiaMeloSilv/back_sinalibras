@@ -90,8 +90,7 @@ const updateVideoaula = async function (id, dadosVideoaula){
                 duracao = '${dadosVideoaula.duracao}', 
                 foto_capa = '${dadosVideoaula.foto_capa}',
                 id_nivel = '${dadosVideoaula.id_nivel}', 
-                id_modulo = '${dadosVideoaula.id_modulo}',
-                id_professor = '${dadosVideoaula.id_professor}
+                id_modulo = '${dadosVideoaula.id_modulo}'
 
                 where id_videoaula = ${id}`
 
@@ -103,8 +102,7 @@ const updateVideoaula = async function (id, dadosVideoaula){
                 duracao = '${dadosVideoaula.duracao}', 
                 foto_capa = '${dadosVideoaula.foto_capa}', 
                 id_nivel = '${dadosVideoaula.id_nivel}', 
-                id_modulo = '${dadosVideoaula.id_modulo}',
-                id_professor = '${dadosVideoaula.id_professor}
+                id_modulo = '${dadosVideoaula.id_modulo}'
                 
                 where id_videoaula = ${id}`
 

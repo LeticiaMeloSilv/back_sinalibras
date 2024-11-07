@@ -170,7 +170,7 @@ const getAllFeed = async function (){
 
 
             for (let postagem of dadosFeed){
-                let comentarioPostagem = await comentarioDAO.selectComentariosPostagem(postagem.id_postagem)
+                let comentarioPostagem = await comentarioDAO.selectComentariosPostagem(postagem.id_comentario)
                 postagem.comentarios = comentarioPostagem
                 delete postagem.id_comentario
             }
@@ -193,18 +193,10 @@ const getAllFeed = async function (){
                 let moduloVideoaula = await moduloDAO.selectModuloById(videoaula.id_modulo)
                 videoaula.modulo = moduloVideoaula
                 delete videoaula.id_modulo
-            }
-            for (let videoaula of dadosFeed){
-                let professorVideoaula = await professorDAO.selectByIdProfessor(videoaula.id_professor)
-                videoaula.professor = professorVideoaula
-                delete videoaula.id_professor
+
             }
 
-            for (let videoaula of dadosFeed){
-                let comentarioVideoaula = await comentarioDAO.selectComentariosAula(videoaula.id_videoaula)
-                videoaula.comentarios = comentarioVideoaula
-                delete videoaula.id_comentario
-            }
+         
 
             feedJson.feed = dadosFeed
             feedJson.quantidade = dadosFeed.length
