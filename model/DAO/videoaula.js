@@ -70,7 +70,7 @@ const insertVideoaula = async function (dadosVideoaula){
     }
 }
 
-const updateVideoaula = async function (dadosVideoaula, id){
+const updateVideoaula = async function (id, dadosVideoaula){
 
     let sql 
     
@@ -90,7 +90,8 @@ const updateVideoaula = async function (dadosVideoaula, id){
                 duracao = '${dadosVideoaula.duracao}', 
                 foto_capa = '${dadosVideoaula.foto_capa}',
                 id_nivel = '${dadosVideoaula.id_nivel}', 
-                id_modulo = '${dadosVideoaula.id_modulo}'
+                id_modulo = '${dadosVideoaula.id_modulo}',
+                id_professor = '${dadosVideoaula.id_professor}
 
                 where id_videoaula = ${id}`
 
@@ -102,7 +103,8 @@ const updateVideoaula = async function (dadosVideoaula, id){
                 duracao = '${dadosVideoaula.duracao}', 
                 foto_capa = '${dadosVideoaula.foto_capa}', 
                 id_nivel = '${dadosVideoaula.id_nivel}', 
-                id_modulo = '${dadosVideoaula.id_modulo}'
+                id_modulo = '${dadosVideoaula.id_modulo}',
+                id_professor = '${dadosVideoaula.id_professor}
                 
                 where id_videoaula = ${id}`
 

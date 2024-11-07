@@ -432,7 +432,7 @@ app.put('/v1/sinalibras/videoaula/:id', cors(), bodyParserJson, async function(r
 
 app.get('/v1/sinalibras/videos/nivel/:id', cors(), async function(request, response){
     let idNivel = request.params.id
-    let videosNivel = await controllerNivel.getVideosDoNivel(idNivel)
+    let videosNivel = await controllerVideoaula.getVideosDoNivel(idNivel)
 
         response.status(200)
         response.json(videosNivel)
@@ -540,8 +540,9 @@ app.get('/v1/sinalibras/nivel/:id', cors(), async function(request, response, ne
 
     let dadosNivel = await controllerNivel.getNivelById(idNivel)
 
-        response.status(dadosNivel.status_code)
         response.json(dadosNivel)
+        response.status(dadosNivel.status_code)
+        
  
 
 })
@@ -687,9 +688,22 @@ app.get('/v1/sinalibras/feed', cors(), async function(request, response){
     response.status(dadosFeed.status_code);
     response.json(dadosFeed);
     
-  
-
 })
+
+app.get('/v1/sinalibras/postagem/:titulo', cors(), async function(request,response,next){
+
+    let textoPostagem = request.params.texto
+  
+    
+    let dadosPostagem = await controllerPostagem.getPostagemByNome(textoPostagem)
+
+
+        response.json(dadosPostagem);
+        response.status(dadosPostagem.status_code)
+
+       //ok  
+ })
+
 
 /************************ COMENTARIOS POSTAGEM ************************/
 

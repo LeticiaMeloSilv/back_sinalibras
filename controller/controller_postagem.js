@@ -278,7 +278,7 @@ const getPostagemByNome = async function (texto){
 
        let postagemJson = {}
 
-    if(idPostagem == undefined || idPostagem == ' ' || isNaN(idPostagem)){
+    if(textoPostagem == undefined || textoPostagem == ' '){
         return message.ERROR_INVALID_ID
     }else{
     
