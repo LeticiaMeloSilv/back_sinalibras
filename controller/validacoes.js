@@ -20,17 +20,50 @@ const validarData = (data) => {
         return false;
     }
 
-    const idade = 2024 - ano 
-
+    const subtracao = 2024 - parseInt(ano)
+    const idade = subtracao
+   
+    
     if(idade < 12){
       return false
     }
     
- 
-
-
-
     return true; 
+}
+
+
+
+const validarDataProf = (data) => {
+
+    
+  if (data === "00-00-0000") {
+      return false;
+  }
+
+   
+  if (data === "0000-00-00") {
+      return false;
+  }
+  
+  const [ano, mes, dia] = data.split('-').map(Number);
+  
+  if (dia < 1 || dia > 31) {
+      return false;
+  }
+
+  if (mes < 1 || mes > 12) {
+      return false;
+  }
+
+  const subtracao = 2024 - parseInt(ano)
+  const idade = subtracao
+ 
+  
+  if(idade < 18){
+    return false
+  }
+  
+  return true; 
 }
 
 
@@ -102,5 +135,6 @@ const partes = data.split('-');
 module.exports = {
     validarData,
     converterData,
-    converterDataBR
+    converterDataBR,
+    validarDataProf
 }

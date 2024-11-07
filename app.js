@@ -45,6 +45,7 @@ app.post('/v1/sinalibras/aluno/validacao', cors(), bodyParserJson, async (reques
     response.json(dadosUsuario)
     
 //ok
+
 })
 app.get('/v1/sinalibras/alunos', cors(), async function(request, response){
 
@@ -190,10 +191,10 @@ app.post('/v1/sinalibras/resultado_quiz', cors(), bodyParserJson, async function
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
-console.log(dadosBody+"dadosBody");
+
 
     let resultadoNovaResposta = await controllerProfessor.setInserirRespostaQuiz(dadosBody, contentType);
-console.log(resultadoNovaResposta);
+
 
     response.status(resultadoNovaResposta.status_code); 
     response.json(resultadoNovaResposta);
@@ -203,10 +204,10 @@ console.log(resultadoNovaResposta);
 app.get('/v1/sinalibras/usuario/email/:email', cors(), async function(request,response,next){
 
     let emailProfessor = request.params.email
-    console.log(emailProfessor);
+  
     
     let professor = await controllerProfessor.getBuscarUsuarioTesteEmail(emailProfessor)
-console.log(professor);
+
 
         response.json(professor);
          response.status(professor.status_code)
@@ -441,7 +442,7 @@ app.get('/v1/sinalibras/videos/nivel/:id', cors(), async function(request, respo
 
 app.get('/v1/sinalibras/videos/modulo/:id', cors(), async function(request, response){
     let idModulo = request.params.id
-    let videosModulo = await controllerModulo.getVideosDoModulo(idModulo)
+    let videosModulo = await controllerVideoaula.getVideosDoModulo(idModulo)
 
         response.status(200)
         response.json(videosModulo)
@@ -464,10 +465,6 @@ app.get('/v1/sinalibras/modulo/:id', cors(), async function(request, response, n
         response.status(404)
         response.json({message: 'Nenhum registro foi encontrado'})
     }
-
-   
-    
-    response.json(resultadoNovaFoto)
 
     //ok
 })
@@ -563,7 +560,6 @@ app.post('/v1/sinalibras/nivel', cors(), bodyParserJson, async function(request,
     
     
     let novoNivel = await controllerNivel.inserirNovoNivel(dadosBody, contentType)
-
 
     response.status(novoNivel.status_code)
     response.json(novoNivel)

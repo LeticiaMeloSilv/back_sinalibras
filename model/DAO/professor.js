@@ -32,19 +32,35 @@ const selectVerificarEmail = async function (email){
     try{
      let sql = `select ta.nome, ta.email from tbl_professor as ta where email = '${email}';`
 
-     let rsAluno = await prisma.$queryRawUnsafe(sql)
 
+     let rsProfessor = await prisma.$queryRawUnsafe(sql)
 
-     if(rsAluno){
-        return rsAluno
-     }else{
-        return false 
+     if (rsProfessor.length > 0){
+        return rsProfessor
+     } else{
+        let sqlProf = `select ta.nome, ta.email from tbl_aluno as ta where email = '${email}';`
+
+        let rsProfAluno = await prisma.$queryRawUnsafe(sqlProf)
+
+        if(rsProfAluno){
+            return rsProfAluno
+        }else{
+            return false
+        }
      }
+
+
+    
     }catch(error){
         return false
     }
     
 }
+
+
+
+
+
 
 
 const selectAllProfessores = async function (){
