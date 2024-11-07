@@ -109,7 +109,7 @@ const setAtualizarVideoaula = async function (id, dadosVideoaula, contentType){
 
                         if(status){
                             let videoAtualizado = await videoaulaDAO.updateVideoaula(idVideo)
-
+                                console.log(videoAtualizado);
                             if(videoAtualizado){
 
                                 updateVideoJson.videoaula = dadosVideoaula
@@ -297,10 +297,11 @@ const getVideosDoModulo = async function(id){
         }else{
 
             let moduloId = await moduloDAO.selectModuloById(idModulo)
+        
 
             if(moduloId){
 
-                let dadosVideoaula = await moduloDAO.selectVideosModulo(idModulo)
+                let dadosVideoaula = await videoaulaDAO.selectVideosModulo(idModulo)
 
             if(dadosVideoaula){
 
@@ -323,13 +324,14 @@ const getVideosDoModulo = async function(id){
                 }
     
                 for (let videoaula of dadosVideoaula){
-                    let comentarioVideoaula = await comentarioDAO.selectComentariosVideo(videoaula.id_videoaula)
+                    let comentarioVideoaula = await comentarioDAO.selectComentariosAula(videoaula.id_videoaula)
                     videoaula.comentarios = comentarioVideoaula
                     delete videoaula.id_comentario
                 }
                 
                     moduloJson.videos = dadosVideoaula
                     moduloJson.status_code = 200
+
                     return moduloJson
               
             }else{
@@ -344,6 +346,7 @@ const getVideosDoModulo = async function(id){
         }
 
     }catch (error){
+        console.log(error);
         return message.ERROR_INTERNAL_SERVER
     }
 }
@@ -358,9 +361,9 @@ const getVideosDoNivel = async function(id){
         if(idNivel == null || idNivel == ' ' || isNaN(idNivel) || idNivel == undefined){
             return message.ERROR_INVALID_ID
         }else{
-            let idNivel = await nivelDAO.selectLastId(idNivel)
+            let nivel = await nivelDAO.selectLastId(idNivel)
 
-            if(idNivel){
+            if(nivel){
                 let dadosVideoaula = await videoaulaDAO.selectVideosNivel(idNivel)
 
                 if(dadosVideoaula){
@@ -384,14 +387,14 @@ const getVideosDoNivel = async function(id){
                     }
         
                     for (let videoaula of dadosVideoaula){
-                        let comentarioVideoaula = await comentarioDAO.selectComentariosVideo(videoaula.id_videoaula)
+                        let comentarioVideoaula = await comentarioDAO.selectComentariosAula(videoaula.id_videoaula)
                         videoaula.comentarios = comentarioVideoaula
                         delete videoaula.id_comentario
                     }
                     
-                        moduloJson.videos = dadosVideoaula
-                        moduloJson.status_code = 200
-                        return moduloJson
+                        nivelJson.videos = dadosVideoaula
+                        nivelJson.status_code = 200
+                        return nivelJson
                   
                 }else{
                     return message.ERROR_INTERNAL_SERVER_DB
