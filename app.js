@@ -45,6 +45,7 @@ app.post('/v1/sinalibras/aluno/validacao', cors(), bodyParserJson, async (reques
     response.json(dadosUsuario)
     
 //ok
+
 })
 app.get('/v1/sinalibras/alunos', cors(), async function(request, response){
 

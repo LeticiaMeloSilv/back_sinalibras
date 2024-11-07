@@ -127,13 +127,11 @@ const setInserirRespostaQuiz = async function (dadosUser, contentType) {
                 let ultimoID = await preCadastroProfDAO.selectUltimoIdRespostaQuiz()
                    
                 dadosUser.id = Number(ultimoID[0].id)
-                console.log(dadosUser);
-                console.log(dadosUser[0].id_usuario_teste);
+             
 
      
                 let resultadoQuiz = await preCadastroProfDAO.insertResultadoUsuario(dadosUser[0].id_usuario_teste)
        
-                console.log(resultadoQuiz);
 
                 if(resultadoQuiz){
 
@@ -368,7 +366,7 @@ const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
                 return message.ERROR_REQUIRED_FIELDS
             }
 
-            if (!dadosProfessor.data_nascimento || !data.validarData(dadosProfessor.data_nascimento)) {
+            if (!dadosProfessor.data_nascimento || !data.validarDataProf(dadosProfessor.data_nascimento)) {
                 return message.ERROR_INVALID_DATA 
             }
 
@@ -378,7 +376,7 @@ const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
             if(verificarEmail ==''){
                
                 let novoProfessor = await professorDAO.insertProfessor(dadosProfessor)
-                    console.log(novoProfessor);
+                  
                     
                 if (novoProfessor){
                 

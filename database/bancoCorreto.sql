@@ -208,7 +208,7 @@ CREATE TABLE `tbl_professor` (
   `nome` VARCHAR(250) NOT NULL,
   `data_cadastro` DATE NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `senha` VARCHAR(8) NOT NULL,
+  `senha` VARCHAR(255) NOT NULL,
   `data_nascimento` DATE NOT NULL,
   `foto_perfil` VARCHAR(255) NULL)
 ENGINE = InnoDB;
@@ -312,7 +312,7 @@ delete from tbl_aluno where id_aluno = 5;
 -------------- TABELA DOS ALUNOS ---------------
 CREATE TABLE `tbl_aluno` (
   `id_aluno` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `nome` VARCHAR(250) NOT NULL,
+  `nome` VARCHAR(255) NOT NULL,
   `data_cadastro` DATE NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `senha` VARCHAR(255) NOT NULL,
