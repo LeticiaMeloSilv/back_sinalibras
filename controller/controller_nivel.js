@@ -8,7 +8,7 @@ const inserirNovoNivel = async function(dadosNivel, contentType){
             let novoNivelJson = {}
 
             if(dadosNivel.nivel == undefined || dadosNivel.nivel == null || dadosNivel.nivel == '' || dadosNivel.nivel.length>20 ||
-                dadosNivel.icon == undefined || dadosNivel.icon == null || dadosNivel.icon == '' || dadosNivel.icon,length>255){
+                dadosNivel.icon == undefined || dadosNivel.icon == null || dadosNivel.icon == '' || dadosNivel.icon.length>255){
                 return message.ERROR_REQUIRED_FIELDS
             }else{
 
