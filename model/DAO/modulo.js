@@ -108,5 +108,6 @@ module.exports = {
     selectAllModulos,
     selectModuloById,
     selectLastId,
+    selectLastId,
     selectLastId
 }

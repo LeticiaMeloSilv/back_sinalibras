@@ -41,10 +41,7 @@ const selectComentariosAula = async function (id) {
 
     let rsComentario = await prisma.$queryRawUnsafe(sql)
 
-    if (rsComentario)
-        return rsComentario
-    else
-        return false
+    return rsComentario
 }
 
 const selectComentarioByIdAula = async function (id) {

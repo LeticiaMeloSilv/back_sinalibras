@@ -62,17 +62,22 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
     }
 }
 
-const setAtualizarVideoaula = async function (dadosVideoaula, id, contentType){
-    let idVideo = id
+const setAtualizarVideoaula = async function (id, dadosVideoaula, contentType){
+
+    try{
+
+        let idVideo = id
 
     if(idVideo == undefined || idVideo == null || idVideo == '' || isNaN(idVideo)){
+
+        
         return message.ERROR_INVALID_ID
     } else {
-        let idVideoaula = await videoaulaDAO.selectVideoaulaById(idVideoaula)
+        let idVideoaula = await videoaulaDAO.selectVideoaulaById(idVideo)
         
-        if(idVideoaula > 0){
+        if(idVideoaula.length > 0){
 
-            try{
+            
                 if(String(contentType).toLowerCase () == 'application/json'){
                     let updateVideoJson = {}
 
@@ -81,6 +86,7 @@ const setAtualizarVideoaula = async function (dadosVideoaula, id, contentType){
                         dadosVideoaula.titulo == undefined || dadosVideoaula.url_video == undefined || dadosVideoaula.duracao == undefined || dadosVideoaula.foto_capa == undefined || dadosVideoaula.data == undefined || dadosVideoaula.id_nivel == undefined || dadosVideoaula.id_modulo == undefined || dadosVideoaula.id_professor == undefined ||
                         dadosVideoaula.titulo.length > 50 || dadosVideoaula.url_video.length > 255 || dadosVideoaula.duracao.length > 8 || dadosVideoaula.foto_capa.length > 255 || dadosVideoaula.data.length != 10 || isNaN(dadosVideoaula.id_nivel) || isNaN(dadosVideoaula.id_modulo) || isNaN(dadosVideoaula.id_professor)
                     ){
+                     
                         return message.ERROR_REQUIRED_FIELDS
                     } else {
                         let status = false
@@ -90,6 +96,9 @@ const setAtualizarVideoaula = async function (dadosVideoaula, id, contentType){
                             dadosVideoaula.descricao != undefined
                         ){
                             if(dadosVideoaula.descricao.length>255){
+
+                        
+                                
                                 return message.ERROR_REQUIRED_FIELDS
                             } else {
                                 status = true 
@@ -100,7 +109,7 @@ const setAtualizarVideoaula = async function (dadosVideoaula, id, contentType){
                         }
 
                         if(validate){
-                            let videoAtualizado = await videoaulaDAO.updateVideoaula(dadosVideoaula.id)
+                            let videoAtualizado = await videoaulaDAO.updateVideoaula(idVideo)
 
                             if(videoAtualizado){
 
@@ -119,16 +128,20 @@ const setAtualizarVideoaula = async function (dadosVideoaula, id, contentType){
                 }else{
                     return message.ERROR_CONTENT_TYPE
                 }
-            }catch(error){
-                return message.ERROR_INTERNAL_SERVER
-            }
     
 
         }else{
             return message.ERROR_NOT_FOUND_ID
         }
     }
+
+    }catch(error){
+        return false
+    }
+    
 }
+
+
 
 const setExcluirVideoaula = async function (id){
     try{
@@ -188,7 +201,7 @@ const getVideoaulaById = async function (id){
             }
 
             for (let videoaula of dadosVideoaula){
-                let comentarioVideoaula = await comentarioDAO.selectComentariosVideo(videoaula.id_videoaula)
+                let comentarioVideoaula = await comentarioDAO.selectComentariosAula(videoaula.id_videoaula)
                 videoaula.comentarios = comentarioVideoaula
                 delete videoaula.id_comentario
             }
@@ -196,7 +209,9 @@ const getVideoaulaById = async function (id){
 
 
             videoaulaJson.video = dadosVideoaula
-            videoaulaJson.status_code = dadosVideoaula.status_code
+            videoaulaJson.status_code = 200
+
+
             return videoaulaJson
 
         }else{
@@ -205,12 +220,13 @@ const getVideoaulaById = async function (id){
     }
 
 
-    }catch(error){
+    }catch(error){       
         return false
     }
 
     
 }
+
 const getVideoaulaByNome = async function (titulo){
     try{
 

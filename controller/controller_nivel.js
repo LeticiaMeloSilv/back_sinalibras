@@ -3,8 +3,6 @@ const message = require('../modulo/config.js')
 
 const inserirNovoNivel = async function(dadosNivel, contentType){
     try{
-        console.log(contentType);
-        
 
         if(String(contentType).toLowerCase() == 'application/json'){
             let novoNivelJson = {}
@@ -23,8 +21,6 @@ const inserirNovoNivel = async function(dadosNivel, contentType){
                     
                         
                         dadosNivel.id_nivel = Number(ultimoId[0].id)
-          
-                        dadosNivel.id = Number(ultimoId[0].id)
 
 
                         novoNivelJson.nivel = dadosNivel
