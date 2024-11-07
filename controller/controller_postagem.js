@@ -168,17 +168,18 @@ const getAllFeed = async function (){
 
         if(dadosFeed){
 
-            for (let postagem of dadosFeed){
-                let professorPostagem = await professorDAO.selectByIdProfessor(postagem.id_professor)   
-                postagem.professor = professorPostagem
-                delete postagem.id_professor 
-                
-            }
 
             for (let postagem of dadosFeed){
                 let comentarioPostagem = await comentarioDAO.selectComentariosPostagem(postagem.id_postagem)
                 postagem.comentarios = comentarioPostagem
                 delete postagem.id_comentario
+            }
+
+            for (let postagem of dadosFeed){
+                let professorPostagem = await professorDAO.selectByIdProfessor(postagem.id_professor)   
+                postagem.professor = professorPostagem
+                delete postagem.id_professor 
+                
             }
             
             for (let videoaula of dadosFeed){
@@ -200,15 +201,15 @@ const getAllFeed = async function (){
             }
 
             for (let videoaula of dadosFeed){
-                let comentarioVideoaula = await comentarioDAO.selectComentariosVideo(videoaula.id_videoaula)
+                let comentarioVideoaula = await comentarioDAO.selectComentariosAula(videoaula.id_videoaula)
                 videoaula.comentarios = comentarioVideoaula
                 delete videoaula.id_comentario
             }
 
-            feedJson.postagens = dadosFeed
+            feedJson.feed = dadosFeed
             feedJson.quantidade = dadosFeed.length
             feedJson.status_code = 200
-            return postagemJson
+            return feedJson
        
         } else {
             return message.ERROR_NOT_FOUND

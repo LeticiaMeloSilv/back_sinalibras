@@ -37,11 +37,17 @@ const deleteComentarioAula = async function (id) {
 }
 
 const selectComentariosAula = async function (id) {
-    let sql = `select * from tbl_comentario_aula where id_videoaula = ${id}`
+    try{
 
-    let rsComentario = await prisma.$queryRawUnsafe(sql)
+        let sql = `select * from tbl_comentario_aula where id_videoaula = ${id}`
 
-    return rsComentario
+        let rsComentario = await prisma.$queryRawUnsafe(sql)
+
+        return rsComentario
+    }catch(error){
+        return false
+    }
+    
 }
 
 const selectComentarioByIdAula = async function (id) {
