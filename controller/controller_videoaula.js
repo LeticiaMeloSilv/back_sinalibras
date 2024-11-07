@@ -38,6 +38,7 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
 
                 if (status){
                     let novaVideoaula = await videoaulaDAO.insertVideoaula(dadosVideoaula)
+          
     
                     if(novaVideoaula){
                         let ultimoId = await videoaulaDAO.selectUltimoId()
@@ -50,6 +51,7 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
 
                         return novaVideoaulaJson
                     }else {
+                      
                         return message.ERROR_INTERNAL_SERVER_DB
                     }
                 }
@@ -74,11 +76,11 @@ const setAtualizarVideoaula = async function (id, dadosVideoaula, contentType){
         return message.ERROR_INVALID_ID
     } else {
         let idVideoaula = await videoaulaDAO.selectVideoaulaById(idVideo)
-        
+
         if(idVideoaula.length > 0){
 
             
-                if(String(contentType).toLowerCase () == 'application/json'){
+                if(String(contentType).toLowerCase() == 'application/json'){
                     let updateVideoJson = {}
 
                     if(dadosVideoaula.titulo == null || dadosVideoaula.url_video == null || dadosVideoaula.duracao == null || dadosVideoaula.foto_capa == null  || dadosVideoaula.id_nivel == null || dadosVideoaula.id_modulo == null ||
@@ -106,10 +108,16 @@ const setAtualizarVideoaula = async function (id, dadosVideoaula, contentType){
                         } else {
                             status = true
                         }
-
+                       
                         if(status){
+                       
                             let videoAtualizado = await videoaulaDAO.updateVideoaula(idVideo)
+
+                            
+
+
                                 console.log(videoAtualizado);
+
                             if(videoAtualizado){
 
                                 updateVideoJson.videoaula = dadosVideoaula

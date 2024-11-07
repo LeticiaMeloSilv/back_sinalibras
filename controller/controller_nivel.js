@@ -16,7 +16,7 @@ const inserirNovoNivel = async function(dadosNivel, contentType){
 
                 if(status){
                     let novoNivel = await nivelDAO.insertNivel(dadosNivel)
-            
+                
                    
                     if(novoNivel){
                         let ultimoId = await nivelDAO.selectLastId()

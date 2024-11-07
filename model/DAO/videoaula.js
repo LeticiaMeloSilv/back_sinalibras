@@ -63,14 +63,19 @@ const insertVideoaula = async function (dadosVideoaula){
         }
 
         let rsVideoaula = await prisma.$executeRawUnsafe(sql)
+        
         return rsVideoaula
        
     } catch (error){
+
+        console.log(error);
         return false 
     }
 }
 
 const updateVideoaula = async function (id, dadosVideoaula){
+
+
 
     let sql 
     
@@ -92,6 +97,7 @@ const updateVideoaula = async function (id, dadosVideoaula){
                 id_nivel = '${dadosVideoaula.id_nivel}', 
                 id_modulo = '${dadosVideoaula.id_modulo}'
 
+
                 where id_videoaula = ${id}`
 
             }else{
@@ -101,9 +107,9 @@ const updateVideoaula = async function (id, dadosVideoaula){
                 descricao = null,
                 duracao = '${dadosVideoaula.duracao}', 
                 foto_capa = '${dadosVideoaula.foto_capa}', 
-                id_nivel = '${dadosVideoaula.id_nivel}', 
-                id_modulo = '${dadosVideoaula.id_modulo}'
-                
+                id_nivel = '${dadosVideoaula.id_nivel}',
+                id_modulo = '${dadosVideoaula.id_modulo}',
+                id_professor = '${dadosVideoaula.id_professor}
                 where id_videoaula = ${id}`
 
             }
@@ -113,6 +119,7 @@ const updateVideoaula = async function (id, dadosVideoaula){
             return rsVideoaula
 
     } catch (error){
+        console.log(error);
         return false
     }
 }
