@@ -100,7 +100,6 @@ BEGIN
     END WHILE;
 END//
 
-DELIMITER; 
 
 CALL inserir_questao_com_alternativas(
     'Qual é a capital da França?',
@@ -123,7 +122,7 @@ select * from pergunta_alternativas where id_pergunta = 3;
 CREATE TABLE `tbl_usuario_teste` (
   `id_usuario_teste` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `email` VARCHAR(255) NOT NULL,
-  `data_cadastro` DATE NOT NULL)
+  `data` DATE NOT NULL)
 ENGINE = InnoDB;
 
 select * from tbl_usuario_teste;
@@ -165,7 +164,6 @@ select * from respostas_do_usuario where id_usuario_teste = 1;
 
 
 ------------------- TABELA DO RESULTADO DO QUIZ  ---------------------------------
-
 CREATE TABLE `tbl_resultado` (
   `id_resultado` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `pontuacao` INT NOT NULL,
@@ -229,9 +227,9 @@ CREATE TABLE `tbl_postagem` (
 ENGINE = InnoDB;
 
 
-select * from tbl_post;
+select * from tbl_postagem;
 
-insert into tbl_post (texto, foto_postagem, id_professor, data)
+insert into tbl_postagem (texto, foto_postagem, id_professor, data)
 values ("show", "www.jedjebdcjebk.edjwbdjbd",1, '2024-09-10');
 
 
@@ -247,27 +245,6 @@ on t.id_professor = p.id_professor;
 
 select * from post_usuario where id_professor = 1;
 
-
------------- VIEW QUE TRAZ AS INFORMAÇÕES DO POST ------------------
-create view informacoes_post as
-select t.id_postagem, t.texto, t.foto_postagem, t.data, p.nome
-from tbl_postagem as t
-inner join tbl_professor as p
-on t.id_professor = p.id_professor;
-
-select * from informacoes_post where id_post = 1;
-
-update tbl_post set
-texto = "reuniao",
-foto_postagem = "wdcnsde vncsde",
-id_professor = 1,
-data = '2024-09-08'
-where id_post =1;
-
-delete from tbl_post where id_post = 1;
-
--- select para trazer os post dos mais recentes para o mais antigo
-select  * from informacoes_post order by data desc;
 
 
 --------- TABELA DOS MÓDULOS -----------------------
@@ -295,14 +272,16 @@ where id_modulo = 1;
 ------------ TABELA DOS NÍVEIS ------------
 CREATE TABLE `tbl_nivel` (
   `id_nivel` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `nivel` VARCHAR(20) NOT NULL)
+  `nivel` VARCHAR(20) NOT NULL,
+  `icon` varchar (255) not null)
 ENGINE = InnoDB;
+
 
 select * from tbl_nivel;
 
-insert into tbl_nivel (nivel)
-values ("iniciante"),
-("intermediario");
+insert into tbl_nivel (nivel, icon)
+values ("iniciante", "mdkwnexdkwnxkwn"),
+("intermediario", "wkxjdwxdnwsxjn");
 
 delete from tbl_comentario_aula where id_comentario = 22;
 delete from tbl_aluno where id_aluno = 5;
@@ -349,11 +328,11 @@ ENGINE = InnoDB;
 select * from tbl_videoaula;
 
 
-INSERT INTO tbl_videoaula (titulo, descricao, duracao, foto_capa, data, id_nivel, id_modulo, id_professor)
-VALUES ('cohecendo alguém', 'como se comunicar', '00:40:00', 'xbjwbxjnxk xck', '2024-12-05', '1', '1', '1'),
-('blabla', 'bla', '00:30:00', 'ednxkwnex', '2023-09-27', 1, 1,1 );
+INSERT INTO tbl_videoaula (titulo, url_video, descricao, duracao, foto_capa, data, id_nivel, id_modulo, id_professor)
+VALUES ('cohecendo alguém', 'xxswbjswxjswa', 'como se comunicar', '00:40:00', 'xbjwbxjnxk xck', '2024-12-05', '1', '1', '1'),
+('blabla', 'njdcndjnc', 'bla', '00:30:00', 'ednxkwnex', '2023-09-27', 1, 1,1 );
 
-delete from tbl_videoaula where id_videoaula = 5;
+delete from tbl_videoaula where id_videoaula = 3;
 
 update tbl_videoaula set
 titulo = 'teste2',
@@ -440,5 +419,4 @@ select * from pergunta_alternativas;
 
 
 select * from respostas_do_usuario where id_usuario_teste = 1;
-
-show tables;
+select * from tbl_videoaula;
