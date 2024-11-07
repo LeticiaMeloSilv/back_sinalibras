@@ -433,29 +433,19 @@ app.get('/v1/sinalibras/videos/nivel/:id', cors(), async function(request, respo
     let idNivel = request.params.id
     let videosNivel = await controllerNivel.getVideosDoNivel(idNivel)
 
-    if(videosNivel){
         response.status(200)
         response.json(videosNivel)
-    }else{
-        response.status(404)
-        response.json({message: 'Nenhum registro foi encontrado'})
-    }
+    
 
 })
 
 app.get('/v1/sinalibras/videos/modulo/:id', cors(), async function(request, response){
     let idModulo = request.params.id
     let videosModulo = await controllerModulo.getVideosDoModulo(idModulo)
-console.log(videosModulo);
 
-    if(videosModulo){
         response.status(200)
         response.json(videosModulo)
-    }else{
-        response.status(404)
-        response.json({message: 'Nenhum registro foi encontrado'})
-    }
-
+   
 })
 
 
@@ -642,22 +632,17 @@ app.delete('/v1/sinalibras/videoaula/comentario/:id', cors(), async function (re
 
 /**************************************** POSTAGENS ************************************/
 
-app.get('/v1/sinalibras/postagens', cors(), async function(request, response){
+app.get('/v1/sinalibras/postagem/:id', cors(), async function(request, response){
+
+    let idPostagem = request.params.id
+   
+    let dadosPostagem = await controllerPostagem.getPostagemById(idPostagem)
 
    
-    let dadosPostagem = await controllerPostagem.getListaPostagens()
-
-   
-    if(dadosPostagem){
-      response.json(dadosPostagem);
-        response.status(200);
-    }else{
-        response.status(404);
-        response.json({message: 'Nenhum registro foi encontrado'})
-        
-    }
-
-    //ok
+ 
+    response.json(dadosPostagem);
+    response.status(200);
+  
 
 })
 

@@ -227,9 +227,9 @@ CREATE TABLE `tbl_postagem` (
 ENGINE = InnoDB;
 
 
-select * from tbl_post;
+select * from tbl_postagem;
 
-insert into tbl_post (texto, foto_postagem, id_professor, data)
+insert into tbl_postagem (texto, foto_postagem, id_professor, data)
 values ("show", "www.jedjebdcjebk.edjwbdjbd",1, '2024-09-10');
 
 
@@ -245,27 +245,6 @@ on t.id_professor = p.id_professor;
 
 select * from post_usuario where id_professor = 1;
 
-
------------- VIEW QUE TRAZ AS INFORMAÇÕES DO POST ------------------
-create view informacoes_post as
-select t.id_postagem, t.texto, t.foto_postagem, t.data, p.nome
-from tbl_postagem as t
-inner join tbl_professor as p
-on t.id_professor = p.id_professor;
-
-select * from informacoes_post where id_post = 1;
-
-update tbl_post set
-texto = "reuniao",
-foto_postagem = "wdcnsde vncsde",
-id_professor = 1,
-data = '2024-09-08'
-where id_post =1;
-
-delete from tbl_post where id_post = 1;
-
--- select para trazer os post dos mais recentes para o mais antigo
-select  * from informacoes_post order by data desc;
 
 
 --------- TABELA DOS MÓDULOS -----------------------

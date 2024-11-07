@@ -2,6 +2,7 @@ const message = require('../modulo/config.js')
 const postagemDAO = require ('../model/DAO/postagem.js')
 const professorDAO = require ('../model/DAO/professor.js')
 const comentarioDAO = require('../model/DAO/comentarios.js')
+const videoaulaDAO = require('../model/DAO/videoaula.js')
 const { Prisma } = require('@prisma/client')
 
 const inserirNovaPostagem = async function (dadosPostagem, contentType){
@@ -60,17 +61,19 @@ const inserirNovaPostagem = async function (dadosPostagem, contentType){
     }
 }
 
-const setAtualizarPostagem = async function (dadosPostagem, contentType, id){
-    let idPostagem = id
+const setAtualizarPostagem = async function (dadosPostagem, id, contentType){
+
+    try{
+
+        let idPostagem = id
 
     if(idPostagem == undefined || idPostagem == null || idPostagem == '' || isNaN(idPostagem)){
         return message.ERROR_INVALID_ID
     } else {
         let idPostagem = await postagemDAO.selectPostagemById(idPostagem)
         
-        if(idPostagem > 0){
+        if(idPostagem){
 
-            try{
                 if(String(contentType).toLowerCase () == 'application/json'){
                     let updatePostagemJson = {}
 
@@ -118,15 +121,18 @@ const setAtualizarPostagem = async function (dadosPostagem, contentType, id){
                 }else{
                     return message.ERROR_CONTENT_TYPE
                 }
-            }catch(error){
-                return message.ERROR_INTERNAL_SERVER
-            }
     
 
         }else{
             return message.ERROR_NOT_FOUND_ID
         }
     }
+
+
+    }catch(error){
+        return message.ERROR_INTERNAL_SERVER
+    }
+    
 }
 
 const setExcluirPostagem = async function (id){
@@ -153,33 +159,158 @@ const setExcluirPostagem = async function (id){
     }
 }
 
-const getListaPostagens = async function (){
-    let postagemJson = {}
+const getAllFeed = async function (){
+    try{
+        let feedJson = {}
 
-    let dadosPostagem = await postagemDAO.selectAllPostagens()
+        let dadosFeed = await postagemDAO.selectAllFeed()
 
-    if(dadosPostagem){
+        if(dadosFeed){
 
-        if(dadosPostagem.length>0){
-
-            for (let postagem of dadosPostagem){
+            for (let postagem of dadosFeed){
                 let professorPostagem = await professorDAO.selectByIdProfessor(postagem.id_professor)   
                 postagem.professor = professorPostagem
                 delete postagem.id_professor 
                 
             }
 
-            postagemJson.postagems = dadosPostagem
-            postagemJson.quantidade = dadosPostagem.length
-            postagemJson.status_code = 200
+            for (let postagem of dadosFeed){
+                let comentariopostagem = await comentarioDAO.selectComentariosPostagem(postagem.id_postagem)
+                postagem.comentarios = comentariopostagem
+                delete postagem.id_comentario
+            }
+            
+            for (let videoaula of dadosVideoaula){
+                let nivelVideoaula = await nivelDAO.selectNivelById(videoaula.id_nivel)   
+                videoaula.nivel = nivelVideoaula
+                delete videoaula.id_nivel 
+                
+            }
+
+            for (let videoaula of dadosVideoaula){
+                let moduloVideoaula = await moduloDAO.selectModuloById(videoaula.id_modulo)
+                videoaula.modulo = moduloVideoaula
+                delete videoaula.id_modulo
+            }
+            for (let videoaula of dadosVideoaula){
+                let professorVideoaula = await professorDAO.selectByIdProfessor(videoaula.id_professor)
+                videoaula.professor = professorVideoaula
+                delete videoaula.id_professor
+            }
+
+            for (let videoaula of dadosVideoaula){
+                let comentarioVideoaula = await comentarioDAO.selectComentariosVideo(videoaula.id_videoaula)
+                videoaula.comentarios = comentarioVideoaula
+                delete videoaula.id_comentario
+            }
+
+            feedJson.postagens = dadosFeed
+            feedJson.quantidade = dadosFeed.length
+            feedJson.status_code = 200
             return postagemJson
        
         } else {
             return message.ERROR_NOT_FOUND
         }
-    }else{
-        return message.ERROR_INTERNAL_SERVER_DB
+
+    }catch(error){
+        return message.ERROR_INTERNAL_SERVER
     }
+    
+  
+}
+
+const getPostagemById = async function (id){
+    try{
+
+       let idPostagem = id
+
+       let postagemJson = {}
+
+    if(idPostagem == undefined || idPostagem == ' ' || isNaN(idPostagem)){
+        return message.ERROR_INVALID_ID
+    }else{
+    
+        let dadosPostagem = await postagemDAO.selectPostagemById(idPostagem)
+
+        if(dadosPostagem){
+
+            for (let postagem of dadosPostagem){
+                let professorPostagem = await professorDAO.selectByIdProfessor(postagem.id_professor)
+                postagem.professor = professorPostagem
+                delete postagem.id_professor
+            }
+
+            for (let postagem of dadosPostagem){
+                let comentarioPostagem = await comentarioDAO.selectComentariosAula(postagem.id_postagem)
+                postagem.comentarios = comentarioPostagem
+                delete postagem.id_comentario
+            }
+
+
+
+            postagemJson.postagem = dadosPostagem
+            postagemJson.status_code = 200
+
+
+            return postagemJson
+
+        }else{
+            return message.ERROR_NOT_FOUND
+        }
+    }
+
+
+    }catch(error){       
+        return false
+    }
+
+    
+}
+
+const getPostagemByNome = async function (texto){
+    try{
+
+       let textoPostagem = texto
+
+       let postagemJson = {}
+
+    if(idPostagem == undefined || idPostagem == ' ' || isNaN(idPostagem)){
+        return message.ERROR_INVALID_ID
+    }else{
+    
+        let dadosPostagem = await postagemDAO.selectPostagemByNome(textoPostagem)
+
+        if(dadosPostagem){
+           
+            for (let postagem of dadosPostagem){
+                let professorPostagem = await professorDAO.selectByIdProfessor(postagem.id_professor)
+                postagem.professor = professorPostagem
+                delete postagem.id_professor
+            }
+
+            for (let postagem of dadosPostagem){
+                let comentarioPostagem = await comentarioDAO.selectComentariosAula(postagem.id_postagem)
+                postagem.comentarios = comentarioPostagem
+                delete postagem.id_comentario
+            }
+
+
+            postagemJson.postagem = dadosPostagem
+            postagemJson.status_code = 200
+            return postagemJson
+
+        }else{
+            return message.ERROR_NOT_FOUND
+        }
+    }
+
+
+    }catch(error){
+        return false
+    }
+
+    
 }
 
 
@@ -187,5 +318,7 @@ module.exports = {
     inserirNovaPostagem,
     setAtualizarPostagem,
     setExcluirPostagem,
-    getListaPostagens
+    getAllFeed,
+    getPostagemById,
+    getPostagemByNome
 }

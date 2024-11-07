@@ -7,7 +7,8 @@ const inserirNovoNivel = async function(dadosNivel, contentType){
         if(String(contentType).toLowerCase() == 'application/json'){
             let novoNivelJson = {}
 
-            if(dadosNivel.nivel == undefined || dadosNivel.nivel == null || dadosNivel.nivel == '' || dadosNivel.nivel.length>20){
+            if(dadosNivel.nivel == undefined || dadosNivel.nivel == null || dadosNivel.nivel == '' || dadosNivel.nivel.length>20 ||
+                dadosNivel.icon == undefined || dadosNivel.icon == null || dadosNivel.icon == '' || dadosNivel.icon,length>255){
                 return message.ERROR_REQUIRED_FIELDS
             }else{
 
@@ -58,7 +59,8 @@ const setAtualizarNivel = async function (id, dadosNivel, contentType){
                 if(String(contentType).toLowerCase () == 'application/json'){
                     let updateNivelJson = {}
 
-                    if(dadosNivel.nivel == null || dadosNivel.nivel == ' ' || dadosNivel.nivel.length > 20 || dadosNivel.nivel == undefined){
+                    if(dadosNivel.nivel == undefined || dadosNivel.nivel == null || dadosNivel.nivel == '' || dadosNivel.nivel.length>20 ||
+                    dadosNivel.icon == undefined || dadosNivel.icon == null || dadosNivel.icon == '' || dadosNivel.icon,length>255){
                         return message.ERROR_REQUIRED_FIELDS
                     } else {
 
