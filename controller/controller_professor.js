@@ -667,7 +667,7 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
 
 
                             for (let professor of dadosProfessor){
-                                let infoVideoAula = await videoaulaDAO.selectVideosByIdProfessor(professor.id_professor)   
+                                let infoVideoAula = await videoaulaDAO.selectVideosByIdProfessor(dadosProfessor.id_professor)   
                                 professor.videoaula = infoVideoAula 
                             }
                 
@@ -690,7 +690,7 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
 
         
 
- //getInfoPerfilProfessor(1);
+
 
 module.exports = {
     getListarProfessores,

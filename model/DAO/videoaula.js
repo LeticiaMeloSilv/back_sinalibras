@@ -73,21 +73,29 @@ const insertVideoaula = async function (dadosVideoaula){
     }
 }
 
-const updateVideoaula = async function (id, dadosVideoaula){
-
-
-
-    let sql 
-    
+const updateVideoaula = async function (dadosVideoaula, id){  
 
     try{
+
+        let sql 
+
         if(
-            dadosVideoaula.descricao != null &&
-            dadosVideoaula.descricao != "" &&
-            dadosVideoaula.descricao != undefined
+            dadosVideoaula.descricao == null ||
+            dadosVideoaula.descricao == "" ||
+            dadosVideoaula.descricao == undefined
         
         ){
+         sql = `update tbl_videoaula set
+                titulo = '${dadosVideoaula.titulo}', 
+                url_video = '${dadosVideoaula.url_video}', 
+                descricao = null,
+                duracao = '${dadosVideoaula.duracao}', 
+                foto_capa = '${dadosVideoaula.foto_capa}', 
+                id_nivel = '${dadosVideoaula.id_nivel}',
+                id_modulo = '${dadosVideoaula.id_modulo}'
+                where id_videoaula = ${id}`
 
+            }else{
                 sql = `update tbl_videoaula set
                 titulo = '${dadosVideoaula.titulo}', 
                 url_video = '${dadosVideoaula.url_video}', 
@@ -96,26 +104,42 @@ const updateVideoaula = async function (id, dadosVideoaula){
                 foto_capa = '${dadosVideoaula.foto_capa}',
                 id_nivel = '${dadosVideoaula.id_nivel}', 
                 id_modulo = '${dadosVideoaula.id_modulo}'
-
-
                 where id_videoaula = ${id}`
-
-            }else{
-                sql = `update tbl_videoaula set
-                titulo = '${dadosVideoaula.titulo}', 
-                url_video = '${dadosVideoaula.url_video}', 
-                descricao = null,
-                duracao = '${dadosVideoaula.duracao}', 
-                foto_capa = '${dadosVideoaula.foto_capa}', 
-                id_nivel = '${dadosVideoaula.id_nivel}',
-                id_modulo = '${dadosVideoaula.id_modulo}',
-                id_professor = '${dadosVideoaula.id_professor}
-                where id_videoaula = ${id}`
-
             }
 
-            let rsVideoaula = await prisma.$executeRawUnsafe(sql)
 
+        // if(
+        //     dadosVideoaula.descricao != null &&
+        //     dadosVideoaula.descricao != "" &&
+        //     dadosVideoaula.descricao != undefined
+        
+        // ){
+        
+
+        //         sql = `update tbl_videoaula set
+        //         titulo = '${dadosVideoaula.titulo}', 
+        //         url_video = '${dadosVideoaula.url_video}', 
+        //         descricao = '${dadosVideoaula.descricao}',
+        //         duracao = '${dadosVideoaula.duracao}', 
+        //         foto_capa = '${dadosVideoaula.foto_capa}',
+        //         id_nivel = '${dadosVideoaula.id_nivel}', 
+        //         id_modulo = '${dadosVideoaula.id_modulo}'
+        //         where id_videoaula = ${id}`
+
+        //     }else{
+        //         sql = `update tbl_videoaula set
+        //         titulo = '${dadosVideoaula.titulo}', 
+        //         url_video = '${dadosVideoaula.url_video}', 
+        //         descricao = null,
+        //         duracao = '${dadosVideoaula.duracao}', 
+        //         foto_capa = '${dadosVideoaula.foto_capa}', 
+        //         id_nivel = '${dadosVideoaula.id_nivel}',
+        //         id_modulo = '${dadosVideoaula.id_modulo}'
+        //         where id_videoaula = ${id}`
+
+        //     }
+
+            let rsVideoaula = await prisma.$executeRawUnsafe(sql)
             return rsVideoaula
 
     } catch (error){
@@ -123,6 +147,10 @@ const updateVideoaula = async function (id, dadosVideoaula){
         return false
     }
 }
+
+
+
+
 
 const deleteVideoaula = async function (id){
 
@@ -212,7 +240,8 @@ const selectVideosByIdProfessor = async function (id){
         let sql = `select * from tbl_videoaula where  id_professor = ${id}`
 
         let rsModulo = await prisma.$queryRawUnsafe(sql)
-
+ 
+            
 
         if(rsModulo)
         return rsModulo

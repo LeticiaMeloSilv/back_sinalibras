@@ -353,6 +353,16 @@ app.put('/v1/sinalibras/professor/perfil/:id', cors(), bodyParserJson, async fun
     //ok
 })
 
+app.get('/v1/sinalibras/professor/perfil/:id', cors(), bodyParserJson, async function(request,response){
+
+    let idUsuario = request.params.id
+    let infoPerfil = await controllerProfessor.getInfoPerfilProfessor(idUsuario)
+
+    response.status(infoPerfil.status_code)
+    response.json(infoPerfil)
+    //ok
+})
+
 
 
 
@@ -423,7 +433,7 @@ app.put('/v1/sinalibras/videoaula/:id', cors(), bodyParserJson, async function(r
     let contentType = request.headers['content-type']
     let dadosBody = request.body
 
-    let videoaulaAtualizado = await controllerVideoaula.setAtualizarVideoaula(idVideoaula, dadosBody, contentType)
+    let videoaulaAtualizado = await controllerVideoaula.setAtualizarVideoaula(dadosBody, idVideoaula, contentType)
 
     response.status(videoaulaAtualizado.status_code)
     response.json(videoaulaAtualizado)

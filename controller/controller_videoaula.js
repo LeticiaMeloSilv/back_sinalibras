@@ -64,12 +64,11 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
     }
 }
 
-const setAtualizarVideoaula = async function (id, dadosVideoaula, contentType){
+const setAtualizarVideoaula = async function (dadosVideoaula, id,  contentType){
+
 
     try{
-
         let idVideo = id
-
     if(idVideo == undefined || idVideo == null || idVideo == '' || isNaN(idVideo)){
 
         
@@ -77,7 +76,7 @@ const setAtualizarVideoaula = async function (id, dadosVideoaula, contentType){
     } else {
         let idVideoaula = await videoaulaDAO.selectVideoaulaById(idVideo)
 
-        if(idVideoaula.length > 0){
+        if(idVideoaula){
 
             
                 if(String(contentType).toLowerCase() == 'application/json'){
@@ -96,10 +95,7 @@ const setAtualizarVideoaula = async function (id, dadosVideoaula, contentType){
                             dadosVideoaula.descricao != '' &&
                             dadosVideoaula.descricao != undefined
                         ){
-                            if(dadosVideoaula.descricao.length>255){
-
-                        
-                                
+                            if(dadosVideoaula.descricao.length>255){                                
                                 return message.ERROR_REQUIRED_FIELDS
                             } else {
                                 status = true 
@@ -111,14 +107,9 @@ const setAtualizarVideoaula = async function (id, dadosVideoaula, contentType){
                        
                         if(status){
                        
-                            let videoAtualizado = await videoaulaDAO.updateVideoaula(idVideo)
-
+                            let videoAtualizado = await videoaulaDAO.updateVideoaula(dadosVideoaula, idVideo)
                             
-
-
-                                console.log(videoAtualizado);
-
-                            if(videoAtualizado){
+                                if(videoAtualizado){
 
                                 updateVideoJson.videoaula = dadosVideoaula
                                 updateVideoJson.status = message.SUCESS_UPDATED_ITEM.status
