@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 const insertModulo = async function(dadosModulo){
     try{
 
-        let sql = `insert into tbl_modulo (modulo) values ('${dadosModulo.modulo}')`
+        let sql = `insert into tbl_modulo (modulo, icon) values ('${dadosModulo.modulo}', '${dadosModulo.icon}')`
 
         let rsModulo = await prisma.$executeRawUnsafe(sql)
      
@@ -21,7 +21,11 @@ const insertModulo = async function(dadosModulo){
 const updateModulo = async function (id, dadosModulo){
     try{
 
-        let sql = `update tbl_modulo set modulo = '${dadosModulo.modulo}' where id_modulo = ${id}`
+        let sql = `update tbl_modulo set 
+        modulo = '${dadosModulo.modulo}',
+        icon = '${dadosModulo.icon}' 
+
+        where id_modulo = ${id}`
      
         let rsModulo = await prisma.$executeRawUnsafe(sql)
 

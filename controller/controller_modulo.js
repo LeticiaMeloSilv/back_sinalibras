@@ -6,7 +6,8 @@ const inserirNovoModulo = async function(dadosModulo, contentType){
         if(String(contentType).toLowerCase() == 'application/json'){
             let novoModuloJson = {}
 
-            if(dadosModulo.modulo == undefined || dadosModulo.modulo == null || dadosModulo.modulo == '' || dadosModulo.modulo.length>20){
+            if(dadosModulo.modulo == undefined || dadosModulo.modulo == null || dadosModulo.modulo == '' || dadosModulo.modulo.length>20 ||
+               dadosModulo.icon == undefined || dadosModulo.icon == null || dadosModulo.icon == '' || dadosModulo.icon.length>255){
                 return message.ERROR_REQUIRED_FIELDS
             }else{
 
@@ -56,7 +57,8 @@ const setAtualizarModulo = async function (id, dadosModulo, contentType){
                 
                 let updateModuloJson = {}
 
-                 if(dadosModulo.modulo == null || dadosModulo.modulo == ' ' || dadosModulo.modulo.length > 20 || dadosModulo.modulo == undefined){
+                 if(dadosModulo.modulo == undefined || dadosModulo.modulo == null || dadosModulo.modulo == '' || dadosModulo.modulo.length>20 ||
+                 dadosModulo.icon == undefined || dadosModulo.icon == null || dadosModulo.icon == '' || dadosModulo.icon.length>255){
                     return message.ERROR_REQUIRED_FIELDS
                  } else {
 
