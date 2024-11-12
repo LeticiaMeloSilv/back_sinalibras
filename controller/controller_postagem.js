@@ -170,16 +170,15 @@ const getAllFeed = async function (){
 
 
             for (let postagem of dadosFeed){
-                let comentarioPostagem = await comentarioDAO.selectComentariosPostagem(postagem.id_comentario)
-                postagem.comentarios = comentarioPostagem
-                delete postagem.id_comentario
+                let professorPostagem = await professorDAO.selectByIdProfessor(postagem.id_professor)   
+                postagem.professor = professorPostagem
+                delete postagem.id_professor  
             }
 
             for (let postagem of dadosFeed){
-                let professorPostagem = await professorDAO.selectByIdProfessor(postagem.id_professor)   
-                postagem.professor = professorPostagem
-                delete postagem.id_professor 
-                
+                let comentarioPostagem = await comentarioDAO.selectComentarioById(postagem.id_comentario)
+                postagem.comentarios = comentarioPostagem
+                delete postagem.id_comentario
             }
             
             for (let videoaula of dadosFeed){
@@ -208,7 +207,6 @@ const getAllFeed = async function (){
         }
 
     }catch(error){
-        console.log(error);
         return message.ERROR_INTERNAL_SERVER
     }
     
