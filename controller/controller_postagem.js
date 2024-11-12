@@ -167,36 +167,27 @@ const getAllFeed = async function (){
         let dadosFeed = await postagemDAO.selectAllFeed()
 
         if(dadosFeed){
+            for (let elemento of dadosFeed){
+                let professorPostagem = await professorDAO.selectByIdProfessor(elemento.id_professor)   
+                elemento.professor = professorPostagem
+                delete elemento.id_professor 
+                if(elemento.tipo === 'postagem'){
+                    let comentariosPostagem = await comentarioDAO.selectComentarioByIdPostagem(elemento.id)
+                    elemento.comentarios = comentariosPostagem
+                    delete elemento.id_comentario 
 
-
-            for (let postagem of dadosFeed){
-                let professorPostagem = await professorDAO.selectByIdProfessor(postagem.id_professor)   
-                postagem.professor = professorPostagem
-                delete postagem.id_professor  
+                } else if (elemento.tipo === 'videoaula'){
+                    let nivelVideoaula = await nivelDAO.selectNivelById(elemento.id_nivel)   
+                    elemento.nivel = nivelVideoaula
+                    delete elemento.id_nivel 
+                    let moduloVideoaula = await moduloDAO.selectModuloById(elemento.id_modulo)
+                    elemento.modulo = moduloVideoaula
+                    delete elemento.id_modulo
+                    let comentariosVideoaula = await comentarioDAO.selectComentariosAula(elemento.id)
+                    elemento.comentarios = comentariosVideoaula
+                    delete elemento.id_comentario 
+                }
             }
-
-            for (let postagem of dadosFeed){
-                let comentarioPostagem = await comentarioDAO.selectComentarioById(postagem.id_comentario)
-                postagem.comentarios = comentarioPostagem
-                delete postagem.id_comentario
-            }
-            
-            for (let videoaula of dadosFeed){
-                let nivelVideoaula = await nivelDAO.selectNivelById(videoaula.id_nivel)   
-                videoaula.nivel = nivelVideoaula
-                delete videoaula.id_nivel 
-                
-            }
-
-            for (let videoaula of dadosFeed){
-                let moduloVideoaula = await moduloDAO.selectModuloById(videoaula.id_modulo)
-                videoaula.modulo = moduloVideoaula
-                delete videoaula.id_modulo
-
-            }
-
-         
-
             feedJson.feed = dadosFeed
             feedJson.quantidade = dadosFeed.length
             feedJson.status_code = 200

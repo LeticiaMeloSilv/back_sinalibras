@@ -131,32 +131,17 @@ const selectComentariosPostagem = async function (id) {
     
 }
 
-const selectComentarioById = async function (id){
-
-    try{
-
-
-        let sql = `select * from tbl_comentario_postagem where id_comentario = ${id}`
-
-        let rsComentario = await prisma.$queryRawUnsafe(sql)
-
-        return rsComentario
-
-    }catch(error){
-        console.log(error);
-        return false
-    }
-}
 
 const selectComentarioByIdPostagem = async function (id) {
-    let sql = `select * from tbl_comentario_postagem where id_comentario = ${id}`
+    try{
+        let sql = `select * from tbl_comentario_postagem where id_postagem = ${id}`
 
-    let rsComentario = await prisma.$executeRawUnsafe(sql)
-
-    if (rsComentario)
-        return true
-    else
-        return false
+        let rsComentario = await prisma.$queryRawUnsafe(sql)
+        console.log(sql);
+        return rsComentario
+    }catch(error){
+        console.error(error)
+    }
 }
 
 const selectLastIdPostagem = async function () {
@@ -186,7 +171,6 @@ module.exports = {
     insertComentarioPostagem,
     deleteComentarioPostagem,
     selectComentariosPostagem,
-    selectComentarioById,
     selectComentarioByIdPostagem,
     selectLastIdPostagem
 }

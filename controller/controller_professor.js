@@ -647,46 +647,86 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
             }
 
 
-         const getInfoPerfilProfessor = async function (id){
-                let idProfessor = id 
+        //  const getInfoPerfilProfessor = async function (id){
+        //         let idProfessor = id 
             
-                let professorJSON = {}
+        //         let professorJSON = {}
             
-                if (idProfessor == '' || idProfessor == undefined || isNaN(idProfessor)) {
-                    return message.ERROR_INVALID_ID; //400
-                } else {
-            
-                   
-                    let dadosProfessor = await professorDAO.selectInfoPeril(idProfessor)
+        //         if (idProfessor == '' || idProfessor == undefined || isNaN(idProfessor)) {
+        //             return message.ERROR_INVALID_ID; //400
+        //         } else {
             
                    
-                    if (dadosProfessor) {
+        //             let dadosProfessor = await professorDAO.selectInfoPeril(idProfessor)
+            
+                   
+        //             if (dadosProfessor) {
             
                     
-                        if (dadosProfessor.length > 0) {
+        //                 if (dadosProfessor.length > 0) {
 
 
-                            for (let professor of dadosProfessor){
-                                let infoVideoAula = await videoaulaDAO.selectVideosByIdProfessor(dadosProfessor.id_professor)   
-                                professor.videoaula = infoVideoAula 
-                            }
+        //                     for (let professor of dadosProfessor){
+        //                         let infoVideoAula = await videoaulaDAO.selectVideosByIdProfessor(dadosProfessor.id_professor)   
+        //                         professor.videoaula = infoVideoAula 
+        //                     }
                 
-                            professorJSON.professor = dadosProfessor[0];
-                            professorJSON.status_code = 200;
+        //                     professorJSON.professor = dadosProfessor[0];
+        //                     professorJSON.status_code = 200;
             
-                            return professorJSON
+        //                     return professorJSON
             
-                        } else {
-                            return message.ERROR_NOT_FOUND; //404
-                        }
+        //                 } else {
+        //                     return message.ERROR_NOT_FOUND; //404
+        //                 }
             
-                    } else {
-                        return message.ERROR_INTERNAL_SERVER_DB; //500
-                    }
-                }
+        //             } else {
+        //                 return message.ERROR_INTERNAL_SERVER_DB; //500
+        //             }
+        //         }
             
-            }
+        //     }
 
+   
+        
+        const getInfoPerfilProfessor = async function (id) {
+            let idProfessor = id;
+            console.log(idProfessor);
+            let professorJSON = {};
+        
+            if (idProfessor == '' || idProfessor == undefined || isNaN(idProfessor)) {
+                return message.ERROR_INVALID_ID; // 400
+            } else {
+        
+                let dadosProfessor = await professorDAO.selectInfoPeril(idProfessor);
+        
+                if (dadosProfessor) {
+        
+                    if (dadosProfessor.length > 0) {
+        
+                       
+                        let professoresComVideoaulas = await Promise.all(dadosProfessor.map(async (professor) => {
+                            console.log(dadosProfessor.id_professor);
+                            let videoAulas = await videoaulaDAO.selectVideosByIdProfessor(idProfessor);
+                            professor.videoaulas = videoAulas;  
+                            return professor;
+                        }));
+        
+                        professorJSON.professores = professoresComVideoaulas;
+                        professorJSON.status_code = 200;
+        
+                        return professorJSON;
+        
+                    } else {
+                        return message.ERROR_NOT_FOUND; // 404
+                    }
+        
+                } else {
+                    return message.ERROR_INTERNAL_SERVER_DB; // 500
+                }
+            }
+        };
+        
 
         
 

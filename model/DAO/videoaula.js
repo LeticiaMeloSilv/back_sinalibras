@@ -241,7 +241,7 @@ const selectVideosByIdProfessor = async function (id){
 
         let rsModulo = await prisma.$queryRawUnsafe(sql)
  
-            
+        console.log();    
 
         if(rsModulo)
         return rsModulo
