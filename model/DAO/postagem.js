@@ -199,6 +199,21 @@ const selectUltimoId = async function (){
    }
 }
 
+
+const selectPostagemByIdProfessor = async function (id){
+    try{
+
+        let sql = `select * from tbl_postagem where id_professor = ${id}`
+        let rsPostagem = await prisma.$queryRawUnsafe(sql)
+
+        return rsPostagem
+    
+    }catch(error){
+        console.log(error);
+        return false
+    }
+}
+
 module.exports = {
     insertPostagem,
     updatePostagem,
@@ -206,5 +221,6 @@ module.exports = {
     selectAllFeed,
     selectPostagemById,
     selectPostagemByNome,
-    selectUltimoId
+    selectUltimoId,
+    selectPostagemByIdProfessor
 }

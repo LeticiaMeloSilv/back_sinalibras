@@ -21,10 +21,10 @@ const setInserirNovoComentarioAula = async function (dadosComentario, contentTyp
                 dadosComentario.data.length > 10 || dadosComentario.comentario.length > 250 || isNaN(dadosComentario.id_videoaula) || isNaN(dadosComentario.id_aluno)){
                     return message.ERROR_REQUIRED_FIELDS
                 }else{
-                     let novoComentario = await comentarioDAO.insertComentario(dadosComentario)
+                     let novoComentario = await comentarioDAO.insertComentarioAula(dadosComentario)
 
                      if(novoComentario){
-                        let idComentario = await comentarioDAO.selectLastId()
+                        let idComentario = await comentarioDAO.selectLastIdAula()
                         dadosComentario.id_comentario = idComentario[0].id_comentario
 
                         jsonComentario.comentario = dadosComentario
@@ -99,11 +99,11 @@ const setDeleteComentarioAula = async function(id){
             return message.ERROR_INVALID_ID
         }else{
 
-            let dadosComentario = await comentarioDAO.selectComentarioById(idComentario)
+            let dadosComentario = await comentarioDAO.selectComentarioByIdAula(idComentario)
 
             if(dadosComentario){
             
-                dadosComentario = await comentarioDAO.deleteComentario(idComentario)
+                dadosComentario = await comentarioDAO.deleteComentarioAula(idComentario)
                 return message.SUCESS_DELETED_ITEM
         
             }else{
@@ -131,10 +131,10 @@ const setInserirNovoComentarioPostagem = async function (dadosComentario, conten
                 dadosComentario.comentario.length > 255 || dadosComentario.data.length > 10 || isNaN(dadosComentario.id_postagem) || isNaN(dadosComentario.id_aluno)){
                     return message.ERROR_REQUIRED_FIELDS
                 }else{
-                     let novoComentario = await comentarioDAO.insertComentario(dadosComentario)
+                     let novoComentario = await comentarioDAO.insertComentarioPostagem(dadosComentario)
 
                      if(novoComentario){
-                        let idComentario = await comentarioDAO.selectLastId()
+                        let idComentario = await comentarioDAO.selectLastIdPostagem()
                         dadosComentario.id_comentario = idComentario[0].id_comentario
 
                         jsonComentario.comentario = dadosComentario
@@ -209,11 +209,11 @@ const setDeleteComentarioPostagem = async function(id){
             return message.ERROR_INVALID_ID
         }else{
 
-            let comentarioId = await comentarioDAO.selectComentarioById(idComentario)
+            let comentarioId = await comentarioDAO.selectComentarioByIdPostagem(idComentario)
 
             if(comentarioId){
                
-                let comentarioDelete = await comentarioDAO.deleteComentario(idComentario)
+                let comentarioDelete = await comentarioDAO.deleteComentarioPostagem(idComentario)
              
 
                 if(comentarioDelete){
