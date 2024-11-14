@@ -161,7 +161,7 @@ const setExcluirNivel = async function (id){
             let dadosNivel = await nivelDAO.selectNivelById(idNivel)
             
 
-            if(dadosNivel){
+            if(dadosNivel.length>0){
 
                 nivelJson.nivel = dadosNivel
                 nivelJson.status_code = 200
@@ -170,7 +170,7 @@ const setExcluirNivel = async function (id){
                             
             }else{
              
-                return message.ERROR_INTERNAL_SERVER_DB
+                return message.ERROR_NOT_FOUND_ID
             }
         }
 
