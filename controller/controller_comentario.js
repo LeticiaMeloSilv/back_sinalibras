@@ -27,11 +27,6 @@ const setInserirNovoComentarioAula = async function (dadosComentario, contentTyp
                      if(novoComentario){
                         let idComentario = await comentariosDAO.selectLastIdAula()
 
-                     let novoComentario = await comentarioDAO.insertComentarioAula(dadosComentario)
-
-                     if(novoComentario){
-                        let idComentario = await comentarioDAO.selectLastIdAula()
-
                         dadosComentario.id_comentario = idComentario[0].id_comentario
 
                         jsonComentario.comentario = dadosComentario

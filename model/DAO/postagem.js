@@ -113,39 +113,7 @@ const selectAllFeed = async function (){
 
      try{
 
-        let sql = `SELECT 
-        id_postagem AS id,
-        texto AS conteudo,
-        foto_postagem AS foto,
-        NULL AS url_video,             
-        NULL AS descricao,             
-        NULL AS duracao,               
-        foto_postagem AS foto_capa,     
-        data,
-        NULL AS id_nivel,             
-        NULL AS id_modulo,             
-        id_professor,
-        'postagem' AS tipo
-    FROM tbl_postagem
-    
-    UNION ALL
-    
-    SELECT 
-        id_videoaula AS id,
-        titulo AS conteudo,
-        foto_capa AS foto,
-        url_video,
-        descricao,
-        duracao,
-        foto_capa AS foto_capa,
-        data,
-        id_nivel,
-        id_modulo,
-        id_professor,
-        'videoaula' AS tipo
-    FROM tbl_videoaula
-    
-    ORDER BY data DESC;`
+        let sql = `select * from feed_postagens_videoaula;`
 
         let rsPostagem = await prisma.$queryRawUnsafe(sql)
 
@@ -202,15 +170,26 @@ const selectPostagemByIdProfessor = async function (id){
     }
 }
 
+const selectAlunoByComentario = async function (id){
+    try{
+
+        let sql = `SELECT * FROM vw_alunos_comentaram_postagem WHERE id_aluno = ${id}`
+        let rsAluno = await prisma.$queryRawUnsafe(sql)
+        return rsAluno
+    }catch(error){
+        return false
+    }
+}
+
 module.exports = {
     insertPostagem,
     updatePostagem,
     deletePostagem,
     selectAllFeed,
     selectPostagemById,
-    selectUltimoId
-    selectPostagemByNome,
     selectUltimoId,
-    selectPostagemByIdProfessor
+    selectUltimoId,
+    selectPostagemByIdProfessor,
+    selectAlunoByComentario
 
 }

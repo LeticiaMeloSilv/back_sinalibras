@@ -219,6 +219,17 @@ const selectVideosByIdProfessor = async function (id){
     }
 }
 
+const selectAlunoByComentario = async function (id){
+    try{
+
+        let sql = `SELECT * FROM vw_alunos_comentaram_videoaula WHERE id_aluno = ${id}`
+        let rsAluno = await prisma.$queryRawUnsafe(sql)
+        return rsAluno
+    }catch(error){
+        return false
+    }
+}
+
 module.exports = {
     insertVideoaula,
     updateVideoaula,
@@ -229,6 +240,7 @@ module.exports = {
     selectVideosByIdProfessor,
     selectVideosModulo,
     selectVideosNivel,
-    selectUltimoId
+    selectUltimoId,
+    selectAlunoByComentario
 
 }
