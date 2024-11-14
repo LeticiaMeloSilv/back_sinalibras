@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/cd59f8ae-5686-4bd4-91a8-0dbe12ab16f4/resourceGroups/sinalibras/providers/Microsoft.Web/sites/sinalibras-back",
+    "appService.deploySubpath": "."
+}

@@ -27,11 +27,6 @@ const setInserirNovoComentarioAula = async function (dadosComentario, contentTyp
                      if(novoComentario){
                         let idComentario = await comentariosDAO.selectLastIdAula()
 
-                     let novoComentario = await comentarioDAO.insertComentarioAula(dadosComentario)
-
-                     if(novoComentario){
-                        let idComentario = await comentarioDAO.selectLastIdAula()
-
                         dadosComentario.id_comentario = idComentario[0].id_comentario
 
                         jsonComentario.comentario = dadosComentario
@@ -44,7 +39,8 @@ const setInserirNovoComentarioAula = async function (dadosComentario, contentTyp
                      }else{
                         return message.ERROR_INTERNAL_SERVER
                      }
-                }
+                
+            }
 
         } else {
             return message.ERROR_CONTENT_TYPE
@@ -55,6 +51,7 @@ const setInserirNovoComentarioAula = async function (dadosComentario, contentTyp
         return message.ERROR_INTERNAL_SERVER_DB
     }
 }
+
 
 const getAllComentariosAula = async function (id){
 

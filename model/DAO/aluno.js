@@ -228,9 +228,6 @@ const deleteAluno = async function (id){
    
        let rsAluno = await prisma.$executeRawUnsafe(sql);  
 
- 
-       return rsAluno
-      
        if(rsAluno)
        return true
        else
@@ -273,51 +270,6 @@ const selectAlunoByEmail = async function (email){
 
 
 
-/********************************* Perfil aluno **************************************/
-
-const updateAlunoFotoPerfil = async function (id, dadosAluno) {
-
-    let sql  
-
-
-    try{
-        sql = `update tbl_aluno set
-            foto_perfil = '${dadosAluno.foto_perfil}'
-            where tbl_aluno.id_aluno = ${id}`
-            
-        let rsAluno = await prisma.$executeRawUnsafe(sql)
-    
-        if (rsAluno)
-        return true
-        else
-        return false 
-    }catch(error){
-        return false
-    }
-
-}
-
-const updateSenhaAluno = async function  (id, dadosAluno) {
-    
-    let sql 
-
-    try{
-
-        sql = `UPDATE tbl_aluno SET 
-                senha = md5('${dadosAluno.senha}') 
-                WHERE id_aluno = ${id}`
-
-          let rsAluno = await prisma.$executeRawUnsafe(sql)    
-          if(rsAluno)
-            return rsAluno
-        else 
-        return false
-          
-    }catch(error){
-        return false 
-    }
-}
-
 
 
 
@@ -332,8 +284,6 @@ module.exports = {
     selectUltimoIdAluno,
     updateAluno,
     deleteAluno,
-    updateAlunoFotoPerfil,
-    updateSenhaAluno,
     selectValidarAluno,
     selectVerificarEmail
 }

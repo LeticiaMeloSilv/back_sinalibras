@@ -419,24 +419,6 @@ CREATE TABLE IF NOT EXISTS `tbl_video_salvo` (
 ENGINE = InnoDB;
 
 
-create view vw_todos_videos_salvos as
-SELECT 
-    tvs.id, 
-    tvs.id_videoaula, 
-    tv.titulo AS video, 
-    tvs.id_aluno, 
-    ta.id_aluno AS id_aluno_aluno,  -- Renomeando para evitar conflito
-    ta.nome AS aluno 
-FROM 
-    tbl_video_salvo AS tvs 
-INNER JOIN 
-    tbl_videoaula AS tv ON tvs.id_videoaula = tv.id_videoaula  
-INNER JOIN 
-    tbl_aluno AS ta ON tvs.id_aluno = ta.id_aluno 
-ORDER BY 
-    tvs.id DESC;
-    
-    select * from vw_todos_videos_salvos where id_aluno = 1;
 
 
 CREATE TABLE `tbl_comentario_postagem` (

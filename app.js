@@ -32,7 +32,8 @@ const controllerNivel = require('./controller/controller_nivel')
 const controllerModulo = require('./controller/controller_modulo')
 const controllerComentario = require('./controller/controller_comentario')
 const controllerPostagem = require('./controller/controller_postagem')
-
+const controllerPerfilProfessor = require('./controller/controller_pefil_prof')
+const controllerPerfilAluno = require('./controller/controller_perfil_aluno')
 
 /************************************ Aluno ******************************/
 
@@ -150,7 +151,7 @@ app.put('/v1/sinalibras/aluno/fotoPerfil/:id', cors(), bodyParserJson, async fun
     let idUsuario = request.params.id
 
     let dadosBody = request.body
-    let resultadoNovaFoto = await controllerAluno.setAtualizarFotoPerfilAluno(idUsuario, dadosBody, contentType)
+    let resultadoNovaFoto = await controllerPerfilAluno.setAtualizarFotoPerfilAluno(idUsuario, dadosBody, contentType)
 
     response.status(resultadoNovaFoto.status_code)
    
@@ -165,7 +166,7 @@ app.put('/v1/sinalibras/aluno/perfil/:id', cors(), bodyParserJson, async functio
     let idUsuario = request.params.id
 
     let dadosBody = request.body
-    let resultadoNovaSenha = await controllerAluno.setAtualizarSenhaAluno(idUsuario, dadosBody, contentType)
+    let resultadoNovaSenha = await controllerPerfilAluno.setAtualizarSenhaAluno(idUsuario, dadosBody, contentType)
 
     response.status(resultadoNovaSenha.status_code)
    
@@ -173,6 +174,17 @@ app.put('/v1/sinalibras/aluno/perfil/:id', cors(), bodyParserJson, async functio
     response.json(resultadoNovaSenha)
     //ok
 })
+
+
+app.get('/v1/sinalibras/aluno/perfil/:id', cors(), bodyParserJson, async function(request,response){
+    let idUsuario = request.params.id
+    let infoPerfil = await controllerPerfilAluno.getInfoPerfilAluno(idUsuario)
+
+    response.status(infoPerfil.status_code)
+    response.json(infoPerfil)
+    //ok
+})
+
 
 /*********************************************** Pré cadastro professor ****************************************/
 app.post('/v1/sinalibras/usuario', cors(), bodyParserJson, async function (request, response){
@@ -329,7 +341,7 @@ app.put('/v1/sinalibras/professor/fotoPerfil/:id', cors(), bodyParserJson, async
     let idUsuario = request.params.id
 
     let dadosBody = request.body
-    let resultadoNovaFoto = await controllerProfessor.setAtualizarFotoPerfilProfessor(idUsuario, dadosBody, contentType)
+    let resultadoNovaFoto = await controllerPerfilProfessor.setAtualizarFotoPerfilProfessor(idUsuario, dadosBody, contentType)
 
     response.status(resultadoNovaFoto.status_code)
    
@@ -344,7 +356,7 @@ app.put('/v1/sinalibras/professor/perfil/:id', cors(), bodyParserJson, async fun
     let idUsuario = request.params.id
 
     let dadosBody = request.body
-    let resultadoNovaSenha = await controllerProfessor.setAtualizarSenhaProf(idUsuario, dadosBody, contentType)
+    let resultadoNovaSenha = await controllerPerfilProfessor.setAtualizarSenhaProf(idUsuario, dadosBody, contentType)
 
     response.status(resultadoNovaSenha.status_code)
    
@@ -354,9 +366,8 @@ app.put('/v1/sinalibras/professor/perfil/:id', cors(), bodyParserJson, async fun
 })
 
 app.get('/v1/sinalibras/professor/perfil/:id', cors(), bodyParserJson, async function(request,response){
-
     let idUsuario = request.params.id
-    let infoPerfil = await controllerProfessor.getInfoPerfilProfessor(idUsuario)
+    let infoPerfil = await controllerPerfilProfessor.getInfoPerfilProfessor(idUsuario)
 
     response.status(infoPerfil.status_code)
     response.json(infoPerfil)

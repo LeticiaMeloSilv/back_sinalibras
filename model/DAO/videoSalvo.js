@@ -56,7 +56,7 @@ const deleteVideoSalvo= async (id) => {
 
 
 // Buscar filme favorito filtrando pelo ID
-const selectByIdVideoSalvo= async (id) => {
+const selectByIdVideosSalvo= async (id) => {
 
     try {
         let sql = `select * from vw_todos_videos_salvos where id_aluno = ${id};`
@@ -86,7 +86,7 @@ module.exports = {
     insertVideoSalvo,
     updateVideoSalvo,
     deleteVideoSalvo,
-    selectByIdVideoSalvo,
+    selectByIdVideosSalvo,
     selectLastIdVideoSalvo
 }
 

@@ -38,6 +38,7 @@ const inserirNovaPostagem = async function (dadosPostagem, contentType){
 
                 if (status){
                     let novaPostagem = await postagemDAO.insertPostagem(dadosPostagem)
+                    console.log(novaPostagem);
 
                     if(novaPostagem){
                         let ultimoId = await postagemDAO.selectUltimoId()

@@ -105,6 +105,7 @@ const selectUltimoIdRespostaQuiz = async function (){
        return false
    }
 }
+
 const dadosUsuario = [
     { id_alternativa: 1, id_usuario_teste: 1 },
     { id_alternativa: 2, id_usuario_teste: 1 },
@@ -181,7 +182,7 @@ const selectValidarUsuario = async function (email){
      let sql = `select tu.id_usuario_teste, tu.email, tu.data_cadastro, r.pontuacao from tbl_usuario_teste as tu join tbl_resultado as r on r.id_usuario_teste=tu.id_usuario_teste where email = '${email}';`
 
      let rsUser = await prisma.$queryRawUnsafe(sql)
-        log
+    
 
      if(rsUser){
         return rsUser
