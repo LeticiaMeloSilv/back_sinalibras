@@ -100,6 +100,7 @@ BEGIN
     END WHILE;
 END//
 
+DELIMITER ;
 
 CALL inserir_questao_com_alternativas(
     'Qual é a capital da França?',
@@ -212,8 +213,7 @@ CREATE TABLE `tbl_professor` (
 ENGINE = InnoDB;
  
  select * from tbl_professor;
- 
- 
+
 --------------- TABELA DOS POSTS -----------------------
 
 CREATE TABLE `tbl_postagem` (
@@ -227,9 +227,9 @@ CREATE TABLE `tbl_postagem` (
 ENGINE = InnoDB;
 
 
-select * from tbl_postagem;
+select * from tbl_post;
 
-insert into tbl_postagem (texto, foto_postagem, id_professor, data)
+insert into tbl_post (texto, foto_postagem, id_professor, data)
 values ("show", "www.jedjebdcjebk.edjwbdjbd",1, '2024-09-10');
 
 
@@ -245,6 +245,27 @@ on t.id_professor = p.id_professor;
 
 select * from post_usuario where id_professor = 1;
 
+
+------------ VIEW QUE TRAZ AS INFORMAÇÕES DO POST ------------------
+create view informacoes_post as
+select t.id_postagem, t.texto, t.foto_postagem, t.data, p.nome
+from tbl_postagem as t
+inner join tbl_professor as p
+on t.id_professor = p.id_professor;
+
+select * from informacoes_post where id_post = 1;
+
+update tbl_post set
+texto = "reuniao",
+foto_postagem = "wdcnsde vncsde",
+id_professor = 1,
+data = '2024-09-08'
+where id_post =1;
+
+delete from tbl_post where id_post = 1;
+
+-- select para trazer os post dos mais recentes para o mais antigo
+select  * from informacoes_post order by data desc;
 
 
 --------- TABELA DOS MÓDULOS -----------------------
@@ -276,22 +297,21 @@ CREATE TABLE `tbl_nivel` (
   `icon` varchar (255) not null)
 ENGINE = InnoDB;
 
-
 select * from tbl_nivel;
 
-insert into tbl_nivel (nivel, icon)
-values ("iniciante", "mdkwnexdkwnxkwn"),
-("intermediario", "wkxjdwxdnwsxjn");
+insert into tbl_nivel (nivel)
+values ("iniciante");
 
 delete from tbl_comentario_aula where id_comentario = 22;
 delete from tbl_aluno where id_aluno = 5;
 
-
+alter table tbl_nivel
+add column icon varchar (255) not null;
 
 -------------- TABELA DOS ALUNOS ---------------
 CREATE TABLE `tbl_aluno` (
   `id_aluno` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `nome` VARCHAR(255) NOT NULL,
+  `nome` VARCHAR(250) NOT NULL,
   `data_cadastro` DATE NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `senha` VARCHAR(255) NOT NULL,
@@ -328,11 +348,11 @@ ENGINE = InnoDB;
 select * from tbl_videoaula;
 
 
-INSERT INTO tbl_videoaula (titulo, url_video, descricao, duracao, foto_capa, data, id_nivel, id_modulo, id_professor)
-VALUES ('cohecendo alguém', 'xxswbjswxjswa', 'como se comunicar', '00:40:00', 'xbjwbxjnxk xck', '2024-12-05', '1', '1', '1'),
-('blabla', 'njdcndjnc', 'bla', '00:30:00', 'ednxkwnex', '2023-09-27', 1, 1,1 );
+INSERT INTO tbl_videoaula (titulo, descricao, duracao, foto_capa, data, id_nivel, id_modulo, id_professor)
+VALUES ('cohecendo alguém', 'como se comunicar', '00:40:00', 'xbjwbxjnxk xck', '2024-12-05', '1', '1', '1'),
+('blabla', 'bla', '00:30:00', 'ednxkwnex', '2023-09-27', 1, 1,1 );
 
-delete from tbl_videoaula where id_videoaula = 3;
+delete from tbl_videoaula where id_videoaula = 5;
 
 update tbl_videoaula set
 titulo = 'teste2',
@@ -398,6 +418,27 @@ CREATE TABLE IF NOT EXISTS `tbl_video_salvo` (
     FOREIGN KEY (`id_aluno`) REFERENCES `tbl_aluno` (`id_aluno`))
 ENGINE = InnoDB;
 
+
+create view vw_todos_videos_salvos as
+SELECT 
+    tvs.id, 
+    tvs.id_videoaula, 
+    tv.titulo AS video, 
+    tvs.id_aluno, 
+    ta.id_aluno AS id_aluno_aluno,  -- Renomeando para evitar conflito
+    ta.nome AS aluno 
+FROM 
+    tbl_video_salvo AS tvs 
+INNER JOIN 
+    tbl_videoaula AS tv ON tvs.id_videoaula = tv.id_videoaula  
+INNER JOIN 
+    tbl_aluno AS ta ON tvs.id_aluno = ta.id_aluno 
+ORDER BY 
+    tvs.id DESC;
+    
+    select * from vw_todos_videos_salvos where id_aluno = 1;
+
+
 CREATE TABLE `tbl_comentario_postagem` (
   `id_comentario` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `comentario` VARCHAR(255) NOT NULL,
@@ -419,4 +460,5 @@ select * from pergunta_alternativas;
 
 
 select * from respostas_do_usuario where id_usuario_teste = 1;
-select * from tbl_videoaula;
+
+show tables;
