@@ -107,38 +107,6 @@ const updateVideoaula = async function (dadosVideoaula, id){
                 where id_videoaula = ${id}`
             }
 
-
-        // if(
-        //     dadosVideoaula.descricao != null &&
-        //     dadosVideoaula.descricao != "" &&
-        //     dadosVideoaula.descricao != undefined
-        
-        // ){
-        
-
-        //         sql = `update tbl_videoaula set
-        //         titulo = '${dadosVideoaula.titulo}', 
-        //         url_video = '${dadosVideoaula.url_video}', 
-        //         descricao = '${dadosVideoaula.descricao}',
-        //         duracao = '${dadosVideoaula.duracao}', 
-        //         foto_capa = '${dadosVideoaula.foto_capa}',
-        //         id_nivel = '${dadosVideoaula.id_nivel}', 
-        //         id_modulo = '${dadosVideoaula.id_modulo}'
-        //         where id_videoaula = ${id}`
-
-        //     }else{
-        //         sql = `update tbl_videoaula set
-        //         titulo = '${dadosVideoaula.titulo}', 
-        //         url_video = '${dadosVideoaula.url_video}', 
-        //         descricao = null,
-        //         duracao = '${dadosVideoaula.duracao}', 
-        //         foto_capa = '${dadosVideoaula.foto_capa}', 
-        //         id_nivel = '${dadosVideoaula.id_nivel}',
-        //         id_modulo = '${dadosVideoaula.id_modulo}'
-        //         where id_videoaula = ${id}`
-
-        //     }
-
             let rsVideoaula = await prisma.$executeRawUnsafe(sql)
             return rsVideoaula
 

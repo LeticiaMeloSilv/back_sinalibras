@@ -21,10 +21,17 @@ const setInserirNovoComentarioAula = async function (dadosComentario, contentTyp
                 dadosComentario.data.length > 10 || dadosComentario.comentario.length > 250 || isNaN(dadosComentario.id_videoaula) || isNaN(dadosComentario.id_aluno)){
                     return message.ERROR_REQUIRED_FIELDS
                 }else{
+
                      let novoComentario = await comentariosDAO.insertComentarioAula(dadosComentario)
 
                      if(novoComentario){
                         let idComentario = await comentariosDAO.selectLastIdAula()
+
+                     let novoComentario = await comentarioDAO.insertComentarioAula(dadosComentario)
+
+                     if(novoComentario){
+                        let idComentario = await comentarioDAO.selectLastIdAula()
+
                         dadosComentario.id_comentario = idComentario[0].id_comentario
 
                         jsonComentario.comentario = dadosComentario
@@ -99,11 +106,18 @@ const setDeleteComentarioAula = async function(id){
             return message.ERROR_INVALID_ID
         }else{
 
+
             let dadosComentario = await comentariosDAO.selectComentarioByIdAula(idComentario)
+
+
+
 
             if(dadosComentario.length>0){
             
+
                 dadosComentario = await comentariosDAO.deleteComentarioAula(idComentario)
+
+
                 return message.SUCESS_DELETED_ITEM
         
             }else{
@@ -131,10 +145,12 @@ const setInserirNovoComentarioPostagem = async function (dadosComentario, conten
                 dadosComentario.comentario.length > 255 || dadosComentario.data.length > 10 || isNaN(dadosComentario.id_postagem) || isNaN(dadosComentario.id_aluno)){
                     return message.ERROR_REQUIRED_FIELDS
                 }else{
+
                      let novoComentario = await comentariosDAO.insertComentarioPostagem(dadosComentario)
 
                      if(novoComentario){
                         let idComentario = await comentariosDAO.selectLastIdPostagem()
+
                         dadosComentario.id_comentario = idComentario[0].id_comentario
 
                         jsonComentario.comentario = dadosComentario
@@ -213,10 +229,12 @@ const setDeleteComentarioPostagem = async function(id){
             return message.ERROR_INVALID_ID
         }else{
 
+
             let comentarioId = await comentariosDAO.selectComentarioByIdPostagem(idComentario)
             if(comentarioId){
                
                 let comentarioDelete = await comentariosDAO.deleteComentarioPostagem(idComentario)
+
              
 
                 if(comentarioDelete){

@@ -301,7 +301,7 @@ const updateSenhaProfessor = async function  (id, dadosProfessor) {
 
 const selectInfoPeril = async function (id){
     try{
-        let sql = `select nome, foto_perfil from tbl_professor where id_professor = ${id}`
+        let sql = `select id_professor, nome, foto_perfil from tbl_professor where id_professor = ${id}`
 
         let rsProfessor = await prisma.$queryRawUnsafe(sql)
 

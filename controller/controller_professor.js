@@ -11,6 +11,7 @@ const professorDAO = require('../model/DAO/professor.js');
 const data = require('./validacoes.js')
 const preCadastroProfDAO = require('../model/DAO/preCadastroProfessor.js')
 const videoaulaDAO = require('../model/DAO/videoaula.js')
+const postagemDAO = require('../model/DAO/postagem.js')
 
 
 /*********************************** Pré cadastro prof ****************************************/
@@ -706,11 +707,14 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
         
                        
                         let professoresComVideoaulas = await Promise.all(dadosProfessor.map(async (professor) => {
-                            console.log(dadosProfessor.id_professor);
                             let videoAulas = await videoaulaDAO.selectVideosByIdProfessor(idProfessor);
                             professor.videoaulas = videoAulas;  
+                            let postagem = await postagemDAO.selectPostagemByIdProfessor(idProfessor)
+                            professor.postagens = postagem
                             return professor;
                         }));
+
+                     
         
                         professorJSON.professores = professoresComVideoaulas;
                         professorJSON.status_code = 200;
