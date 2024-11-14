@@ -29,8 +29,7 @@ const deleteComentarioAula = async function (id) {
         let sql = `delete from tbl_comentario_aula where id_comentario = ${id}`
         let rsComentario = await prisma.$executeRawUnsafe(sql);
 
-        if(rsComentario)
-        return true
+       return rsComentario
     } catch (error) {
         return false
     }
@@ -42,6 +41,7 @@ const selectComentariosAula = async function (id) {
         let sql = `select * from tbl_comentario_aula where id_videoaula = ${id}`
 
         let rsComentario = await prisma.$queryRawUnsafe(sql)
+        console.log(sql)
 
         return rsComentario
     }catch(error){
@@ -55,10 +55,9 @@ const selectComentarioByIdAula = async function (id) {
 
         let sql = `select * from tbl_comentario_aula where id_comentario = ${id}`
 
-        let rsComentario = await prisma.$executeRawUnsafe(sql)
+        let rsComentario = await prisma.$queryRawUnsafe(sql)
 
-        if(rsComentario)
-        return true
+        return rsComentario
 
     }catch(error){
         return false
@@ -103,7 +102,7 @@ const insertComentarioPostagem = async function (dadosComentario) {
 
 const deleteComentarioPostagem = async function (id) {
     try {
-        let sql = `delete from tbl_comentario_postagem where id_postagem = ${id}`
+        let sql = `delete from tbl_comentario_postagem where id_comentario = ${id}`
    
         let rsComentario = await prisma.$executeRawUnsafe(sql);
        
@@ -138,9 +137,10 @@ const selectComentarioByIdPostagem = async function (id) {
 
         let rsComentario = await prisma.$queryRawUnsafe(sql)
         console.log(sql);
+
         return rsComentario
     }catch(error){
-        console.error(error)
+        return false
     }
 }
 

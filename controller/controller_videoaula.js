@@ -179,7 +179,7 @@ const getVideoaulaById = async function (id){
     
         let dadosVideoaula = await videoaulaDAO.selectVideoaulaById(idVideo)
 
-        if(dadosVideoaula){
+        if(dadosVideoaula.length>0){
            
             for (let videoaula of dadosVideoaula){
                 let nivelVideoaula = await nivelDAO.selectNivelById(videoaula.id_nivel)   
@@ -226,63 +226,7 @@ const getVideoaulaById = async function (id){
     
 }
 
-const getVideoaulaByNome = async function (titulo){
-    try{
 
-       let tituloVideo = titulo
-
-       let videoaulaJson = {}
-
-    if(idVideo == undefined || idVideo == ' ' || isNaN(idVideo)){
-        return message.ERROR_INVALID_ID
-    }else{
-    
-        let dadosVideoaula = await videoaulaDAO.selectVideoaulaByNome(tituloVideo)
-
-        if(dadosVideoaula){
-           
-            for (let videoaula of dadosVideoaula){
-                let nivelVideoaula = await nivelDAO.selectNivelById(videoaula.id_nivel)   
-                videoaula.nivel = nivelVideoaula
-                delete videoaula.id_nivel 
-                
-            }
-
-            for (let videoaula of dadosVideoaula){
-                let moduloVideoaula = await moduloDAO.selectModuloById(videoaula.id_modulo)
-                videoaula.modulo = moduloVideoaula
-                delete videoaula.id_modulo
-            }
-            for (let videoaula of dadosVideoaula){
-                let professorVideoaula = await professorDAO.selectByIdProfessor(videoaula.id_professor)
-                videoaula.professor = professorVideoaula
-                delete videoaula.id_professor
-            }
-
-            for (let videoaula of dadosVideoaula){
-                let comentarioVideoaula = await comentarioDAO.selectComentariosVideo(videoaula.id_videoaula)
-                videoaula.comentarios = comentarioVideoaula
-                delete videoaula.id_comentario
-            }
-
-
-
-            videoaulaJson.video = dadosVideoaula
-            videoaulaJson.status_code = dadosVideoaula.status_code
-            return videoaulaJson
-
-        }else{
-            return message.ERROR_NOT_FOUND
-        }
-    }
-
-
-    }catch(error){
-        return false
-    }
-
-    
-}
 
 const getVideosDoModulo = async function(id){
     try{
@@ -302,7 +246,7 @@ const getVideosDoModulo = async function(id){
 
                 let dadosVideoaula = await videoaulaDAO.selectVideosModulo(idModulo)
 
-            if(dadosVideoaula){
+            if(dadosVideoaula.length>0){
 
                 for (let videoaula of dadosVideoaula){
                     let nivelVideoaula = await nivelDAO.selectNivelById(videoaula.id_nivel)   
@@ -334,7 +278,7 @@ const getVideosDoModulo = async function(id){
                     return moduloJson
               
             }else{
-                return message.ERROR_INTERNAL_SERVER_DB
+                return message.ERROR_NOT_FOUND
             }
 
             }else{
@@ -365,7 +309,7 @@ const getVideosDoNivel = async function(id){
             if(nivel){
                 let dadosVideoaula = await videoaulaDAO.selectVideosNivel(idNivel)
 
-                if(dadosVideoaula){
+                if(dadosVideoaula.length>0){
 
                     for (let videoaula of dadosVideoaula){
                         let nivelVideoaula = await nivelDAO.selectNivelById(videoaula.id_nivel)   
@@ -396,7 +340,7 @@ const getVideosDoNivel = async function(id){
                         return nivelJson
                   
                 }else{
-                    return message.ERROR_INTERNAL_SERVER_DB
+                    return message.ERROR_NOT_FOUND
                 }
     
                 }else{
@@ -417,7 +361,6 @@ module.exports = {
     setAtualizarVideoaula,
     setExcluirVideoaula,
     getVideoaulaById,
-    getVideoaulaByNome,
     getVideosDoModulo,
     getVideosDoNivel
 }

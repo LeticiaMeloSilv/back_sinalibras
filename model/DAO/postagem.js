@@ -172,18 +172,6 @@ const selectPostagemById = async function (id){
     }
 }
 
-const selectPostagemByNome = async function (texto){
-    try{
-
-        let sql = `select * from tbl_postagem where texto LIKE "%${texto}%"`
-        let rsPostagem = await prisma.$queryRawUnsafe(sql)
-
-        if(rsPostagem)
-            return true
-    }catch(error){
-        return false
-    }
-}
 
 
 const selectUltimoId = async function (){
@@ -220,7 +208,9 @@ module.exports = {
     deletePostagem,
     selectAllFeed,
     selectPostagemById,
+    selectUltimoId
     selectPostagemByNome,
     selectUltimoId,
     selectPostagemByIdProfessor
+
 }

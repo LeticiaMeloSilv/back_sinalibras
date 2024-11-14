@@ -550,8 +550,13 @@ app.get('/v1/sinalibras/nivel/:id', cors(), async function(request, response, ne
 
     let dadosNivel = await controllerNivel.getNivelById(idNivel)
 
-        response.json(dadosNivel)
-        response.status(dadosNivel.status_code)
+        if(dadosNivel){
+            response.json(dadosNivel)
+            response.status(dadosNivel.status_code)
+          }else{
+              response.json({message: 'Nenhum registro foi encontrado'})
+              response.status(404);
+          }
         
  
 
@@ -700,19 +705,8 @@ app.get('/v1/sinalibras/feed', cors(), async function(request, response){
     
 })
 
-app.get('/v1/sinalibras/postagem/:titulo', cors(), async function(request,response,next){
-
-    let textoPostagem = request.params.texto
-  
-    
-    let dadosPostagem = await controllerPostagem.getPostagemByNome(textoPostagem)
 
 
-        response.json(dadosPostagem);
-        response.status(dadosPostagem.status_code)
-
-       //ok  
- })
 
 
 /************************ COMENTARIOS POSTAGEM ************************/
@@ -721,7 +715,7 @@ app.post('/v1/sinalibras/postagem/comentario', cors(), bodyParserJson, async fun
     let contentType = request.headers['content-type']
     let dadosBody = request.body
 
-    let novoComentario = await controllerComentarioPostagem.setInserirNovoComentario(dadosBody, contentType)
+    let novoComentario = await controllerComentario.setInserirNovoComentarioPostagem(dadosBody, contentType)
 
     if(novoComentario){
         response.status(200)
@@ -735,7 +729,7 @@ app.post('/v1/sinalibras/postagem/comentario', cors(), bodyParserJson, async fun
 
 app.get('/v1/sinalibras/postagem/comentarios/:id', cors(), async function (request, response){
     let idPostagem = request.params.id
-    let dadosComentario = await controllerComentarioPostagem.getAllComentariosPostagem(idPostagem)
+    let dadosComentario = await controllerComentario.getAllComentariosPostagem(idPostagem)
 
     if(dadosComentario){
         response.status(200)
@@ -750,7 +744,7 @@ app.get('/v1/sinalibras/postagem/comentarios/:id', cors(), async function (reque
 app.delete('/v1/sinalibras/postagem/comentario/:id', cors(), async function (request, response){
 
     let idComentario = request.params.id
-    let deleteComentario = await controllerComentarioPostagem.setDeleteComentario(idComentario)
+    let deleteComentario = await controllerComentario.setDeleteComentarioPostagem(idComentario)
 
     if(deleteComentario){
         response.status(200)

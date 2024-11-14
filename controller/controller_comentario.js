@@ -1,5 +1,5 @@
 const message = require('../modulo/config.js')
-const comentarioDAO = require('../model/DAO/comentarios.js');
+const comentariosDAO = require('../model/DAO/comentarios.js');
 const alunoDAO = require('../model/DAO/aluno.js')
 const videoaulaDAO = require('../model/DAO/videoaula.js')
 const postagemDAO = require('../model/DAO/postagem.js')
@@ -21,10 +21,17 @@ const setInserirNovoComentarioAula = async function (dadosComentario, contentTyp
                 dadosComentario.data.length > 10 || dadosComentario.comentario.length > 250 || isNaN(dadosComentario.id_videoaula) || isNaN(dadosComentario.id_aluno)){
                     return message.ERROR_REQUIRED_FIELDS
                 }else{
+
+                     let novoComentario = await comentariosDAO.insertComentarioAula(dadosComentario)
+
+                     if(novoComentario){
+                        let idComentario = await comentariosDAO.selectLastIdAula()
+
                      let novoComentario = await comentarioDAO.insertComentarioAula(dadosComentario)
 
                      if(novoComentario){
                         let idComentario = await comentarioDAO.selectLastIdAula()
+
                         dadosComentario.id_comentario = idComentario[0].id_comentario
 
                         jsonComentario.comentario = dadosComentario
@@ -59,7 +66,7 @@ const getAllComentariosAula = async function (id){
 
         let comentarioJson = {}
         
-        let comentarioVideo = await comentarioDAO.selectComentariosAula(id)
+        let comentarioVideo = await comentariosDAO.selectComentariosAula(id)
 
         if(comentarioVideo){
 
@@ -99,11 +106,18 @@ const setDeleteComentarioAula = async function(id){
             return message.ERROR_INVALID_ID
         }else{
 
-            let dadosComentario = await comentarioDAO.selectComentarioByIdAula(idComentario)
 
-            if(dadosComentario){
+            let dadosComentario = await comentariosDAO.selectComentarioByIdAula(idComentario)
+
+
+
+
+            if(dadosComentario.length>0){
             
-                dadosComentario = await comentarioDAO.deleteComentarioAula(idComentario)
+
+                dadosComentario = await comentariosDAO.deleteComentarioAula(idComentario)
+
+
                 return message.SUCESS_DELETED_ITEM
         
             }else{
@@ -131,10 +145,12 @@ const setInserirNovoComentarioPostagem = async function (dadosComentario, conten
                 dadosComentario.comentario.length > 255 || dadosComentario.data.length > 10 || isNaN(dadosComentario.id_postagem) || isNaN(dadosComentario.id_aluno)){
                     return message.ERROR_REQUIRED_FIELDS
                 }else{
-                     let novoComentario = await comentarioDAO.insertComentarioPostagem(dadosComentario)
+
+                     let novoComentario = await comentariosDAO.insertComentarioPostagem(dadosComentario)
 
                      if(novoComentario){
-                        let idComentario = await comentarioDAO.selectLastIdPostagem()
+                        let idComentario = await comentariosDAO.selectLastIdPostagem()
+
                         dadosComentario.id_comentario = idComentario[0].id_comentario
 
                         jsonComentario.comentario = dadosComentario
@@ -161,7 +177,8 @@ const setInserirNovoComentarioPostagem = async function (dadosComentario, conten
 
 const getAllComentariosPostagem = async function (id){
 
-    let idPostagem = id
+        try{
+            let idPostagem = id
 
     if(idPostagem == null || idPostagem == undefined || isNaN(idPostagem)){
         return message.ERROR_INVALID_ID
@@ -169,9 +186,9 @@ const getAllComentariosPostagem = async function (id){
 
         let comentarioJson = {}
         
-        let comentarioPostagem = await comentarioDAO.selectComentariosPostagem(idPostagem)
+        let comentarioPostagem = await comentariosDAO.selectComentariosPostagem(idPostagem)
 
-        if(comentarioPostagem){
+        if(comentarioPostagem.length>0){
 
             for(let comentario of comentarioPostagem){
                 let comentarioAluno = await alunoDAO.selectByIdAluno(comentario.id_aluno)
@@ -192,10 +209,13 @@ const getAllComentariosPostagem = async function (id){
             return comentarioJson
 
         }else{
-            return message.ERROR_INTERNAL_SERVER_DB
+            return message.ERROR_NOT_FOUND
         }
 
     } 
+        }catch(error){
+            return message.ERROR_INTERNAL_SERVER
+        }
    
 }
 
@@ -209,11 +229,12 @@ const setDeleteComentarioPostagem = async function(id){
             return message.ERROR_INVALID_ID
         }else{
 
-            let comentarioId = await comentarioDAO.selectComentarioByIdPostagem(idComentario)
 
+            let comentarioId = await comentariosDAO.selectComentarioByIdPostagem(idComentario)
             if(comentarioId){
                
-                let comentarioDelete = await comentarioDAO.deleteComentarioPostagem(idComentario)
+                let comentarioDelete = await comentariosDAO.deleteComentarioPostagem(idComentario)
+
              
 
                 if(comentarioDelete){

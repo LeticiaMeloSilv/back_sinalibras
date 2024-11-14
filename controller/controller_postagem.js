@@ -217,7 +217,7 @@ const getPostagemById = async function (id){
     
         let dadosPostagem = await postagemDAO.selectPostagemById(idPostagem)
 
-        if(dadosPostagem){
+        if(dadosPostagem.length>0){
 
             for (let postagem of dadosPostagem){
                 let professorPostagem = await professorDAO.selectByIdProfessor(postagem.id_professor)
@@ -252,50 +252,6 @@ const getPostagemById = async function (id){
     
 }
 
-const getPostagemByNome = async function (texto){
-    try{
-
-       let textoPostagem = texto
-
-       let postagemJson = {}
-
-    if(textoPostagem == undefined || textoPostagem == ' '){
-        return message.ERROR_INVALID_ID
-    }else{
-    
-        let dadosPostagem = await postagemDAO.selectPostagemByNome(textoPostagem)
-
-        if(dadosPostagem){
-           
-            for (let postagem of dadosPostagem){
-                let professorPostagem = await professorDAO.selectByIdProfessor(postagem.id_professor)
-                postagem.professor = professorPostagem
-                delete postagem.id_professor
-            }
-
-            for (let postagem of dadosPostagem){
-                let comentarioPostagem = await comentarioDAO.selectComentariosAula(postagem.id_postagem)
-                postagem.comentarios = comentarioPostagem
-                delete postagem.id_comentario
-            }
-
-
-            postagemJson.postagem = dadosPostagem
-            postagemJson.status_code = 200
-            return postagemJson
-
-        }else{
-            return message.ERROR_NOT_FOUND
-        }
-    }
-
-
-    }catch(error){
-        return false
-    }
-
-    
-}
 
 
 module.exports = {
@@ -303,6 +259,5 @@ module.exports = {
     setAtualizarPostagem,
     setExcluirPostagem,
     getAllFeed,
-    getPostagemById,
-    getPostagemByNome
+    getPostagemById
 }
