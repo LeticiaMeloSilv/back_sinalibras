@@ -182,12 +182,7 @@ const selectValidarUsuario = async function (email){
      let sql = `select tu.id_usuario_teste, tu.email, tu.data_cadastro, r.pontuacao from tbl_usuario_teste as tu join tbl_resultado as r on r.id_usuario_teste=tu.id_usuario_teste where email = '${email}';`
 
      let rsUser = await prisma.$queryRawUnsafe(sql)
-<<<<<<< HEAD
-    
 
-=======
- 
->>>>>>> cbfa7cc56460c51471b6f1267142486d67c2d847
      if(rsUser){
         return rsUser
      }else{

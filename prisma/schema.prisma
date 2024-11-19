@@ -10,8 +10,8 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:bcd127@localhost:3306/db_sinalibras"
- //url = "mysql://sinalibras:Bcd127bcd@sinalibras-banco.mysql.database.azure.com:3306/db_sinalibras"
+  //url      = "mysql://root:bcd127@localhost:3306/db_sinalibras"
+ url = "mysql://sinalibras:Bcd127bcd@sinalibras-banco.mysql.database.azure.com:3306/db_sinalibras"
 }
 
 model User {
