@@ -43,7 +43,7 @@ const setAtualizarFotoPerfilAluno = async function (id, dadosAluno, contentType)
                             return message.ERROR_REQUIRED_FIELDS
                          }
 
-                            let fotoAtualizada = await perfilDAO.updateAlunoFotoPerfil(id, dadosAluno)
+                            let fotoAtualizada = await perfilAlunoDAO.updateAlunoFotoPerfil(id, dadosAluno)
             
                             if (fotoAtualizada){
                             
@@ -107,7 +107,7 @@ const setAtualizarFotoPerfilAluno = async function (id, dadosAluno, contentType)
                                 return message.ERROR_REQUIRED_FIELDS
                              }
     
-                                let senhaAtualizada = await perfilDAO.updateSenhaAluno(id, dadosAluno)
+                                let senhaAtualizada = await perfilAlunoDAO.updateSenhaAluno(id, dadosAluno)
                 
                                 if (senhaAtualizada){
                                 
