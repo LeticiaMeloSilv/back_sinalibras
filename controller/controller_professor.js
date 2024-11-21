@@ -101,7 +101,52 @@ const getBuscarUsuarioTesteEmail = async (email) => {
     }
 }
 
+const getBuscarUsuariosTeste = async () => {
+            
+    let professorJSON = {};
 
+    let dadosProfessor = await preCadastroProfDAO.selectAllUsuariosTeste()
+
+        if (dadosProfessor) {
+            if (dadosProfessor.length > 0 ) {
+                
+                professorJSON.usuario = dadosProfessor;
+                professorJSON.status_code = 200;
+
+                return professorJSON;
+            } else {
+                return message.ERROR_NOT_FOUND;
+            }
+        } else {
+            return message.ERROR_INTERNAL_SERVER_DB
+        }
+
+
+    
+}
+
+const setExcluirUsuarioTeste = async function (id){
+
+    try{
+        idUser = id
+
+        if(idUser == null || idUser == undefined || idUser == '' || isNaN(idUser)){
+            return message.ERROR_INVALID_ID
+        }else{
+            let dadosUsers = await preCadastroProfDAO.selectUsuariosTesteById(idUser)
+
+            if(dadosUsers.length>0){
+                dadosUsers = await preCadastroProfDAO.deleteUsuarioTeste(idUser)
+                return message.SUCESS_DELETED_ITEM
+            }else{
+                return message.ERROR_NOT_FOUND_ID
+            }
+        }
+
+    }catch(error){
+        return message.ERROR_INTERNAL_SERVER
+    }
+}
 
 
 const setInserirRespostaQuiz = async function (dadosUser, contentType) {
@@ -530,5 +575,7 @@ module.exports = {
     getValidarProf,
     setInserirUsuarioQuiz,
     setInserirRespostaQuiz,
-    getBuscarUsuarioTesteEmail
+    getBuscarUsuarioTesteEmail,
+    getBuscarUsuariosTeste,
+    setExcluirUsuarioTeste
 }

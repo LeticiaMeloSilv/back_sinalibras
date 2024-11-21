@@ -227,6 +227,34 @@ app.get('/v1/sinalibras/usuario/email/:email', cors(), async function(request,re
        //ok  
  })
 
+ app.get('/v1/sinalibras/users', cors(), async function(request, response){
+
+   
+    let dadosProfessores = await controllerProfessor.getBuscarUsuariosTeste();
+
+   
+    if(dadosProfessores){
+      response.json(dadosProfessores);
+        response.status(200);
+    }else{
+        response.json({message: 'Nenhum registro foi encontrado'})
+        response.status(404);
+    }
+
+    //ok
+
+})
+
+app.delete('/v1/sinalibras/usuario/:id', cors(), async function(request,response){
+
+    let idProfessor = request.params.id
+
+    let dadosProfessor = await controllerProfessor.setExcluirUsuarioTeste(idProfessor)
+    response.status(dadosProfessor.status_code)
+    response.json(dadosProfessor)
+//ok
+})
+
 /*********************** Professor *****************************/
 
 app.post('/v1/sinalibras/professor', cors(), bodyParserJson, async function (request, response){
