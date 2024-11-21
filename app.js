@@ -102,7 +102,7 @@ app.get('/v1/sinalibras/aluno/email/:email', cors(), async function(request,resp
 //ok
 })
 
-app.post('/v1/sinalibras/post/aluno', cors(), bodyParserJson, async function (request, response){
+app.post('/v1/sinalibras/aluno', cors(), bodyParserJson, async function (request, response){
     let contentType = request.headers['content-type']
 
     let dadosBody = request.body

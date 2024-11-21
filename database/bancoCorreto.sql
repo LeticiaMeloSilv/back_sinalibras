@@ -443,4 +443,76 @@ select * from pergunta_alternativas;
 
 select * from respostas_do_usuario where id_usuario_teste = 1;
 
-show tables;
+
+---------- VIEW QUE TRAZ OS DADOS DO ALUNO DE UM COMENTARIO da videoaula
+
+CREATE VIEW vw_alunos_comentaram_videoaula AS
+SELECT
+    a.id_aluno,
+    a.nome AS nome_aluno,
+    a.email,
+    a.data_nascimento,
+    a.foto_perfil,
+    a.data_cadastro
+FROM
+    tbl_comentario_aula AS c
+INNER JOIN
+    tbl_aluno AS a ON c.id_aluno = a.id_aluno;
+
+
+
+
+---------- VIEW QUE TRAZ OS DADOS DO ALUNO DE UM COMENTARIO da postagem
+
+CREATE VIEW vw_alunos_comentaram_postagem AS
+SELECT
+    a.id_aluno,
+    a.nome AS nome_aluno,
+    a.email,
+    a.data_nascimento,
+    a.foto_perfil,
+    a.data_cadastro
+FROM
+    tbl_comentario_postagem AS c
+INNER JOIN
+    tbl_aluno AS a ON c.id_aluno = a.id_aluno;
+   
+   
+
+
+---------- view que traz o feed
+
+create view feed_postagens_videoaula as
+SELECT
+        id_postagem AS id,
+        texto AS conteudo,
+        foto_postagem AS foto,
+        NULL AS url_video,            
+        NULL AS descricao,            
+        NULL AS duracao,              
+        foto_postagem AS foto_capa,    
+        data,
+        NULL AS id_nivel,            
+        NULL AS id_modulo,            
+        id_professor,
+        'postagem' AS tipo
+    FROM tbl_postagem
+   
+    UNION ALL
+   
+    SELECT
+        id_videoaula AS id,
+        titulo AS conteudo,
+        foto_capa AS foto,
+        url_video,
+        descricao,
+        duracao,
+        foto_capa AS foto_capa,
+        data,
+        id_nivel,
+        id_modulo,
+        id_professor,
+        'videoaula' AS tipo
+    FROM tbl_videoaula
+   
+    ORDER BY data DESC;
