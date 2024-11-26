@@ -797,11 +797,11 @@ app.delete('/v1/sinalibras/postagem/comentario/:id', cors(), async function (req
 
 /************************ VIDEOAULA SALVAS ************************/
 
-app.post('/v1/sinalibras/videoaulasalva', cors(), bodyParserJson, async function(request, response){
+app.post('/v1/sinalibras/videosalvo', cors(), bodyParserJson, async function(request, response){
     let contentType = request.headers['content-type']
     let dadosBody = request.body
 
-    let videoSalvo = await controllerVideoAulaSalva.setInserirVideoSalvo(dadosBody, contentType)
+    let videoSalvo = await controllerVideoAulaSalva.setInserirVideoAulaSalva(dadosBody, contentType)
 
 
         response.status(videoSalvo.status_code)
@@ -810,6 +810,32 @@ app.post('/v1/sinalibras/videoaulasalva', cors(), bodyParserJson, async function
 
 })
 
+app.delete('/v1/sinalibras/videosalvo/:id', cors(), async function (request, response){
+
+    let idVideoSalvo = request.params.id
+    let deleteVideoSalvo = await controllerVideoAulaSalva.setExcluirVideoaulaSalva(idVideoSalvo)
+
+    if(deleteVideoSalvo){
+        response.status(200)
+        response.json(deleteVideoSalvo)
+    }else{
+        response.status(404)
+        response.json({message: 'Não foi possível concluir a ação'})
+    }
+})
+
+
+app.get('/v1/sinalibras/videosalvo/:id', cors(), async function(request, response){
+
+    let idVideoaula = request.params.id
+   
+    let dadosVideoaulaSalva = await controllerVideoAulaSalva.getVideoSalvoByIdAluno(idVideoaula)
+
+    response.json(dadosVideoaulaSalva);
+    response.status(200);
+  
+
+})
 
 
 
