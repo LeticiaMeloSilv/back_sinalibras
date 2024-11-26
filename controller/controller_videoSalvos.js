@@ -37,13 +37,14 @@ const setInserirVideoSalvo = async(dadosVideoSalvo, contentType) => {
 
                 //Envia os dados para a model inserir no BD
                 let novoVideoSalvo = await videoaulaSalvaDAO.insertVideoSalvo(dadosVideoSalvo)
+                console.log(novoVideoSalvo);
                 
                 let id = await videoaulaSalvaDAO.selectLastIdVideoSalvo()
                 
-                dadosVideoSalvo.videoaula = videoaula.videoaula[0].titulo
-                dadosVideoSalvo.id_aluno = aluno.aluno[0].id_aluno
-                dadosVideoSalvo.aluno = aluno.aluno[0].nome
-                dadosVideoSalvo.id = Number(id[0].id_videoaula)
+                dadosVideoSalvo.videoaula = videoaula.videoaula.titulo
+                dadosVideoSalvo.id_aluno = aluno.aluno.id_aluno
+                dadosVideoSalvo.aluno = aluno.aluno.nome
+                dadosVideoSalvo.id = Number(id.id_videoaula)
                 
                 //Valida se o BD inseriu corretamente os dados
                 if(novoVideoSalvo){
@@ -67,6 +68,7 @@ const setInserirVideoSalvo = async(dadosVideoSalvo, contentType) => {
         }
 
     } catch (error) {
+        console.log( "erro:" +  error);
         return message.ERROR_INTERNAL_SERVER // 500
     }
 

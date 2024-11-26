@@ -34,6 +34,7 @@ const controllerComentario = require('./controller/controller_comentario')
 const controllerPostagem = require('./controller/controller_postagem')
 const controllerPerfilProfessor = require('./controller/controller_pefil_prof')
 const controllerPerfilAluno = require('./controller/controller_perfil_aluno')
+const controllerVideoAulaSalva = require('./controller/controller_videoSalvos')
 
 /************************************ Aluno ******************************/
 
@@ -80,7 +81,7 @@ app.get('/v1/sinalibras/aluno/:id', cors(), async function(request,response,next
 
 app.get('/v1/sinalibras/aluno/nome/:nome', cors(), async function(request,response,next){
 
-        let nome = request.query.nome
+        let nome = request.params.nome
         let usuariosNome = await controllerAluno.getBuscarAlunoNome(nome)
     
             response.json(usuariosNome);
@@ -93,7 +94,7 @@ app.get('/v1/sinalibras/aluno/nome/:nome', cors(), async function(request,respon
 
 app.get('/v1/sinalibras/aluno/email/:email', cors(), async function(request,response,next){
 
-        let email = request.query.email
+        let email = request.params.email
         let usuarios = await controllerAluno.getBuscarAlunoEmail(email)
     
             response.json(usuarios);
@@ -338,7 +339,7 @@ app.get('/v1/sinalibras/professor/:id', cors(), async function(request,response,
 
 app.get('/v1/sinalibras/professor/nome/:nome', cors(), async function(request,response,next){
 
-        let nomeProfessor = request.query.nome
+        let nomeProfessor = request.params.nome
         let professorNome = await controllerProfessor.getBuscarProfessorNome(nomeProfessor)
     
             response.json(professorNome);
@@ -352,7 +353,7 @@ app.get('/v1/sinalibras/professor/nome/:nome', cors(), async function(request,re
 
 app.get('/v1/sinalibras/professor/email/:email', cors(), async function(request,response,next){
 
-        let emailProfessor = request.query.email
+        let emailProfessor = request.params.email
         let professor = await controllerProfessor.getBuscarProfessorEmail(emailProfessor)
     
             response.json(professor);
@@ -707,18 +708,18 @@ app.delete('/v1/sinalibras/postagem/:id', cors(), async function(request, respon
 }) 
 
 
-app.post('/v1/sinalibras/postagem', cors(), bodyParserJson, async function(request, response){
-    let contentType = request.headers['content-type']
-    let dadosBody = request.body
+    app.post('/v1/sinalibras/postagem', cors(), bodyParserJson, async function(request, response){
+        let contentType = request.headers['content-type']
+        let dadosBody = request.body
 
-    let novaPostagem = await controllerPostagem.inserirNovaPostagem(dadosBody, contentType)
+        let novaPostagem = await controllerPostagem.inserirNovaPostagem(dadosBody, contentType)
 
 
-        response.status(novaPostagem.status_code)
-        response.json(novaPostagem)
-   
+            response.status(novaPostagem.status_code)
+            response.json(novaPostagem)
+    
 
-})
+    })
 
 app.put('/v1/sinalibras/postagem/:id', cors(), bodyParserJson, async function(request, response){
 
@@ -794,6 +795,20 @@ app.delete('/v1/sinalibras/postagem/comentario/:id', cors(), async function (req
     }
 })
 
+/************************ VIDEOAULA SALVAS ************************/
+
+app.post('/v1/sinalibras/videoaulasalva', cors(), bodyParserJson, async function(request, response){
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+
+    let videoSalvo = await controllerVideoAulaSalva.setInserirVideoSalvo(dadosBody, contentType)
+
+
+        response.status(videoSalvo.status_code)
+        response.json(videoSalvo)
+   
+
+})
 
 
 

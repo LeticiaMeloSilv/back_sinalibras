@@ -252,7 +252,7 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
                 }
                 
                 if (novoAluno){
-                    novoAlunoJSON.aluno = dadosAluno
+                    novoAlunoJSON.aluno = dadosAluno[0]
                     novoAlunoJSON.status = message.SUCESS_CREATED_ITEM.status
                     novoAlunoJSON.status_code = message.SUCESS_CREATED_ITEM.status_code
                     novoAlunoJSON.message = message.SUCESS_CREATED_ITEM.message
@@ -318,7 +318,7 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
             
                             if (alunoAtualizado){
                             
-                               updateAlunoJSON.aluno = dadosAluno
+                               updateAlunoJSON.aluno = dadosAluno[0]
                                updateAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
                                updateAlunoJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
                                updateAlunoJSON.message = message.SUCESS_UPDATED_ITEM.message

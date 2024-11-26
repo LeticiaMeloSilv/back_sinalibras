@@ -14,7 +14,9 @@ const insertVideoSalvo = async (dadosVideoSalvo) => {
 
     try {
         let sql = `insert into tbl_video_salvo (id_videoaula, id_aluno) values (${dadosVideoSalvo.id_videoaula}, ${dadosVideoSalvo.id_aluno})`
+        console.log(sql);
         let resultStatus = await prisma.$executeRawUnsafe(sql)
+
         if(resultStatus)
             return true
         else
@@ -30,6 +32,7 @@ const updateVideoSalvo = async (dadosVideoSalvo, idVideoSalvo) => {
     try {
         let sql = `update tbl_video_salvo set id_videoaula = ${dadosVideoSalvo.id_videoaula}, id_aluno = ${dadosVideoSalvo.id_aluno} where id = ${idVideoSalvo}`   
         let resultStatus = await prisma.$executeRawUnsafe(sql)
+        console.log(resultStatus);
         if(resultStatus)
             return true
         else
