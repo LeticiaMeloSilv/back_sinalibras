@@ -38,6 +38,7 @@ const inserirNovaPostagem = async function (dadosPostagem, contentType){
 
                 if (status){
                     let novaPostagem = await postagemDAO.insertPostagem(dadosPostagem)
+                    console.log(novaPostagem);
 
                     if(novaPostagem){
                         let ultimoId = await postagemDAO.selectUltimoId()
@@ -169,7 +170,7 @@ const getAllFeed = async function (){
         if(dadosFeed){
             for (let elemento of dadosFeed){
                 let professorPostagem = await professorDAO.selectByIdProfessor(elemento.id_professor)   
-                elemento.professor = professorPostagem
+                elemento.professor = professorPostagem[0]
                 delete elemento.id_professor 
                 if(elemento.tipo === 'postagem'){
                     let comentariosPostagem = await comentarioDAO.selectComentarioByIdPostagem(elemento.id)
@@ -178,10 +179,10 @@ const getAllFeed = async function (){
 
                 } else if (elemento.tipo === 'videoaula'){
                     let nivelVideoaula = await nivelDAO.selectNivelById(elemento.id_nivel)   
-                    elemento.nivel = nivelVideoaula
+                    elemento.nivel = nivelVideoaula[0]
                     delete elemento.id_nivel 
                     let moduloVideoaula = await moduloDAO.selectModuloById(elemento.id_modulo)
-                    elemento.modulo = moduloVideoaula
+                    elemento.modulo = moduloVideoaula[0]
                     delete elemento.id_modulo
                     let comentariosVideoaula = await comentarioDAO.selectComentariosAula(elemento.id)
                     elemento.comentarios = comentariosVideoaula

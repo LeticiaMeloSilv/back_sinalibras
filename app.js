@@ -32,7 +32,9 @@ const controllerNivel = require('./controller/controller_nivel')
 const controllerModulo = require('./controller/controller_modulo')
 const controllerComentario = require('./controller/controller_comentario')
 const controllerPostagem = require('./controller/controller_postagem')
-
+const controllerPerfilProfessor = require('./controller/controller_pefil_prof')
+const controllerPerfilAluno = require('./controller/controller_perfil_aluno')
+const controllerVideoAulaSalva = require('./controller/controller_videoSalvos')
 
 /************************************ Aluno ******************************/
 
@@ -79,7 +81,7 @@ app.get('/v1/sinalibras/aluno/:id', cors(), async function(request,response,next
 
 app.get('/v1/sinalibras/aluno/nome/:nome', cors(), async function(request,response,next){
 
-        let nome = request.query.nome
+        let nome = request.params.nome
         let usuariosNome = await controllerAluno.getBuscarAlunoNome(nome)
     
             response.json(usuariosNome);
@@ -92,7 +94,7 @@ app.get('/v1/sinalibras/aluno/nome/:nome', cors(), async function(request,respon
 
 app.get('/v1/sinalibras/aluno/email/:email', cors(), async function(request,response,next){
 
-        let email = request.query.email
+        let email = request.params.email
         let usuarios = await controllerAluno.getBuscarAlunoEmail(email)
     
             response.json(usuarios);
@@ -150,7 +152,7 @@ app.put('/v1/sinalibras/aluno/fotoPerfil/:id', cors(), bodyParserJson, async fun
     let idUsuario = request.params.id
 
     let dadosBody = request.body
-    let resultadoNovaFoto = await controllerAluno.setAtualizarFotoPerfilAluno(idUsuario, dadosBody, contentType)
+    let resultadoNovaFoto = await controllerPerfilAluno.setAtualizarFotoPerfilAluno(idUsuario, dadosBody, contentType)
 
     response.status(resultadoNovaFoto.status_code)
    
@@ -165,7 +167,7 @@ app.put('/v1/sinalibras/aluno/perfil/:id', cors(), bodyParserJson, async functio
     let idUsuario = request.params.id
 
     let dadosBody = request.body
-    let resultadoNovaSenha = await controllerAluno.setAtualizarSenhaAluno(idUsuario, dadosBody, contentType)
+    let resultadoNovaSenha = await controllerPerfilAluno.setAtualizarSenhaAluno(idUsuario, dadosBody, contentType)
 
     response.status(resultadoNovaSenha.status_code)
    
@@ -173,6 +175,17 @@ app.put('/v1/sinalibras/aluno/perfil/:id', cors(), bodyParserJson, async functio
     response.json(resultadoNovaSenha)
     //ok
 })
+
+
+app.get('/v1/sinalibras/aluno/perfil/:id', cors(), bodyParserJson, async function(request,response){
+    let idUsuario = request.params.id
+    let infoPerfil = await controllerPerfilAluno.getInfoPerfilAluno(idUsuario)
+
+    response.status(infoPerfil.status_code)
+    response.json(infoPerfil)
+    //ok
+})
+
 
 /*********************************************** Pré cadastro professor ****************************************/
 app.post('/v1/sinalibras/usuario', cors(), bodyParserJson, async function (request, response){
@@ -214,6 +227,34 @@ app.get('/v1/sinalibras/usuario/email/:email', cors(), async function(request,re
 
        //ok  
  })
+
+ app.get('/v1/sinalibras/users', cors(), async function(request, response){
+
+   
+    let dadosProfessores = await controllerProfessor.getBuscarUsuariosTeste();
+
+   
+    if(dadosProfessores){
+      response.json(dadosProfessores);
+        response.status(200);
+    }else{
+        response.json({message: 'Nenhum registro foi encontrado'})
+        response.status(404);
+    }
+
+    //ok
+
+})
+
+app.delete('/v1/sinalibras/usuario/:id', cors(), async function(request,response){
+
+    let idProfessor = request.params.id
+
+    let dadosProfessor = await controllerProfessor.setExcluirUsuarioTeste(idProfessor)
+    response.status(dadosProfessor.status_code)
+    response.json(dadosProfessor)
+//ok
+})
 
 /*********************** Professor *****************************/
 
@@ -298,7 +339,7 @@ app.get('/v1/sinalibras/professor/:id', cors(), async function(request,response,
 
 app.get('/v1/sinalibras/professor/nome/:nome', cors(), async function(request,response,next){
 
-        let nomeProfessor = request.query.nome
+        let nomeProfessor = request.params.nome
         let professorNome = await controllerProfessor.getBuscarProfessorNome(nomeProfessor)
     
             response.json(professorNome);
@@ -312,7 +353,7 @@ app.get('/v1/sinalibras/professor/nome/:nome', cors(), async function(request,re
 
 app.get('/v1/sinalibras/professor/email/:email', cors(), async function(request,response,next){
 
-        let emailProfessor = request.query.email
+        let emailProfessor = request.params.email
         let professor = await controllerProfessor.getBuscarProfessorEmail(emailProfessor)
     
             response.json(professor);
@@ -329,7 +370,7 @@ app.put('/v1/sinalibras/professor/fotoPerfil/:id', cors(), bodyParserJson, async
     let idUsuario = request.params.id
 
     let dadosBody = request.body
-    let resultadoNovaFoto = await controllerProfessor.setAtualizarFotoPerfilProfessor(idUsuario, dadosBody, contentType)
+    let resultadoNovaFoto = await controllerPerfilProfessor.setAtualizarFotoPerfilProfessor(idUsuario, dadosBody, contentType)
 
     response.status(resultadoNovaFoto.status_code)
    
@@ -344,7 +385,7 @@ app.put('/v1/sinalibras/professor/perfil/:id', cors(), bodyParserJson, async fun
     let idUsuario = request.params.id
 
     let dadosBody = request.body
-    let resultadoNovaSenha = await controllerProfessor.setAtualizarSenhaProf(idUsuario, dadosBody, contentType)
+    let resultadoNovaSenha = await controllerPerfilProfessor.setAtualizarSenhaProf(idUsuario, dadosBody, contentType)
 
     response.status(resultadoNovaSenha.status_code)
    
@@ -354,9 +395,8 @@ app.put('/v1/sinalibras/professor/perfil/:id', cors(), bodyParserJson, async fun
 })
 
 app.get('/v1/sinalibras/professor/perfil/:id', cors(), bodyParserJson, async function(request,response){
-
     let idUsuario = request.params.id
-    let infoPerfil = await controllerProfessor.getInfoPerfilProfessor(idUsuario)
+    let infoPerfil = await controllerPerfilProfessor.getInfoPerfilProfessor(idUsuario)
 
     response.status(infoPerfil.status_code)
     response.json(infoPerfil)
@@ -676,18 +716,18 @@ app.delete('/v1/sinalibras/postagem/:id', cors(), async function(request, respon
 }) 
 
 
-app.post('/v1/sinalibras/postagem', cors(), bodyParserJson, async function(request, response){
-    let contentType = request.headers['content-type']
-    let dadosBody = request.body
+    app.post('/v1/sinalibras/postagem', cors(), bodyParserJson, async function(request, response){
+        let contentType = request.headers['content-type']
+        let dadosBody = request.body
 
-    let novaPostagem = await controllerPostagem.inserirNovaPostagem(dadosBody, contentType)
+        let novaPostagem = await controllerPostagem.inserirNovaPostagem(dadosBody, contentType)
 
 
-        response.status(novaPostagem.status_code)
-        response.json(novaPostagem)
-   
+            response.status(novaPostagem.status_code)
+            response.json(novaPostagem)
+    
 
-})
+    })
 
 app.put('/v1/sinalibras/postagem/:id', cors(), bodyParserJson, async function(request, response){
 
@@ -763,7 +803,47 @@ app.delete('/v1/sinalibras/postagem/comentario/:id', cors(), async function (req
     }
 })
 
+/************************ VIDEOAULA SALVAS ************************/
 
+app.post('/v1/sinalibras/videosalvo', cors(), bodyParserJson, async function(request, response){
+    let contentType = request.headers['content-type']
+    let dadosBody = request.body
+
+    let videoSalvo = await controllerVideoAulaSalva.setInserirVideoAulaSalva(dadosBody, contentType)
+
+
+        response.status(videoSalvo.status_code)
+        response.json(videoSalvo)
+   
+
+})
+
+app.delete('/v1/sinalibras/videosalvo/:id', cors(), async function (request, response){
+
+    let idVideoSalvo = request.params.id
+    let deleteVideoSalvo = await controllerVideoAulaSalva.setExcluirVideoaulaSalva(idVideoSalvo)
+
+    if(deleteVideoSalvo){
+        response.status(200)
+        response.json(deleteVideoSalvo)
+    }else{
+        response.status(404)
+        response.json({message: 'Não foi possível concluir a ação'})
+    }
+})
+
+
+app.get('/v1/sinalibras/videosalvo/:id', cors(), async function(request, response){
+
+    let idVideoaula = request.params.id
+   
+    let dadosVideoaulaSalva = await controllerVideoAulaSalva.getVideoSalvoByIdAluno(idVideoaula)
+
+    response.json(dadosVideoaulaSalva);
+    response.status(200);
+  
+
+})
 
 
 

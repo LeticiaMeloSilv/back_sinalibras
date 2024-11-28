@@ -9,6 +9,7 @@
 const message = require('../modulo/config.js')
 const alunoDao = require('../model/DAO/aluno.js');
 const data = require('./validacoes.js')
+const perfilDAO = require('../model/DAO/pefilAluno.js')
 
 const getValidarAluno = async(email, senha, contentType) => {
 
@@ -251,7 +252,7 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
                 }
                 
                 if (novoAluno){
-                    novoAlunoJSON.aluno = dadosAluno
+                    novoAlunoJSON.aluno = dadosAluno[0]
                     novoAlunoJSON.status = message.SUCESS_CREATED_ITEM.status
                     novoAlunoJSON.status_code = message.SUCESS_CREATED_ITEM.status_code
                     novoAlunoJSON.message = message.SUCESS_CREATED_ITEM.message
@@ -317,7 +318,7 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
             
                             if (alunoAtualizado){
                             
-                               updateAlunoJSON.aluno = dadosAluno
+                               updateAlunoJSON.aluno = dadosAluno[0]
                                updateAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
                                updateAlunoJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
                                updateAlunoJSON.message = message.SUCESS_UPDATED_ITEM.message
@@ -379,137 +380,7 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType){
 
     
 
-    /*********************************** Aluno Perfil ************************************** */
-
-    const setAtualizarFotoPerfilAluno = async function (id, dadosAluno, contentType){
-
-   
-        let idUsuario = id
     
-      
-    
-        if (idUsuario== '' || idUsuario == undefined || isNaN(idUsuario)) {
-            return message.ERROR_INVALID_ID; 
-            }else {
-              
-                let result = await alunoDao.selectByIdAluno(idUsuario)
-                let verificarId = result.length
-                if (verificarId > 0) {
-                    
-                    try{
-    
-                        if (String(contentType).toLowerCase() == 'application/json'){
-    
-                            let updateFotoAlunoJSON= {}
-    
-                            if( 
-                                 dadosAluno.foto_perfil == undefined || dadosAluno.foto_perfil == "" || dadosAluno.foto_perfil.length > 255
-                             ){
-                                return message.ERROR_REQUIRED_FIELDS
-                             }
-    
-                                let fotoAtualizada = await alunoDao.updateAlunoFotoPerfil(id, dadosAluno)
-                
-                                if (fotoAtualizada){
-                                
-                                   updateFotoAlunoJSON.Atualizacao = dadosAluno
-                                   updateFotoAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
-                                   updateFotoAlunoJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
-                                   updateFotoAlunoJSON.message = message.SUCESS_UPDATED_ITEM.message
-                                    
-                                    return updateFotoAlunoJSON//201
-                                }else {
-                              
-                                    return message.ERROR_INTERNAL_SERVER_DB // 500 
-                                }
-    
-    
-                            
-    
-                        }else{
-                            return message.ERROR_CONTENT_TYPE
-                        }
-                    }catch(error){
-                    
-                        return message.ERROR_INTERNAL_SERVER
-                    }
-                }else{
-                    return message.ERROR_NOT_FOUND_ID
-                }
-    
-            
-    
-            }
-        
-        }
-    
-
-
-        const setAtualizarSenhaAluno = async function (id, dadosAluno, contentType){
-
-   
-            let idUsuario = id
-        
-          
-        
-            if (idUsuario== '' || idUsuario == undefined || isNaN(idUsuario)) {
-                return message.ERROR_INVALID_ID; 
-                }else {
-                  
-                    let result = await alunoDao.selectByIdAluno(idUsuario)
-                    let verificarId = result.length
-                    if (verificarId > 0) {
-                        
-                        try{
-        
-                            if (String(contentType).toLowerCase() == 'application/json'){
-        
-                                let updateSenhaAlunoJSON= {}
-        
-                                if( 
-                                     dadosAluno.senha == undefined || dadosAluno.senha == "" || dadosAluno.senha.length > 8 || dadosAluno.senha.length < 8 
-                                 ){
-                                    return message.ERROR_REQUIRED_FIELDS
-                                 }
-        
-                                    let senhaAtualizada = await alunoDao.updateSenhaAluno(id, dadosAluno)
-                    
-                                    if (senhaAtualizada){
-                                    
-                                       //updateSenhaAlunoJSON.dadosAluno = dadosAluno
-                                       updateSenhaAlunoJSON.status = message.SUCESS_UPDATED_ITEM.status
-                                       updateSenhaAlunoJSON.status_code = message.SUCESS_UPDATED_ITEM.status_code
-                                       updateSenhaAlunoJSON.message = message.SUCESS_UPDATED_ITEM.message
-                                        
-                                        return updateSenhaAlunoJSON//201
-                                    }else {
-                                  
-                                        return message.ERROR_INTERNAL_SERVER_DB // 500 
-                                    }
-        
-        
-                                
-        
-                            }else{
-                                return message.ERROR_CONTENT_TYPE
-                            }
-                        }catch(error){
-                        
-                            return message.ERROR_INTERNAL_SERVER
-                        }
-                    }else{
-                        return message.ERROR_NOT_FOUND_ID
-                    }
-        
-                
-        
-                }
-            
-            }
-
-
-           
-
 
 
 
@@ -522,7 +393,5 @@ module.exports = {
     setInserirNovoAluno,
     setAtualizarAluno,
     setExcluirAluno,
-    setAtualizarFotoPerfilAluno,
-    setAtualizarSenhaAluno,
     getValidarAluno
 }

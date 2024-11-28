@@ -419,24 +419,6 @@ CREATE TABLE IF NOT EXISTS `tbl_video_salvo` (
 ENGINE = InnoDB;
 
 
-create view vw_todos_videos_salvos as
-SELECT 
-    tvs.id, 
-    tvs.id_videoaula, 
-    tv.titulo AS video, 
-    tvs.id_aluno, 
-    ta.id_aluno AS id_aluno_aluno,  -- Renomeando para evitar conflito
-    ta.nome AS aluno 
-FROM 
-    tbl_video_salvo AS tvs 
-INNER JOIN 
-    tbl_videoaula AS tv ON tvs.id_videoaula = tv.id_videoaula  
-INNER JOIN 
-    tbl_aluno AS ta ON tvs.id_aluno = ta.id_aluno 
-ORDER BY 
-    tvs.id DESC;
-    
-    select * from vw_todos_videos_salvos where id_aluno = 1;
 
 
 CREATE TABLE `tbl_comentario_postagem` (
@@ -461,4 +443,96 @@ select * from pergunta_alternativas;
 
 select * from respostas_do_usuario where id_usuario_teste = 1;
 
-show tables;
+
+---------- VIEW QUE TRAZ OS DADOS DO ALUNO DE UM COMENTARIO da videoaula
+
+CREATE VIEW vw_alunos_comentaram_videoaula AS
+SELECT
+    a.id_aluno,
+    a.nome AS nome_aluno,
+    a.email,
+    a.data_nascimento,
+    a.foto_perfil,
+    a.data_cadastro
+FROM
+    tbl_comentario_aula AS c
+INNER JOIN
+    tbl_aluno AS a ON c.id_aluno = a.id_aluno;
+
+
+
+
+---------- VIEW QUE TRAZ OS DADOS DO ALUNO DE UM COMENTARIO da postagem
+
+CREATE VIEW vw_alunos_comentaram_postagem AS
+SELECT
+    a.id_aluno,
+    a.nome AS nome_aluno,
+    a.email,
+    a.data_nascimento,
+    a.foto_perfil,
+    a.data_cadastro
+FROM
+    tbl_comentario_postagem AS c
+INNER JOIN
+    tbl_aluno AS a ON c.id_aluno = a.id_aluno;
+   
+   
+
+
+---------- view que traz o feed
+
+create view feed_postagens_videoaula as
+SELECT
+        id_postagem AS id,
+        texto AS conteudo,
+        foto_postagem AS foto,
+        NULL AS url_video,            
+        NULL AS descricao,            
+        NULL AS duracao,              
+        foto_postagem AS foto_capa,    
+        data,
+        NULL AS id_nivel,            
+        NULL AS id_modulo,            
+        id_professor,
+        'postagem' AS tipo
+    FROM tbl_postagem
+   
+    UNION ALL
+   
+    SELECT
+        id_videoaula AS id,
+        titulo AS conteudo,
+        foto_capa AS foto,
+        url_video,
+        descricao,
+        duracao,
+        foto_capa AS foto_capa,
+        data,
+        id_nivel,
+        id_modulo,
+        id_professor,
+        'videoaula' AS tipo
+    FROM tbl_videoaula
+   
+    ORDER BY data DESC;
+
+
+
+-------- view que tras todos os vídeos salvos do aluno -------
+create view vw_todos_videos_salvos as
+SELECT 
+    tvs.id, 
+    tvs.id_videoaula, 
+    tv.titulo AS video, 
+    tvs.id_aluno, 
+    ta.id_aluno AS id_aluno_aluno,  -- Renomeando para evitar conflito
+    ta.nome AS aluno 
+FROM 
+    tbl_video_salvo AS tvs 
+INNER JOIN 
+    tbl_videoaula AS tv ON tvs.id_videoaula = tv.id_videoaula  
+INNER JOIN 
+    tbl_aluno AS ta ON tvs.id_aluno = ta.id_aluno 
+ORDER BY 
+    tvs.id DESC;

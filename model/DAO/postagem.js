@@ -42,11 +42,13 @@ const insertPostagem = async function (dadosPostagem){
             )`
         }
 
+        console.log(sql);
         let rsPostagem = await prisma.$executeRawUnsafe(sql)
-
+        console.log(rsPostagem);
        return rsPostagem
        
     } catch (error){
+        console.log("oi" + error);
         return false 
     }
 }

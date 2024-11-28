@@ -28,6 +28,7 @@ const selectValidarProf = async function (email,senha){
        }
    }
    
+   
 const selectVerificarEmail = async function (email){
     try{
      let sql = `select ta.nome, ta.email from tbl_professor as ta where email = '${email}';`
@@ -219,6 +220,8 @@ const deleteProfessor = async function (id){
       
        if(rsProfessor)
        return true
+       else
+       return false
       
      } catch (error) {
         
@@ -254,65 +257,6 @@ const selectProfessorByEmail = async function (email){
 }
 
 
-/********************************* Perfil professor **************************************/
-
-const updateProfessorFotoPerfil = async function (id, dadosProfessor) {
-
-    let sql  
-
-
-    try{
-        sql = `update tbl_professor set
-            foto_perfil = '${dadosProfessor.foto_perfil}'
-            where tbl_professor.id_professor = ${id}`
-            
-        let rsProfessor = await prisma.$executeRawUnsafe(sql)
-    
-        if (rsProfessor)
-        return true
-        else
-        return false 
-    }catch(error){
-        return false
-    }
-
-}
-
-const updateSenhaProfessor = async function  (id, dadosProfessor) {
-    
-    let sql 
-
-    try{
-
-        sql = `UPDATE tbl_professor SET 
-                senha = md5('${dadosProfessor.senha}') 
-                WHERE id_professor = ${id}`
-
-          let rsProfessor = await prisma.$executeRawUnsafe(sql)    
-          if(rsProfessor){
-            return rsProfessor
-          }  
-    }catch(error){
-        return false 
-    }
-}
-
-
-
-const selectInfoPeril = async function (id){
-    try{
-        let sql = `select id_professor, nome, foto_perfil from tbl_professor where id_professor = ${id}`
-
-        let rsProfessor = await prisma.$queryRawUnsafe(sql)
-
-        if(rsProfessor)
-        return rsProfessor
-    }catch(error){
-        return false
-    }
-}
-
-
 
 
 
@@ -325,9 +269,6 @@ module.exports = {
     deleteProfessor,
     updateProfessor,
     insertProfessor,
-    updateProfessorFotoPerfil,
-    updateSenhaProfessor,
     selectValidarProf,
-    selectVerificarEmail,
-    selectInfoPeril
+    selectVerificarEmail
 }

@@ -39,7 +39,8 @@ const setInserirNovoComentarioAula = async function (dadosComentario, contentTyp
                      }else{
                         return message.ERROR_INTERNAL_SERVER
                      }
-                }
+                
+            }
 
         } else {
             return message.ERROR_CONTENT_TYPE
@@ -50,6 +51,7 @@ const setInserirNovoComentarioAula = async function (dadosComentario, contentTyp
         return message.ERROR_INTERNAL_SERVER_DB
     }
 }
+
 
 const getAllComentariosAula = async function (id){
 
