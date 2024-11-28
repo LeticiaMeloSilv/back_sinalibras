@@ -181,40 +181,44 @@ const getVideoaulaById = async function (id){
 
         if(dadosVideoaula.length>0){
            
-            for (let videoaula of dadosVideoaula){
-                let nivelVideoaula = await nivelDAO.selectNivelById(videoaula.id_nivel)   
-                videoaula.nivel = nivelVideoaula
-                delete videoaula.id_nivel 
-                
-            }
+            const promises = dadosVideoaula.map(async (videoaula) => {
+                const nivelPromise = nivelDAO.selectNivelById(videoaula.id_nivel);
+                const moduloPromise = moduloDAO.selectModuloById(videoaula.id_modulo);
+                const professorPromise = professorDAO.selectByIdProfessor(videoaula.id_professor);
+                const comentariosPromise = comentarioDAO.selectComentariosAula(videoaula.id_videoaula);
 
-            for (let videoaula of dadosVideoaula){
-                let moduloVideoaula = await moduloDAO.selectModuloById(videoaula.id_modulo)
-                videoaula.modulo = moduloVideoaula
-                delete videoaula.id_modulo
-            }
-            for (let videoaula of dadosVideoaula){
-                let professorVideoaula = await professorDAO.selectByIdProfessor(videoaula.id_professor)
-                videoaula.professor = professorVideoaula
-                delete videoaula.id_professor
-            }
+                const [nivel, modulo, professor, comentarios] = await Promise.all([nivelPromise, moduloPromise, professorPromise, comentariosPromise]);
 
-            for (let videoaula of dadosVideoaula){
-                let comentarioVideoaula = await comentarioDAO.selectComentariosAula(videoaula.id_videoaula)
-                videoaula.comentarios = comentarioVideoaula
-                delete videoaula.id_comentario
-            }
+                videoaula.nivel = nivel;
+                videoaula.modulo = modulo;
+                videoaula.professor = professor;
+                videoaula.comentarios = [];
 
+                for (let aluno of comentarios) {
+                    const alunosPromise = videoaulaDAO.selectAlunoByComentario(aluno.id_aluno);
+                    const alunos = await alunosPromise;
 
+                    aluno.aluno = alunos;
 
-            videoaulaJson.video = dadosVideoaula
-            videoaulaJson.status_code = 200
+                    videoaula.comentarios.push(aluno);
+                }
 
+               
+                delete videoaula.id_nivel;
+                delete videoaula.id_modulo;
+                delete videoaula.id_professor;
 
-            return videoaulaJson
+                return videoaula;
+            });
 
-        }else{
-            return message.ERROR_NOT_FOUND
+            const videoaulasCompletas = await Promise.all(promises);
+
+            return {
+                video: videoaulasCompletas,
+                status_code: 200
+            };
+        } else {
+            return message.ERROR_NOT_FOUND;
         }
     }
 
@@ -355,6 +359,41 @@ const getVideosDoNivel = async function(id){
     }
 }
 
+const getBuscarVideoaulaNome = async function (titulo) {
+
+    try{
+
+        let tituloVideoaula = titulo
+        let videoaulaJson = {};
+
+    if (tituloVideoaula == '' || tituloVideoaula == undefined) {
+        return message.ERROR_INVALID_ID
+    } else {
+    
+        let dadosVideoaula = await videoaulaDAO.selectVideoaulaByNome(titulo)
+
+
+            if (dadosVideoaula.length > 0) {
+                
+                videoaulaJson.professor = dadosVideoaula;
+                videoaulaJson.status_code = 200;
+
+                return videoaulaJson;
+            } else {
+              
+                return message.ERROR_NOT_FOUND;
+            }
+
+    }
+
+    }catch(error){
+        return message.ERROR_INTERNAL_SERVER
+    }
+    
+     
+    
+}
+
 
 module.exports = {
     inserirNovaVideoaula,
@@ -362,5 +401,6 @@ module.exports = {
     setExcluirVideoaula,
     getVideoaulaById,
     getVideosDoModulo,
-    getVideosDoNivel
+    getVideosDoNivel,
+    getBuscarVideoaulaNome
 }

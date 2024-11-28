@@ -499,6 +499,14 @@ app.get('/v1/sinalibras/videos/modulo/:id', cors(), async function(request, resp
    
 })
 
+app.get('/v1/sinalibras/videos/titulo/:titulo', cors(), async function(request, response, next){
+    let tituloVideoaula = request.params.titulo
+    let dadosVideoaula = await controllerVideoaula.getBuscarVideoaulaNome(tituloVideoaula)
+    
+    response.status(dadosVideoaula.status_code)
+    response.json(dadosVideoaula)
+})
+
 
 
 /****************************** MODULOS ***************************************/
