@@ -536,3 +536,7 @@ INNER JOIN
     tbl_aluno AS ta ON tvs.id_aluno = ta.id_aluno 
 ORDER BY 
     tvs.id DESC;
+
+create view  select_pontuacoes_usuarios as 
+select tut.id_usuario_teste, tut.email, tut.data_cadastro, tr.pontuacao 
+from tbl_usuario_teste as tut inner join tbl_resultado as tr on tut.id_usuario_teste = tr.id_usuario_teste;
