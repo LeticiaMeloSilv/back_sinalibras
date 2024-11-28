@@ -154,9 +154,9 @@ const selectVideoaulaByNome = async function (titulo){
         let sql = `select * from tbl_videoaula where titulo LIKE "%${titulo}%"`
         let rsVideoaula = await prisma.$queryRawUnsafe(sql)
 
+        
         return rsVideoaula
     }catch(error){
-        return false
     }
 }
 

@@ -359,6 +359,41 @@ const getVideosDoNivel = async function(id){
     }
 }
 
+const getBuscarVideoaulaNome = async function (titulo) {
+
+    try{
+
+        let tituloVideoaula = titulo
+        let videoaulaJson = {};
+
+    if (tituloVideoaula == '' || tituloVideoaula == undefined) {
+        return message.ERROR_INVALID_ID
+    } else {
+    
+        let dadosVideoaula = await videoaulaDAO.selectVideoaulaByNome(titulo)
+
+
+            if (dadosVideoaula.length > 0) {
+                
+                videoaulaJson.professor = dadosVideoaula;
+                videoaulaJson.status_code = 200;
+
+                return videoaulaJson;
+            } else {
+              
+                return message.ERROR_NOT_FOUND;
+            }
+
+    }
+
+    }catch(error){
+        return message.ERROR_INTERNAL_SERVER
+    }
+    
+     
+    
+}
+
 
 module.exports = {
     inserirNovaVideoaula,
@@ -366,5 +401,6 @@ module.exports = {
     setExcluirVideoaula,
     getVideoaulaById,
     getVideosDoModulo,
-    getVideosDoNivel
+    getVideosDoNivel,
+    getBuscarVideoaulaNome
 }
