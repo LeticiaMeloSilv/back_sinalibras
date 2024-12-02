@@ -375,7 +375,7 @@ const getBuscarVideoaulaNome = async function (titulo) {
 
             if (dadosVideoaula.length > 0) {
                 
-                videoaulaJson.professor = dadosVideoaula;
+                videoaulaJson.videoaula = dadosVideoaula;
                 videoaulaJson.status_code = 200;
 
                 return videoaulaJson;
