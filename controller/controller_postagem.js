@@ -245,7 +245,6 @@ const getPostagemById = async function (id){
         }
     }
 
-
     }catch(error){       
         return false
     }
@@ -254,11 +253,50 @@ const getPostagemById = async function (id){
 }
 
 
+const getBuscarPostagem = async function (texto) {
+
+    try{
+
+        let textoPost = texto
+        let postagemJSON = {};
+
+    if (textoPost == '' || textoPost == undefined) {
+        return message.ERROR_INVALID_ID
+    } else {
+    
+        let dadosPostagem = await postagemDAO.selectPesquisarPost(texto)
+
+
+            if (dadosPostagem.length > 0) {
+                
+                postagemJSON.postagem = dadosPostagem;
+                postagemJSON.status_code = 200;
+
+                return postagemJSON;
+                
+            } else {
+              
+                return message.ERROR_NOT_FOUND;
+            }
+
+    }
+
+    }catch(error){
+        return message.ERROR_INTERNAL_SERVER
+    }
+    
+     
+    
+}
+
+
+
 
 module.exports = {
     inserirNovaPostagem,
     setAtualizarPostagem,
     setExcluirPostagem,
     getAllFeed,
-    getPostagemById
+    getPostagemById,
+    getBuscarPostagem
 }

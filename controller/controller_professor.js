@@ -407,8 +407,7 @@ const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
             if(
                dadosProfessor.nome == '' || dadosProfessor.nome == undefined || dadosProfessor.nome == null || dadosProfessor.nome.length > 255||
                dadosProfessor.email == "" || dadosProfessor.email == undefined || dadosProfessor.email == null|| dadosProfessor.email.length > 255||
-               dadosProfessor.senha == "" || dadosProfessor.senha == undefined || dadosProfessor.senha == null||  dadosProfessor.senha.length > 8 || dadosProfessor.senha.length < 8 ||
-               dadosProfessor.foto_perfil.length > 255
+               dadosProfessor.senha == "" || dadosProfessor.senha == undefined || dadosProfessor.senha == null||  dadosProfessor.senha.length > 8 || dadosProfessor.senha.length < 8
             ){
                 return message.ERROR_REQUIRED_FIELDS
             }
@@ -486,8 +485,7 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType){
 
                         if(
                             dadosProfessor.nome == "" || dadosProfessor.nome == undefined || dadosProfessor.nome == null || dadosProfessor.nome.length > 255||
-                            dadosProfessor.email == "" || dadosProfessor.email == undefined || dadosProfessor.email == null|| dadosProfessor.email.length > 255||
-                            dadosProfessor.foto_perfil.length > 255
+                            dadosProfessor.email == "" || dadosProfessor.email == undefined || dadosProfessor.email == null|| dadosProfessor.email.length > 255
                          ){
                             return message.ERROR_REQUIRED_FIELDS
                          }

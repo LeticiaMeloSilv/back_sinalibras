@@ -183,6 +183,19 @@ const selectAlunoByComentario = async function (id){
     }
 }
 
+
+const selectPesquisarPost = async function (texto){
+    try{
+
+        let sql = `select * from tbl_postagem where texto LIKE "%${texto}%"`
+        let rsVideoaula = await prisma.$queryRawUnsafe(sql)
+
+        
+        return rsVideoaula
+    }catch(error){
+    }
+}
+
 module.exports = {
     insertPostagem,
     updatePostagem,
@@ -192,6 +205,7 @@ module.exports = {
     selectUltimoId,
     selectUltimoId,
     selectPostagemByIdProfessor,
-    selectAlunoByComentario
+    selectAlunoByComentario,
+    selectPesquisarPost
 
 }

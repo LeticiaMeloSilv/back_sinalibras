@@ -17,7 +17,7 @@ const inserirNovaVideoaula = async function (dadosVideoaula, contentType){
             if(dadosVideoaula.titulo == null || dadosVideoaula.url_video == null || dadosVideoaula.duracao == null || dadosVideoaula.foto_capa == null || dadosVideoaula.data == null || dadosVideoaula.id_nivel == null || dadosVideoaula.id_modulo == null || dadosVideoaula.id_professor == null ||
                 dadosVideoaula.titulo == '' || dadosVideoaula.url_video == '' || dadosVideoaula.duracao == '' || dadosVideoaula.foto_capa == '' || dadosVideoaula.data == '' || dadosVideoaula.id_nivel == '' || dadosVideoaula.id_modulo == '' || dadosVideoaula.id_professor == '' ||
                 dadosVideoaula.titulo == undefined || dadosVideoaula.url_video == undefined || dadosVideoaula.duracao == undefined || dadosVideoaula.foto_capa == undefined || dadosVideoaula.data == undefined || dadosVideoaula.id_nivel == undefined || dadosVideoaula.id_modulo == undefined || dadosVideoaula.id_professor == undefined ||
-                dadosVideoaula.titulo.length > 50 || dadosVideoaula.url_video.length > 255 || dadosVideoaula.duracao.length > 8 || dadosVideoaula.foto_capa.length > 255 || dadosVideoaula.data.length != 10 || isNaN(dadosVideoaula.id_nivel) || isNaN(dadosVideoaula.id_modulo) || isNaN(dadosVideoaula.id_professor)
+                dadosVideoaula.titulo.length > 50 || dadosVideoaula.duracao.length > 8 || dadosVideoaula.data.length != 10 || isNaN(dadosVideoaula.id_nivel) || isNaN(dadosVideoaula.id_modulo) || isNaN(dadosVideoaula.id_professor)
             ){
                 return message.ERROR_REQUIRED_FIELDS
             }else{
@@ -84,7 +84,7 @@ const setAtualizarVideoaula = async function (dadosVideoaula, id,  contentType){
 
                     if(dadosVideoaula.titulo == null || dadosVideoaula.url_video == null || dadosVideoaula.duracao == null || dadosVideoaula.foto_capa == null  || dadosVideoaula.id_nivel == null || dadosVideoaula.id_modulo == null ||
                         dadosVideoaula.titulo == '' || dadosVideoaula.url_video == '' || dadosVideoaula.duracao == '' || dadosVideoaula.foto_capa == '' || dadosVideoaula.id_nivel == '' || dadosVideoaula.id_modulo == '' || 
-                        dadosVideoaula.titulo.length > 50 || dadosVideoaula.url_video.length > 255 || dadosVideoaula.duracao.length > 8 || dadosVideoaula.foto_capa.length > 255 || isNaN(dadosVideoaula.id_nivel) || isNaN(dadosVideoaula.id_modulo) 
+                        dadosVideoaula.titulo.length > 50 || dadosVideoaula.duracao.length > 8  || isNaN(dadosVideoaula.id_nivel) || isNaN(dadosVideoaula.id_modulo) 
                     ){
                      
                         return message.ERROR_REQUIRED_FIELDS
@@ -379,6 +379,7 @@ const getBuscarVideoaulaNome = async function (titulo) {
                 videoaulaJson.status_code = 200;
 
                 return videoaulaJson;
+                
             } else {
               
                 return message.ERROR_NOT_FOUND;

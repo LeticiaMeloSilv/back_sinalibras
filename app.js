@@ -754,6 +754,19 @@ app.get('/v1/sinalibras/feed', cors(), async function(request, response){
 })
 
 
+app.get('/v1/sinalibras/postagem/buscar/:texto', cors(), async function(request,response,next){
+
+    let textoPost = request.params.texto
+    let postagem = await controllerPostagem.getBuscarPostagem(textoPost)
+
+        response.json(postagem);
+         response.status(postagem.status_code)
+
+         
+ })
+
+
+
 
 
 
